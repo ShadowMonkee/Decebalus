@@ -1,0 +1,92 @@
+<script>
+	let title = 'Svelte'
+	// using $state() will turn this into a signal under the hood, updating uses of the variable when needed
+	let count = $state(0)
+	let src = 'image.gif'
+	let alt = 'Person nodding'
+
+	let obj = {
+		src: 'image.gif',
+		alt: 'Person nodding'
+	}
+
+	let color = 'white'
+	let content = '<h1>Big banana exposed</h1> \
+	<p>The gorillas inside the banana cartel speak out</p>'
+
+	let open = $state(false)
+
+	let editor = $state({
+		theme: 'dark',
+		content: '<h1>Content title</h1>'
+	})
+
+</script>
+
+{@html editor.content}
+
+
+
+
+
+<!-- DYNAMIC CLASSES -->
+<!-- 
+<button onclick={() => open = !open} class="btn">
+	<span>Item A</span>
+	<span class="trigger {open ? 'open' : ''}">&lt;-</span>
+	<span class="trigger" class:open>&lt;-</span>
+	<span class={{ trigger: true, open}}>&lt;-</span>
+	<span class={['trigger', {open}]}>&lt;-</span>
+</button>
+
+
+<style>
+	.trigger {
+		display: inline-block;
+		transition: rotate 0.2s ease;
+	
+		&.open {
+		rotate: -90deg;
+		}
+	}
+</style>
+ -->
+
+
+<!-- GLOBAL STYLES -->
+<!-- <hgroup>
+	{@html content}
+</hgroup>
+
+<style>
+	:global(h1) {
+		text-transform: capitalize;
+	}
+	:global {
+		h1 `{
+			color: darkorchid;
+		}
+		p {
+			text-transform: capitalize;
+		}
+	}
+</style> -->
+
+<!-- DYNAMIC DIRECTIVES -->
+<!-- <h1>{title}</h1>
+<h2 style="color: {color}">{title}</h2>
+<h2 style:color>{title}</h2> -->
+
+<!-- <img src="image.gif" alt={alt}>
+<img {src} {alt}>
+<img {...obj}> -->
+
+<!-- <button onclick={() => count++}>
+	{count}
+</button>
+
+<style>
+	h1{
+		color: orangered;
+	}
+</style> -->
