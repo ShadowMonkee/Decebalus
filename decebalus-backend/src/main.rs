@@ -1,26 +1,16 @@
+mod api;
 mod models;
+mod state;
 
 use axum::{
-    extract::ws::{Message, WebSocket, WebSocketUpgrade},
-    extract::{Path, State},
-    response::IntoResponse,
     routing::{get, post},
-    Json, Router,
+    Router,
 };
-use futures_util::{SinkExt, StreamExt};
-use models::{Job, Host, DisplayStatus, Config};
 use std::{net::SocketAddr, sync::Arc};
-use tokio::sync::{broadcast, Mutex};
 use tracing_subscriber;
 
-#[derive(Clone, Debug)]
-struct AppState {
-    broadcaster: broadcast::Sender<String>,
-    jobs: Arc<Mutex<Vec<Job>>>,
-    hosts: Arc<Mutex<Vec<Host>>>,
-    display_status: Arc<Mutex<DisplayStatus>>,
-    config: Arc<Mutex<Config>>,
-}
+// Re-export AppState so api modules can use it
+pub use state::AppState;
 
 async fn shutdown_signal() {
     tokio::signal::ctrl_c()
@@ -31,222 +21,42 @@ async fn shutdown_signal() {
 
 #[tokio::main]
 async fn main() {
+    // Initialize logging
     tracing_subscriber::fmt::init();
 
-    let (tx, _rx) = broadcast::channel(100);
-    let state = AppState {
-        broadcaster: tx,
-        jobs: Arc::new(Mutex::new(Vec::new())),
-        hosts: Arc::new(Mutex::new(Vec::new())),
-        display_status: Arc::new(Mutex::new(DisplayStatus::new())),
-        config: Arc::new(Mutex::new(Config::new())),
-    };
+    // Create shared application state
+    let state = Arc::new(AppState::new());
 
-    let shared_state = Arc::new(state);
-
+    // Build our application with routes
     let app = Router::new()
-        .route("/api/jobs", post(create_job).get(list_jobs))
-        .route("/api/jobs/{id}", get(get_job))
-        .route("/api/jobs/{id}/cancel", post(cancel_job))
-        .route("/api/hosts", get(list_hosts))
-        .route("/api/hosts/{ip}", get(get_host))
-        .route("/api/display/status", get(get_display_status))
-        .route("/api/display/update", post(update_display))
-        .route("/api/config", get(get_config).post(update_config))
-        .route("/ws", get(ws_handler))
-        .with_state(shared_state);
+        // Job routes
+        .route("/api/jobs", post(api::jobs::create_job).get(api::jobs::list_jobs))
+        .route("/api/jobs/{id}", get(api::jobs::get_job))
+        .route("/api/jobs/{id}/cancel", post(api::jobs::cancel_job))
+        // Host routes
+        .route("/api/hosts", get(api::hosts::list_hosts))
+        .route("/api/hosts/{ip}", get(api::hosts::get_host))
+        // Display routes
+        .route("/api/display/status", get(api::display::get_display_status))
+        .route("/api/display/update", post(api::display::update_display))
+        // Config routes
+        .route("/api/config", get(api::config::get_config).post(api::config::update_config))
+        // WebSocket route
+        .route("/ws", get(api::websocket::ws_handler))
+        .with_state(state);
 
+    // Bind to address
     let addr = SocketAddr::from(([0, 0, 0, 0], 8080));
-    tracing::info!("Listening on {}", addr);
+    tracing::info!("🚀 Server listening on {}", addr);
 
+    // Create TCP listener
     let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
 
+    // Start server with graceful shutdown
     axum::serve(listener, app)
         .with_graceful_shutdown(shutdown_signal())
         .await
         .unwrap();
 
-    tracing::info!("Server has shut down gracefully");
-}
-
-// Job endpoints
-async fn create_job(
-    State(state): State<Arc<AppState>>,
-    Json(payload): Json<serde_json::Value>,
-) -> impl IntoResponse {
-    let job_type = payload
-        .get("job_type")
-        .and_then(|v| v.as_str())
-        .unwrap_or("discovery")
-        .to_string();
-
-    let job = Job::new(job_type.clone());
-
-    {
-        let mut jobs = state.jobs.lock().await;
-        jobs.push(job.clone());
-    }
-
-    let _ = state
-        .broadcaster
-        .send(format!("job_queued:{}:{}", job.id, job_type));
-
-    (axum::http::StatusCode::CREATED, Json(job))
-}
-
-async fn list_jobs(State(state): State<Arc<AppState>>) -> impl IntoResponse {
-    let jobs = state.jobs.lock().await;
-    Json(jobs.clone())
-}
-
-async fn get_job(
-    State(state): State<Arc<AppState>>,
-    Path(id): Path<String>,
-) -> impl IntoResponse {
-    let jobs = state.jobs.lock().await;
-    
-    if let Some(job) = jobs.iter().find(|j| j.id == id) {
-        (axum::http::StatusCode::OK, Json(job.clone())).into_response()
-    } else {
-        (
-            axum::http::StatusCode::NOT_FOUND,
-            Json(serde_json::json!({"error": format!("Job with ID {} not found", id)})),
-        )
-            .into_response()
-    }
-}
-
-async fn cancel_job(
-    State(state): State<Arc<AppState>>,
-    Path(id): Path<String>,
-) -> impl IntoResponse {
-    let mut jobs = state.jobs.lock().await;
-    
-    if let Some(job) = jobs.iter_mut().find(|j| j.id == id) {
-        job.status = "cancelled".to_string();
-        let _ = state.broadcaster.send(format!("job_cancelled:{}", id));
-        
-        (
-            axum::http::StatusCode::OK,
-            Json(serde_json::json!({
-                "message": format!("Cancelling job with {} ID", id)
-            })),
-        )
-    } else {
-        (
-            axum::http::StatusCode::NOT_FOUND,
-            Json(serde_json::json!({"error": format!("Job with ID {} not found", id)})),
-        )
-    }
-}
-
-// Host endpoints
-async fn list_hosts(State(state): State<Arc<AppState>>) -> impl IntoResponse {
-    let hosts = state.hosts.lock().await;
-    Json(hosts.clone())
-}
-
-async fn get_host(
-    State(state): State<Arc<AppState>>,
-    Path(ip): Path<String>,
-) -> impl IntoResponse {
-    let hosts = state.hosts.lock().await;
-    
-    if let Some(host) = hosts.iter().find(|h| h.ip == ip) {
-        (axum::http::StatusCode::OK, Json(host.clone())).into_response()
-    } else {
-        (
-            axum::http::StatusCode::NOT_FOUND,
-            Json(serde_json::json!({"error": format!("Host with IP {} not found", ip)})),
-        )
-            .into_response()
-    }
-}
-
-// Display endpoints
-async fn get_display_status(State(state): State<Arc<AppState>>) -> impl IntoResponse {
-    let status = state.display_status.lock().await;
-    Json(status.clone())
-}
-
-async fn update_display(
-    State(state): State<Arc<AppState>>,
-    Json(payload): Json<serde_json::Value>,
-) -> impl IntoResponse {
-    let text = payload
-        .get("text")
-        .and_then(|v| v.as_str())
-        .unwrap_or("No text provided");
-    
-    let mut display_status = state.display_status.lock().await;
-    display_status.update("updated".to_string());
-    
-    let _ = state.broadcaster.send(format!("display_updated:{}", text));
-    
-    Json(serde_json::json!({
-        "message": format!("Updating e-paper display with: {}", text),
-        "status": "success"
-    }))
-}
-
-// Config endpoints
-async fn get_config(State(state): State<Arc<AppState>>) -> impl IntoResponse {
-    let config = state.config.lock().await;
-    Json(config.clone())
-}
-
-async fn update_config(
-    State(state): State<Arc<AppState>>,
-    Json(payload): Json<serde_json::Value>,
-) -> impl IntoResponse {
-    let mut config = state.config.lock().await;
-    config.settings = payload;
-    
-    Json(serde_json::json!({
-        "message": "Configuration updated successfully",
-        "status": "success"
-    }))
-}
-
-// WebSocket handler
-async fn ws_handler(
-    ws: WebSocketUpgrade,
-    State(state): State<Arc<AppState>>,
-) -> impl IntoResponse {
-    ws.on_upgrade(move |socket| handle_socket(socket, state))
-}
-
-async fn handle_socket(socket: WebSocket, state: Arc<AppState>) {
-    let (mut sender, mut receiver) = socket.split();
-    let mut rx = state.broadcaster.subscribe();
-
-    // Spawn task to forward broadcast messages to client
-    let mut send_task = tokio::spawn(async move {
-        while let Ok(msg) = rx.recv().await {
-            if sender.send(Message::Text(msg.into())).await.is_err() {
-                break;
-            }
-        }
-    });
-
-    // Spawn task to handle incoming messages from client
-    let mut recv_task = tokio::spawn(async move {
-        while let Some(Ok(msg)) = receiver.next().await {
-            match msg {
-                Message::Text(t) => {
-                    tracing::info!("Received message from client: {}", t);
-                }
-                Message::Close(_) => break,
-                _ => {}
-            }
-        }
-    });
-
-    // Wait for either task to finish
-    tokio::select! {
-        _ = (&mut send_task) => recv_task.abort(),
-        _ = (&mut recv_task) => send_task.abort(),
-    }
-
-    tracing::info!("websocket closed");
+    tracing::info!("✅ Server has shut down gracefully");
 }
