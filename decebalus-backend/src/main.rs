@@ -1,3 +1,5 @@
+mod models;
+
 use axum::{
     extract::ws::{Message, WebSocket, WebSocketUpgrade},
     extract::{Path, State},
@@ -6,10 +8,10 @@ use axum::{
     Json, Router,
 };
 use futures_util::{SinkExt, StreamExt};
+use models::{Job, Host, DisplayStatus, Config};
 use std::{net::SocketAddr, sync::Arc};
 use tokio::sync::{broadcast, Mutex};
 use tracing_subscriber;
-use uuid::Uuid;
 
 #[derive(Clone, Debug)]
 struct AppState {
@@ -18,33 +20,6 @@ struct AppState {
     hosts: Arc<Mutex<Vec<Host>>>,
     display_status: Arc<Mutex<DisplayStatus>>,
     config: Arc<Mutex<Config>>,
-}
-
-#[derive(Clone, serde::Serialize, serde::Deserialize, Debug)]
-struct Job {
-    id: String,
-    job_type: String,
-    status: String,
-    results: Option<String>,
-}
-
-#[derive(Clone, serde::Serialize, serde::Deserialize, Debug)]
-struct Host {
-    ip: String,
-    ports: Vec<u16>,
-    banners: Vec<String>,
-    last_seen: String,
-}
-
-#[derive(Clone, serde::Serialize, serde::Deserialize, Debug)]
-struct DisplayStatus {
-    status: String,
-    last_update: String,
-}
-
-#[derive(Clone, serde::Serialize, serde::Deserialize, Debug)]
-struct Config {
-    settings: serde_json::Value,
 }
 
 async fn shutdown_signal() {
@@ -63,13 +38,8 @@ async fn main() {
         broadcaster: tx,
         jobs: Arc::new(Mutex::new(Vec::new())),
         hosts: Arc::new(Mutex::new(Vec::new())),
-        display_status: Arc::new(Mutex::new(DisplayStatus {
-            status: "idle".to_string(),
-            last_update: "never".to_string(),
-        })),
-        config: Arc::new(Mutex::new(Config {
-            settings: serde_json::json!({}),
-        })),
+        display_status: Arc::new(Mutex::new(DisplayStatus::new())),
+        config: Arc::new(Mutex::new(Config::new())),
     };
 
     let shared_state = Arc::new(state);
@@ -110,12 +80,7 @@ async fn create_job(
         .unwrap_or("discovery")
         .to_string();
 
-    let job = Job {
-        id: Uuid::new_v4().to_string(),
-        job_type: job_type.clone(),
-        status: "queued".to_string(),
-        results: None,
-    };
+    let job = Job::new(job_type.clone());
 
     {
         let mut jobs = state.jobs.lock().await;
@@ -214,8 +179,7 @@ async fn update_display(
         .unwrap_or("No text provided");
     
     let mut display_status = state.display_status.lock().await;
-    display_status.last_update = chrono::Utc::now().to_rfc3339();
-    display_status.status = "updated".to_string();
+    display_status.update("updated".to_string());
     
     let _ = state.broadcaster.send(format!("display_updated:{}", text));
     
