@@ -6,6 +6,7 @@ use axum::{
 use std::sync::Arc;
 use crate::models::Job;
 use crate::AppState;
+use crate::services::JobExecutor;
 
 /// Create a new job
 /// POST /api/jobs
@@ -31,8 +32,16 @@ pub async fn create_job(
         .broadcaster
         .send(format!("job_queued:{}:{}", job.id, job_type));
 
+    // ✨ NEW: Spawn job execution in background
+    let state_clone = state.clone();
+    let job_clone = job.clone();
+    tokio::spawn(async move {
+        JobExecutor::execute_job(job_clone, state_clone).await;
+    });
+
     (axum::http::StatusCode::CREATED, Json(job))
 }
+
 
 /// List all jobs
 /// GET /api/jobs
