@@ -7,10 +7,9 @@ use std::sync::Arc;
 use crate::models::Job;
 use crate::AppState;
 use crate::services::JobExecutor;
+use crate::db::repository;
 
 /// Create a new job
-/// POST /api/jobs
-/// Body: { "job_type": "discovery" | "port-scan" | "nmap-scan" | "export" }
 pub async fn create_job(
     State(state): State<Arc<AppState>>,
     Json(payload): Json<serde_json::Value>,
@@ -22,75 +21,86 @@ pub async fn create_job(
         .to_string();
 
     let job = Job::new(job_type.clone());
-
-    {
-        let mut jobs = state.jobs.lock().await;
-        jobs.push(job.clone());
+    
+    // Save to database
+    if let Err(e) = repository::create_job(&state.db, &job).await {
+        tracing::error!("Failed to create job in database: {}", e);
+        return (
+            axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+            Json(serde_json::json!({"error": "Failed to create job"})),
+        ).into_response();
     }
 
     let _ = state
         .broadcaster
         .send(format!("job_queued:{}:{}", job.id, job_type));
 
-    // ✨ NEW: Spawn job execution in background
+    // Spawn job execution in background
     let state_clone = state.clone();
     let job_clone = job.clone();
     tokio::spawn(async move {
         JobExecutor::execute_job(job_clone, state_clone).await;
     });
 
-    (axum::http::StatusCode::CREATED, Json(job))
+    (axum::http::StatusCode::CREATED, Json(job)).into_response()
 }
 
-
 /// List all jobs
-/// GET /api/jobs
 pub async fn list_jobs(State(state): State<Arc<AppState>>) -> impl IntoResponse {
-    let jobs = state.jobs.lock().await;
-    Json(jobs.clone())
+    match repository::list_jobs(&state.db).await {
+        Ok(jobs) => Json(jobs).into_response(),
+        Err(e) => {
+            tracing::error!("Failed to list jobs: {}", e);
+            (
+                axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+                Json(serde_json::json!({"error": "Failed to list jobs"})),
+            ).into_response()
+        }
+    }
 }
 
 /// Get a specific job by ID
-/// GET /api/jobs/{id}
 pub async fn get_job(
     State(state): State<Arc<AppState>>,
     Path(id): Path<String>,
 ) -> impl IntoResponse {
-    let jobs = state.jobs.lock().await;
-    
-    if let Some(job) = jobs.iter().find(|j| j.id == id) {
-        (axum::http::StatusCode::OK, Json(job.clone())).into_response()
-    } else {
-        (
+    match repository::get_job(&state.db, &id).await {
+        Ok(Some(job)) => (axum::http::StatusCode::OK, Json(job)).into_response(),
+        Ok(None) => (
             axum::http::StatusCode::NOT_FOUND,
             Json(serde_json::json!({"error": format!("Job with ID {} not found", id)})),
-        )
-            .into_response()
+        ).into_response(),
+        Err(e) => {
+            tracing::error!("Failed to get job: {}", e);
+            (
+                axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+                Json(serde_json::json!({"error": "Failed to get job"})),
+            ).into_response()
+        }
     }
 }
 
 /// Cancel a running job
-/// POST /api/jobs/{id}/cancel
 pub async fn cancel_job(
     State(state): State<Arc<AppState>>,
     Path(id): Path<String>,
 ) -> impl IntoResponse {
-    let mut jobs = state.jobs.lock().await;
-    
-    if let Some(job) = jobs.iter_mut().find(|j| j.id == id) {
-        job.status = "cancelled".to_string();
-        let _ = state.broadcaster.send(format!("job_cancelled:{}", id));
-        
-        (
-            axum::http::StatusCode::OK,
-            Json(serde_json::json!({
-                "message": format!("Cancelling job with {} ID", id)
-            })),
-        )
-    } else {
-        (
-            axum::http::StatusCode::NOT_FOUND,
-            Json(serde_json::json!({"error": format!("Job with ID {} not found", id)})),
-        )
+    match repository::update_job_status(&state.db, &id, "cancelled").await {
+        Ok(_) => {
+            let _ = state.broadcaster.send(format!("job_cancelled:{}", id));
+            (
+                axum::http::StatusCode::OK,
+                Json(serde_json::json!({
+                    "message": format!("Cancelling job with {} ID", id)
+                })),
+            ).into_response()
+        }
+        Err(e) => {
+            tracing::error!("Failed to cancel job: {}", e);
+            (
+                axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+                Json(serde_json::json!({"error": "Failed to cancel job"})),
+            ).into_response()
+        }
     }
 }

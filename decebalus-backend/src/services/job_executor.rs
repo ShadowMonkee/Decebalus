@@ -2,6 +2,8 @@ use std::sync::Arc;
 use crate::models::Job;
 use crate::AppState;
 use crate::services::{scanner, port_scanner};
+use crate::db::repository;
+
 
 /// Job Executor Service
 /// Responsible for executing jobs based on their type
@@ -54,13 +56,17 @@ impl JobExecutor {
         
         // Get target network from config (or use default)
         let target_network = {
-            let config = state.config.lock().await;
-            config.settings
+
+            if let Ok(config) = repository::get_config(&state.db).await {
+                config.settings
                 .get("scan_config")
                 .and_then(|c| c.get("target_network"))
                 .and_then(|n| n.as_str())
                 .unwrap_or("192.168.68.0/24")
                 .to_string()
+            } else {
+                "192.168.68.0/24".to_string()
+            }            
         };
         
         // Run network discovery
@@ -83,7 +89,8 @@ impl JobExecutor {
         
         // Get all hosts to scan
         let hosts_to_scan = {
-            let hosts = state.hosts.lock().await;
+            let hosts = repository::list_hosts(&state.db)
+            .await.map_err(|e| format!("Failed to list hosts: {}", e))?;
             hosts.iter().map(|h| h.ip.clone()).collect::<Vec<_>>()
         };
         
@@ -139,8 +146,10 @@ impl JobExecutor {
         tracing::info!("Running export");
         
         // Get all data
-        let jobs = state.jobs.lock().await.clone();
-        let hosts = state.hosts.lock().await.clone();
+        let hosts = repository::list_hosts(&state.db).await
+                .map_err(|e| format!("Failed to list hosts: {}", e))?;
+        let jobs = repository::list_jobs(&state.db).await
+                .map_err(|e| format!("Failed to list jobs: {}", e))?;
         
         let export_data = serde_json::json!({
             "export_date": chrono::Utc::now().to_rfc3339(),
@@ -154,19 +163,16 @@ impl JobExecutor {
         Ok(export_data.to_string())
     }
     
-    /// Update job status
     async fn update_job_status(state: &Arc<AppState>, job_id: &str, status: &str) {
-        let mut jobs = state.jobs.lock().await;
-        if let Some(job) = jobs.iter_mut().find(|j| j.id == job_id) {
-            job.status = status.to_string();
+        if let Err(e) = repository::update_job_status(&state.db, job_id, status).await {
+            tracing::error!("Failed to update job status: {}", e);
         }
     }
-    
-    /// Update job results
+
     async fn update_job_results(state: &Arc<AppState>, job_id: &str, results: Option<String>) {
-        let mut jobs = state.jobs.lock().await;
-        if let Some(job) = jobs.iter_mut().find(|j| j.id == job_id) {
-            job.results = results;
+        if let Err(e) = repository::update_job_results(&state.db, job_id, results).await {
+            tracing::error!("Failed to update job results: {}", e);
         }
     }
+
 }

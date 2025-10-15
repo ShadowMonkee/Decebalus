@@ -3,6 +3,8 @@ use std::time::Duration;
 use crate::models::Host;
 use crate::AppState;
 use ipnetwork::Ipv4Network;
+use crate::db::repository;
+
 
 
 /// Network Scanner Service
@@ -36,25 +38,17 @@ impl NetworkScanner {
             if Self::is_host_alive(&ip).await {
                 tracing::info!("Host found: {}", ip);
                 
-                // Create host entry
                 let host = Host::new(ip.clone());
                 
-                // Add to state
-                {
-                    let mut hosts = state.hosts.lock().await;
-                    // Check if host already exists
-                    if let Some(existing) = hosts.iter_mut().find(|h| h.ip == ip) {
-                        existing.update_last_seen();
-                    } else {
-                        hosts.push(host);
-                    }
+                // Save to database
+                if let Err(e) = repository::upsert_host(&state.db, &host).await {
+                    tracing::error!("Failed to save host to database: {}", e);
                 }
-                
-                // Broadcast discovery
+
                 let _ = state.broadcaster.send(format!("host_found:{}", ip));
-                
                 hosts_found += 1;
             }
+
         }
         
         tracing::info!("Discovery complete. Found {} hosts", hosts_found);

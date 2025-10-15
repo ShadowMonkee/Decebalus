@@ -1,7 +1,8 @@
 mod api;
+mod db;
 mod models;
+mod services;
 mod state;
-mod services; 
 
 use axum::{
     routing::{get, post},
@@ -10,7 +11,6 @@ use axum::{
 use std::{net::SocketAddr, sync::Arc};
 use tracing_subscriber;
 
-// Re-export AppState so api modules can use it
 pub use state::AppState;
 
 async fn shutdown_signal() {
@@ -22,11 +22,26 @@ async fn shutdown_signal() {
 
 #[tokio::main]
 async fn main() {
+    // Load .env file
+    dotenvy::dotenv().ok();
+    
     // Initialize logging
     tracing_subscriber::fmt::init();
 
+    // Get database URL from environment or use default
+    let database_url = std::env::var("DATABASE_URL")
+        .unwrap_or_else(|_| "sqlite:data/decebalus.db".to_string());
+    
+    // Create data directory if it doesn't exist
+    std::fs::create_dir_all("data").expect("Failed to create data directory");
+    
+    // Initialize database
+    let db_pool = db::init_pool(&database_url)
+        .await
+        .expect("Failed to initialize database");
+
     // Create shared application state
-    let state = Arc::new(AppState::new());
+    let state = Arc::new(AppState::new(db_pool));
 
     // Build our application with routes
     let app = Router::new()

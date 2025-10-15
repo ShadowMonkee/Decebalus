@@ -5,29 +5,39 @@ use axum::{
 };
 use std::sync::Arc;
 use crate::AppState;
+use crate::db::repository;
 
 /// List all discovered hosts
-/// GET /api/hosts
 pub async fn list_hosts(State(state): State<Arc<AppState>>) -> impl IntoResponse {
-    let hosts = state.hosts.lock().await;
-    Json(hosts.clone())
+    match repository::list_hosts(&state.db).await {
+        Ok(hosts) => Json(hosts).into_response(),
+        Err(e) => {
+            tracing::error!("Failed to list hosts: {}", e);
+            (
+                axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+                Json(serde_json::json!({"error": "Failed to list hosts"})),
+            ).into_response()
+        }
+    }
 }
 
 /// Get details for a specific host by IP
-/// GET /api/hosts/{ip}
 pub async fn get_host(
     State(state): State<Arc<AppState>>,
     Path(ip): Path<String>,
 ) -> impl IntoResponse {
-    let hosts = state.hosts.lock().await;
-    
-    if let Some(host) = hosts.iter().find(|h| h.ip == ip) {
-        (axum::http::StatusCode::OK, Json(host.clone())).into_response()
-    } else {
-        (
+    match repository::get_host(&state.db, &ip).await {
+        Ok(Some(host)) => (axum::http::StatusCode::OK, Json(host)).into_response(),
+        Ok(None) => (
             axum::http::StatusCode::NOT_FOUND,
             Json(serde_json::json!({"error": format!("Host with IP {} not found", ip)})),
-        )
-            .into_response()
+        ).into_response(),
+        Err(e) => {
+            tracing::error!("Failed to get host: {}", e);
+            (
+                axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+                Json(serde_json::json!({"error": "Failed to get host"})),
+            ).into_response()
+        }
     }
 }

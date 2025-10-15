@@ -1,16 +1,25 @@
 use axum::{
     extract::State,
     response::IntoResponse,
+    http::StatusCode,
     Json,
 };
+use chrono::Utc;
 use std::sync::Arc;
+use crate::models::DisplayStatus;
 use crate::AppState;
+use crate::db::repository;
 
 /// Get e-paper display status
 /// GET /api/display/status
 pub async fn get_display_status(State(state): State<Arc<AppState>>) -> impl IntoResponse {
-    let status = state.display_status.lock().await;
-    Json(status.clone())
+    match repository::get_display_status(&state.db).await {
+        Ok(status) => Json(status).into_response(),
+        Err(e) => (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Failed to get display status: {}", e),
+        ).into_response(),
+    }
 }
 
 /// Update e-paper display
@@ -24,14 +33,25 @@ pub async fn update_display(
         .get("text")
         .and_then(|v| v.as_str())
         .unwrap_or("No text provided");
-    
-    let mut display_status = state.display_status.lock().await;
-    display_status.update("updated".to_string());
-    
+
+    // Create a new DisplayStatus instance
+    let new_status = DisplayStatus {
+        status: text.to_string(),
+        last_update: Utc::now().to_rfc3339(),
+    };
+
+    // Save to DB through the repository
+    if let Err(e) = repository::update_display_status(&state.db, &new_status).await {
+        tracing::error!("Failed to update display status: {}", e);
+    }
+
+    // Broadcast update
     let _ = state.broadcaster.send(format!("display_updated:{}", text));
-    
+
+    // Return JSON response
     Json(serde_json::json!({
         "message": format!("Updating e-paper display with: {}", text),
         "status": "success"
     }))
 }
+

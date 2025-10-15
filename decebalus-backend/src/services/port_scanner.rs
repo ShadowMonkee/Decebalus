@@ -1,6 +1,7 @@
 use std::sync::Arc;
 use std::time::Duration;
 use crate::AppState;
+use crate::db::repository;
 
 /// Port Scanner Service
 /// Scans for open ports on hosts
@@ -50,20 +51,21 @@ impl PortScanner {
     
     /// Get port range to scan from config
     async fn get_port_range(state: &Arc<AppState>) -> Vec<u16> {
-        let config = state.config.lock().await;
-        
-        // Check if custom port range is configured
-        if let Some(ports) = config.settings
-            .get("scan_config")
-            .and_then(|c| c.get("port_range"))
-            .and_then(|p| p.as_array())
-        {
-            return ports
-                .iter()
-                .filter_map(|p| p.as_u64().map(|n| n as u16))
-                .collect();
+        // let config = state.config.lock().await;  => old in-memory implementation
+
+        if let Ok(config) = repository::get_config(&state.db).await {
+            // Check if custom port range is configured
+            if let Some(ports) = config.settings
+                .get("scan_config")
+                .and_then(|c| c.get("port_range"))
+                .and_then(|p| p.as_array())
+            {
+                return ports
+                    .iter()
+                    .filter_map(|p| p.as_u64().map(|n| n as u16))
+                    .collect();
+            }
         }
-        
         // Default: common ports
         Self::common_ports()
     }
@@ -164,21 +166,23 @@ impl PortScanner {
     
     /// Update host with discovered ports
     async fn update_host_ports(state: &Arc<AppState>, ip: &str, ports: Vec<u16>) {
-        let mut hosts = state.hosts.lock().await;
-        
-        if let Some(host) = hosts.iter_mut().find(|h| h.ip == ip) {
+        // Get existing host from DB
+        if let Ok(Some(mut host)) = repository::get_host(&state.db, ip).await {
             for port in ports {
                 host.add_port(port);
             }
             host.update_last_seen();
+            
+            // Save back to DB
+            if let Err(e) = repository::upsert_host(&state.db, &host).await {
+                tracing::error!("Failed to update host ports: {}", e);
+            }
         }
     }
     
     /// Add banner to host
     async fn add_banner_to_host(state: &Arc<AppState>, ip: &str, banner: String) {
-        let mut hosts = state.hosts.lock().await;
-        
-        if let Some(host) = hosts.iter_mut().find(|h| h.ip == ip) {
+        if let Ok(Some(mut host)) = repository::get_host(&state.db, ip).await {
             host.add_banner(banner);
         }
     }
