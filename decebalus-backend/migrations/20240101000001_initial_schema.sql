@@ -1,5 +1,5 @@
 -- Jobs table
-CREATE TABLE jobs (
+CREATE TABLE IF NOT EXISTS jobs (
     id TEXT PRIMARY KEY NOT NULL,
     job_type TEXT NOT NULL,
     status TEXT NOT NULL DEFAULT 'queued',
@@ -12,7 +12,7 @@ CREATE INDEX idx_jobs_status ON jobs(status);
 CREATE INDEX idx_jobs_created_at ON jobs(created_at DESC);
 
 -- Hosts table
-CREATE TABLE hosts (
+CREATE TABLE IF NOT EXISTS hosts (
     ip TEXT PRIMARY KEY NOT NULL,
     ports TEXT NOT NULL DEFAULT '[]',
     banners TEXT NOT NULL DEFAULT '[]',
@@ -24,7 +24,7 @@ CREATE TABLE hosts (
 CREATE INDEX idx_hosts_last_seen ON hosts(last_seen DESC);
 
 -- Vulnerabilities table (for future use)
-CREATE TABLE vulnerabilities (
+CREATE TABLE IF NOT EXISTS vulnerabilities (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     host_ip TEXT NOT NULL,
     port INTEGER,
@@ -38,14 +38,14 @@ CREATE TABLE vulnerabilities (
 CREATE INDEX idx_vulns_host ON vulnerabilities(host_ip);
 
 -- Config table (key-value store)
-CREATE TABLE config (
+CREATE TABLE IF NOT EXISTS config (
     key TEXT PRIMARY KEY NOT NULL,
     value TEXT NOT NULL,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Display status table (single row)
-CREATE TABLE display_status (
+CREATE TABLE IF NOT EXISTS display_status (
     id INTEGER PRIMARY KEY DEFAULT 1,
     status TEXT NOT NULL DEFAULT 'idle',
     last_update TEXT NOT NULL DEFAULT 'never',

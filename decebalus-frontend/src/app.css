@@ -3,48 +3,22 @@
 
 :root {
 	--pico-font-family: 'Atkinson Hyperlegible', sans-serif;
+	--nav-height: 64px;
 }
 
 #app {
 	height: 100svh;
 	display: grid;
-	place-content: center;
+	place-content: top;
 }
-
-
-/* DECEBALUS LAYOUT STYLING */
-
-/* --- Decebalus App Layout --- */
-.app-layout {
-	display: flex;
-	flex-direction: column;
-	min-height: 100vh;
-	background: var(--pico-background-color);
-	color: var(--pico-color);
-}
-
-/* Navbar fixed at top */
-nav {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	z-index: 1000;
-	backdrop-filter: blur(6px);
-	/* background: rgba(0, 0, 0, 0.7); subtle glass effect */
-	border-bottom: 1px solid rgba(255, 140, 0, 0.3); /* bronze accent */
-	padding: 0.75rem 1.5rem;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-}
-
-/* Add spacing for main to not hide behind navbar */
+/* Main content area - accounts for fixed navbar */
 main {
 	flex: 1;
-	padding: 6rem 1.5rem 3rem; /* top padding = navbar height + breathing room */
+	margin-top: calc(var(--nav-height)); /* Add extra padding if needed */
+	padding: 2rem 1.5rem 3rem;
 	max-width: 1200px;
-	margin: 0 auto;
+	margin-left: auto;
+	margin-right: auto;
 	width: 100%;
 	box-sizing: border-box;
 }
@@ -60,90 +34,53 @@ footer {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+	:root {
+		--nav-height: 72px;
+	}
+
 	nav {
 		flex-direction: column;
 		align-items: flex-start;
+		height: auto;
 		padding: 1rem;
 	}
+
 	main {
-		padding: 7rem 1rem 2rem;
+		padding: 1.5rem 1rem 2rem;
 	}
 }
 
+.card {
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 
-/* --- Navbar Link Hover Effect (Decebalus Style) --- */
-.nav-link {
+.progress-bar {
   position: relative;
-  text-decoration: none;
-  color: inherit;
-  transition: color 0.3s ease;
+  height: 0.75rem;
+  background-color: #e2e8f0;
+  border-radius: 0.375rem;
+  overflow: hidden;
 }
 
-.nav-link::after {
-  content: "";
+.progress-fill {
   position: absolute;
-  bottom: -3px;
   left: 0;
-  height: 2px;
-  width: 0;
-  background-color: #cd7f32; /* bronze accent */
-  transition: width 0.3s ease;
+  bottom: 0;
+  background-color: red;
+  transition: width 0.3s ease-in-out;
 }
 
-.nav-link:hover {
-  color: #cd7f32;
+.card-hover:hover {
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
 }
 
-.nav-link:hover::after {
-  width: 100%;
-}
-
-.nav-link.active::after {
-  width: 100%;
-}
-.nav-link.active {
-  color: #cd7f32;
-}
-main {
-  padding-top: 5rem; /* roughly navbar height */
-}
-
-/* navbar/app layout helpers */
-:root {
-  --nav-height: 64px; /* tune this (mobile may override below) */
-}
-
-/* fixed top navbar */
-nav.app-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  z-index: 1200; /* above page content */
-  backdrop-filter: blur(6px);
-}
-
-/* the main page content area that sits under the navbar */
-.main-content {
-  padding-top: 400px; /* navbar height + breathing room */
-  /* other padding: left/right/bottom */
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
-  padding-bottom: 3rem;
-  max-width: 1200px;
-  margin: 0 auto;
-  box-sizing: border-box;
-}
-
-/* make in-page scrolling and anchor jumps account for fixed header */
-html {
-  scroll-padding-top: var(--nav-height);
-}
-
-/* responsive: taller nav for small screens */
-@media (max-width: 768px) {
-  :root { --nav-height: 72px; }
-  .main-content { padding-top: calc(var(--nav-height) + 0.75rem); }
+.badge-info {
+  padding: 0.25rem 0.5rem;
+  text-transform: capitalize;
+  font-weight: bold;
+  color: white;
+  background-color: #4a90e2;
+  border-radius: 0.375rem;
 }
