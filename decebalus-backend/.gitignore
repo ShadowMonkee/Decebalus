@@ -69,3 +69,6 @@ pnpm-debug.log*
 # === Misc ===
 /coverage/
 .profdata
+
+# === DB ===
+data/

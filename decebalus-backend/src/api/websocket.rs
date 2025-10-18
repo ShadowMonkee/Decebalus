@@ -12,6 +12,7 @@ pub async fn ws_handler(
     ws: WebSocketUpgrade,
     State(state): State<Arc<AppState>>,
 ) -> impl IntoResponse {
+    tracing::info!("Connected to WS!");
     ws.on_upgrade(move |socket| handle_socket(socket, state))
 }
 

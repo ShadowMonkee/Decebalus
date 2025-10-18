@@ -133,6 +133,15 @@ pub async fn get_host(pool: &SqlitePool, ip: &str) -> Result<Option<Host>, sqlx:
             ports: serde_json::from_str(&ports_str).unwrap_or_default(),
             banners: serde_json::from_str(&banners_str).unwrap_or_default(),
             last_seen: r.get("last_seen"),
+            os: todo!(),
+            os_version: todo!(),
+            device_type: todo!(),
+            mac_address: todo!(),
+            hostname: todo!(),
+            status: todo!(),
+            first_seen: todo!(),
+            services: todo!(),
+            vulnerabilities: todo!(),
         }
     }))
 }
@@ -154,6 +163,15 @@ pub async fn list_hosts(pool: &SqlitePool) -> Result<Vec<Host>, sqlx::Error> {
             ports: serde_json::from_str(&ports_str).unwrap_or_default(),
             banners: serde_json::from_str(&banners_str).unwrap_or_default(),
             last_seen: r.get("last_seen"),
+            os: todo!(),
+            os_version: todo!(),
+            device_type: todo!(),
+            mac_address: todo!(),
+            hostname: todo!(),
+            status: todo!(),
+            first_seen: todo!(),
+            services: todo!(),
+            vulnerabilities: todo!(),
         }
     }).collect();
     
