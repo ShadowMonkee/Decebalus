@@ -10,9 +10,9 @@ pub enum HostStatus {
 impl std::fmt::Display for HostStatus {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
-            HostStatus::Up => write!(f, "Up"),
-            HostStatus::Down => write!(f, "Down"),
-            HostStatus::Unknown => write!(f, "Unknown"),
+            HostStatus::Up => write!(f, "Host Status Up"),
+            HostStatus::Down => write!(f, "Host Status Down"),
+            HostStatus::Unknown => write!(f, "Host Status Unknown"),
         }
     }
 }

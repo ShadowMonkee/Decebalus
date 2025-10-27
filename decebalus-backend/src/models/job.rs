@@ -1,12 +1,16 @@
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
+use crate::models::JobPriority;
+
 #[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct Job {
     pub id: String,
     pub job_type: String,
+    pub priority: JobPriority,
     pub status: String,
     pub results: Option<String>,
+    pub created_at: String
 }
 
 impl Job {
@@ -15,7 +19,9 @@ impl Job {
             id: Uuid::new_v4().to_string(),
             job_type,
             status: "queued".to_string(),
+            priority: JobPriority::NORMAL,
             results: None,
+            created_at: String::new(),
         }
     }
     
@@ -29,5 +35,9 @@ impl Job {
     
     pub fn is_cancelled(&self) -> bool {
         self.status == "cancelled"
+    }
+
+    pub fn is_queued(&self) -> bool {
+        self.status == "queued"
     }
 }

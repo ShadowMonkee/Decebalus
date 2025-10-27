@@ -1,16 +1,24 @@
 use sqlx::{SqlitePool, Row};
-use crate::models::{Job, Host, DisplayStatus, Config};
+use crate::models::{Config, DisplayStatus, Host, Job, JobPriority};
 
 // ==================== JOB REPOSITORY ====================
 
 /// Create a new job in the database
 pub async fn create_job(pool: &SqlitePool, job: &Job) -> Result<(), sqlx::Error> {
+    let priority_int = match job.priority {
+        JobPriority::LOW => 0,
+        JobPriority::NORMAL => 1,
+        JobPriority::HIGH => 2,
+        JobPriority::CRITICAL => 3,
+    };
+
     sqlx::query(
-        "INSERT INTO jobs (id, job_type, status, results) VALUES (?1, ?2, ?3, ?4)"
+        "INSERT INTO jobs (id, job_type, status, priority, results) VALUES (?1, ?2, ?3, ?4, ?5)"
     )
     .bind(&job.id)
     .bind(&job.job_type)
     .bind(&job.status)
+    .bind(priority_int)
     .bind(&job.results)
     .execute(pool)
     .await?;
@@ -21,33 +29,59 @@ pub async fn create_job(pool: &SqlitePool, job: &Job) -> Result<(), sqlx::Error>
 /// Get a job by ID
 pub async fn get_job(pool: &SqlitePool, id: &str) -> Result<Option<Job>, sqlx::Error> {
     let row = sqlx::query(
-        "SELECT id, job_type, status, results FROM jobs WHERE id = ?1"
+        "SELECT id, job_type, status, priority, results, created_at FROM jobs WHERE id = ?1"
     )
     .bind(id)
     .fetch_optional(pool)
     .await?;
-    
-    Ok(row.map(|r| Job {
+
+    Ok(row.map(|r| {
+        let priority_int = r.get::<i32, _>("priority");
+        let priority = match priority_int {
+            0 => JobPriority::LOW,
+            1 => JobPriority::NORMAL,
+            2 => JobPriority::HIGH,
+            3 => JobPriority::CRITICAL,
+            _ => JobPriority::NORMAL,
+        };
+
+        Job {
         id: r.get("id"),
         job_type: r.get("job_type"),
         status: r.get("status"),
+        priority: priority,
         results: r.get("results"),
+        created_at: r.get("created_at")
+        }
     }))
 }
 
 /// List all jobs
 pub async fn list_jobs(pool: &SqlitePool) -> Result<Vec<Job>, sqlx::Error> {
     let rows = sqlx::query(
-        "SELECT id, job_type, status, results FROM jobs ORDER BY created_at DESC"
+        "SELECT id, job_type, status, priority, results, created_at FROM jobs ORDER BY created_at DESC"
     )
     .fetch_all(pool)
     .await?;
     
-    let jobs = rows.into_iter().map(|r| Job {
+    let jobs = rows.into_iter().map(|r| {
+        let priority_int = r.get::<i32, _>("priority");
+        let priority = match priority_int {
+            0 => JobPriority::LOW,
+            1 => JobPriority::NORMAL,
+            2 => JobPriority::HIGH,
+            3 => JobPriority::CRITICAL,
+            _ => JobPriority::NORMAL,
+        };
+        
+        Job {
         id: r.get("id"),
         job_type: r.get("job_type"),
         status: r.get("status"),
+        priority: priority,
         results: r.get("results"),
+        created_at: r.get("created_at")
+        }
     }).collect();
     
     Ok(jobs)
@@ -68,6 +102,41 @@ pub async fn update_job_status(
     .await?;
     
     Ok(())
+}
+
+pub async fn count_running_jobs(pool: &SqlitePool) -> Result<usize, sqlx::Error> {
+    let row = sqlx::query("SELECT COUNT(id) as count FROM jobs WHERE status = 'running'")
+        .fetch_one(pool)
+        .await?;
+    
+    Ok(row.get::<i64, _>("count") as usize)
+}
+
+pub async fn get_queued_jobs(pool: &SqlitePool) -> Result<Vec<Job>, sqlx::Error> {
+    let rows = sqlx::query("SELECT id, job_type, status, priority, results, created_at FROM jobs WHERE status = 'queued'")
+        .fetch_all(pool)
+        .await?;
+    
+    Ok(rows.into_iter().map(|r| {
+        // Convert priority string back to enum
+        let priority_int = r.get::<i32, _>("priority");
+        let priority = match priority_int {
+            0 => JobPriority::LOW,
+            1 => JobPriority::NORMAL,
+            2 => JobPriority::HIGH,
+            3 => JobPriority::CRITICAL,
+            _ => JobPriority::NORMAL,
+        };
+        
+        Job {
+            id: r.get("id"),
+            job_type: r.get("job_type"),
+            status: r.get("status"),
+            priority, 
+            results: r.get("results"),
+            created_at: r.get("created_at")
+        }
+    }).collect())
 }
 
 /// Update job results

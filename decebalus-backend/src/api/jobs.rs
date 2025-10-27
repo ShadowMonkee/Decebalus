@@ -37,9 +37,8 @@ pub async fn create_job(
 
     // Spawn job execution in background
     let state_clone = state.clone();
-    let job_clone = job.clone();
     tokio::spawn(async move {
-        JobExecutor::execute_job(job_clone, state_clone).await;
+        JobExecutor::run_queue(&state_clone).await;
     });
 
     (axum::http::StatusCode::CREATED, Json(job)).into_response()

@@ -1,5 +1,6 @@
+use std::cmp::Ordering;
 use std::sync::Arc;
-use crate::models::Job;
+use crate::models::{Job, JobPriority};
 use crate::AppState;
 use crate::services::{scanner, port_scanner};
 use crate::db::repository;
@@ -14,41 +15,100 @@ impl JobExecutor {
     /// This runs in a separate tokio task (background worker)
     pub async fn execute_job(job: Job, state: Arc<AppState>) {
         tracing::info!("Starting job execution: {} (type: {})", job.id, job.job_type);
-        
-        // Update job status to running
-        Self::update_job_status(&state, &job.id, "running").await;
-        
-        // Broadcast that job started
-        let _ = state.broadcaster.send(format!("job_running:{}", job.id));
-        
-        // Execute based on job type
-        let result = match job.job_type.as_str() {
-            "discovery" => Self::run_discovery(&state, &job).await,
-            "port-scan" => Self::run_port_scan(&state, &job).await,
-            "nmap-scan" => Self::run_nmap_scan(&state, &job).await,
-            "export" => Self::run_export(&state, &job).await,
-            _ => {
-                tracing::warn!("Unknown job type: {}", job.job_type);
-                Err(format!("Unknown job type: {}", job.job_type))
-            }
-        };
-        
-        // Update job with results
-        match result {
-            Ok(results) => {
-                Self::update_job_status(&state, &job.id, "completed").await;
-                Self::update_job_results(&state, &job.id, Some(results)).await;
-                let _ = state.broadcaster.send(format!("job_completed:{}", job.id));
-                tracing::info!("Job completed successfully: {}", job.id);
-            }
-            Err(error) => {
-                Self::update_job_status(&state, &job.id, "failed").await;
-                Self::update_job_results(&state, &job.id, Some(error.clone())).await;
-                let _ = state.broadcaster.send(format!("job_failed:{}:{}", job.id, error));
-                tracing::error!("Job failed: {} - {}", job.id, error);
+
+        // To double check that the job hasn't been picked up by another thread and processed, we check again to make sure this job is still in queue 
+        match repository::get_job(&state.db, &job.id).await {
+            Ok(Some(job)) => {
+                if job.is_queued() {
+                    
+                    // Update job status to running
+                    Self::update_job_status(&state, &job.id, "running").await;
+                    
+                    // Broadcast that job started
+                    let _ = state.broadcaster.send(format!("job_running:{}", job.id));
+                    
+                    // Execute based on job type
+                    let result = match job.job_type.as_str() {
+                        "discovery" => Self::run_discovery(&state, &job).await,
+                        "port-scan" => Self::run_port_scan(&state, &job).await,
+                        "nmap-scan" => Self::run_nmap_scan(&state, &job).await,
+                        "export" => Self::run_export(&state, &job).await,
+                        _ => {
+                            tracing::warn!("Unknown job type: {}", job.job_type);
+                            Err(format!("Unknown job type: {}", job.job_type))
+                        }
+                    };
+                    
+                    // Update job with results
+                    match result {
+                        Ok(results) => {
+                            Self::update_job_status(&state, &job.id, "completed").await;
+                            Self::update_job_results(&state, &job.id, Some(results)).await;
+                            let _ = state.broadcaster.send(format!("job_completed:{}", job.id));
+                            tracing::info!("Job completed successfully: {}", job.id);
+                        }
+                        Err(error) => {
+                            Self::update_job_status(&state, &job.id, "failed").await;
+                            Self::update_job_results(&state, &job.id, Some(error.clone())).await;
+                            let _ = state.broadcaster.send(format!("job_failed:{}:{}", job.id, error));
+                            tracing::error!("Job failed: {} - {}", job.id, error);
+                        }
+                    }
+                }
+            },
+            Ok(None) => (),
+            Err(e) => {
+                tracing::error!("Failed to get job: {}", e);
             }
         }
     }
+
+    pub async fn run_queue(state: &Arc<AppState>) {
+        // Check if we already have running jobs
+        let running_jobs = repository::count_running_jobs(&state.db).await.unwrap_or(0);
+        
+        // If we haven't reached the max threads, start running jobs
+        if running_jobs < state.max_threads {
+            // Get queued jobs ordered by priority
+            let jobs = repository::get_queued_jobs(&state.db).await.unwrap_or(Vec::new());
+            if !jobs.is_empty() {
+                // Filter and sort by priority (highest first)
+                let mut jobs_to_run: Vec<_> = jobs.into_iter()
+                    .filter(|job| job.status == "queued")
+                    .collect();
+                    
+                // Sort by priority (highest priority first)
+                jobs_to_run.sort_by(|a, b| {
+                    match (&a.priority, &b.priority) {
+                        (JobPriority::CRITICAL, JobPriority::LOW) => Ordering::Less,
+                        (JobPriority::CRITICAL, JobPriority::NORMAL) => Ordering::Less,
+                        (JobPriority::CRITICAL, JobPriority::HIGH) => Ordering::Less,
+                        (JobPriority::HIGH, JobPriority::CRITICAL) => Ordering::Greater,
+                        (JobPriority::NORMAL, JobPriority::CRITICAL) => Ordering::Greater,
+                        (JobPriority::LOW, JobPriority::CRITICAL) => Ordering::Greater,
+                        _ => Ordering::Equal,
+                    }
+                });
+                
+                // Run jobs up to max_threads
+                let mut num_running = running_jobs;
+                for job in jobs_to_run {
+                    if num_running >= state.max_threads { break; }
+                                        
+                    // Spawn the job execution
+                    let state_clone = state.clone();
+                    let job_clone = job.clone();
+                    
+                    tokio::spawn(async move {
+                        Self::execute_job(job_clone, state_clone).await;
+                    });
+                    
+                    num_running += 1;
+                }
+            }
+        }
+    }
+
     
     /// Run network discovery
     async fn run_discovery(state: &Arc<AppState>, job: &Job) -> Result<String, String> {
