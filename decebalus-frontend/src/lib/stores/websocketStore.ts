@@ -16,7 +16,7 @@ export function connectWebSocket() {
   }
 
   // Create your WebSocket client
-  const ws = new WebSocketClient('ws://localhost:3000/ws', {
+  const ws = new WebSocketClient('ws://0.0.0.0:8080/ws', {
     onOpen: () => connectionStatus.set('connected'),
     onClose: () => connectionStatus.set('disconnected'),
   });

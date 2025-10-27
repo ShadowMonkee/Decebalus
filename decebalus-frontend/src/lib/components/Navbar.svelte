@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Link } from 'svelte-routing';
+  import { connectionStatus } from '../stores/websocketStore';
 
   const links = [
     { path: '/', label: 'Dashboard' },
@@ -10,7 +11,6 @@
   ];
 
   type ConnectionStatus = 'connected' | 'connecting' | 'disconnected';
-  export let connectionStatus: ConnectionStatus = 'disconnected';
 
   const getStatusColor = (status: ConnectionStatus) => {
     switch (status) {
@@ -22,12 +22,28 @@
         return 'bg-red-500';
     }
   };
+
+  const getStatusText = (status: ConnectionStatus) => {
+    switch (status) {
+      case 'connected':
+        return 'Connected';
+      case 'connecting':
+        return 'Connecting...';
+      default:
+        return 'Disconnected';
+    }
+  };
 </script>
 
 <nav class="fixed top-0 left-0 w-full bg-gray-900 text-white h-16 flex items-center px-6 shadow-lg z-50">
-  <div class="max-w-6xl mx-auto flex items-center justify-between">
+  <div class="max-w-6xl mx-auto flex items-center justify-between w-full">
+    <!-- Logo/Brand -->
+    <div class="flex items-center space-x-2 mr-8">
+      <span class="text-bronze text-xl font-semibold tracking-wide">🐺 Decebalus</span>
+    </div>
+
     <!-- Links -->
-    <ul class="flex space-x-6">
+    <ul class="flex space-x-6 flex-1">
       {#each links as { path, label }}
         <li>
           <Link
@@ -41,10 +57,9 @@
       {/each}
     </ul>
 
-    <!-- Connection indicator -->
-    <div class="flex items-center space-x-2">
-      <div class={`w-3 h-3 rounded-full ${getStatusColor(connectionStatus)}`}></div>
-      <span class="text-sm capitalize">{connectionStatus}</span>
+    <div class="flex items-center space-x-2 ml-auto">
+      <div class={`w-3 h-3 rounded-full ${getStatusColor($connectionStatus)} shadow-glow`}></div>
+      <span class="text-sm font-medium">{getStatusText($connectionStatus)}</span>
     </div>
   </div>
 </nav>
