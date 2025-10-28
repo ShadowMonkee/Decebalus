@@ -184,6 +184,80 @@ impl JobExecutor {
         
         Ok(results.to_string())
     }
+
+        /// Resume any jobs that were marked as "running" when the app last shut down.
+    /// These are treated as interrupted jobs and re-executed.
+    pub async fn resume_incomplete_jobs(state: Arc<AppState>) {
+        tracing::info!("Checking for unfinished jobs after restart...");
+
+        // Step 1: fetch jobs that were left in 'running' state
+        let running_jobs = match repository::get_running_jobs(&state.db).await {
+            Ok(jobs) => jobs,
+            Err(e) => {
+                tracing::error!("Failed to load unfinished jobs: {}", e);
+                return;
+            }
+        };
+
+        if running_jobs.is_empty() {
+            tracing::info!("No unfinished jobs found!");
+            return;
+        }
+
+        tracing::info!("Found {} unfinished jobs. Resuming...", running_jobs.len());
+
+        for job in running_jobs {
+            let state_clone = state.clone();
+            let job_clone = job.clone();
+            let semaphore = state.semaphore.clone();
+
+            // Step 2: acquire a permit before spawning
+            match semaphore.clone().try_acquire_owned() {
+                Ok(permit) => {
+                    tokio::spawn(async move {
+                        tracing::warn!(
+                            "Resuming interrupted job: {} (type: {})",
+                            job_clone.id,
+                            job_clone.job_type
+                        );
+                        // Mark job back to 'queued' first to ensure clean re-run
+                        if let Err(e) = repository::update_job_status(
+                            &state_clone.db,
+                            &job_clone.id,
+                            "queued",
+                        )
+                        .await
+                        {
+                            tracing::error!(
+                                "Failed to reset job {} to queued before resuming: {}",
+                                job_clone.id,
+                                e
+                            );
+                        }
+
+                        // Re-run the job as usual
+                        Self::execute_job(job_clone, state_clone, permit).await;
+                    });
+                }
+                Err(_) => {
+                    tracing::warn!(
+                        "No available permits for resuming job {} — deferring until next run_queue()",
+                        job.id
+                    );
+                    // Optional: mark them as queued again, so they'll get picked up later by run_queue()
+                    if let Err(e) =
+                        repository::update_job_status(&state.db, &job.id, "queued").await
+                    {
+                        tracing::error!(
+                            "Failed to mark deferred resumed job {} as queued: {}",
+                            job.id,
+                            e
+                        );
+                    }
+                }
+            }
+        }
+    }
     
     /// Run full Nmap vulnerability scan
     async fn run_nmap_scan(state: &Arc<AppState>, job: &Job) -> Result<String, String> {

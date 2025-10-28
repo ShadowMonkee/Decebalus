@@ -1,4 +1,4 @@
-use sqlx::{SqlitePool, Row};
+use sqlx::{Row, SqlitePool, sqlite::SqliteRow};
 use crate::models::{Config, DisplayStatus, Host, Job, JobPriority};
 
 // ==================== JOB REPOSITORY ====================
@@ -35,25 +35,7 @@ pub async fn get_job(pool: &SqlitePool, id: &str) -> Result<Option<Job>, sqlx::E
     .fetch_optional(pool)
     .await?;
 
-    Ok(row.map(|r| {
-        let priority_int = r.get::<i32, _>("priority");
-        let priority = match priority_int {
-            0 => JobPriority::LOW,
-            1 => JobPriority::NORMAL,
-            2 => JobPriority::HIGH,
-            3 => JobPriority::CRITICAL,
-            _ => JobPriority::NORMAL,
-        };
-
-        Job {
-        id: r.get("id"),
-        job_type: r.get("job_type"),
-        status: r.get("status"),
-        priority: priority,
-        results: r.get("results"),
-        created_at: r.get("created_at")
-        }
-    }))
+    Ok(row.map(|r| self::from_row(&r)))
 }
 
 /// List all jobs
@@ -104,12 +86,12 @@ pub async fn update_job_status(
     Ok(())
 }
 
-pub async fn count_running_jobs(pool: &SqlitePool) -> Result<usize, sqlx::Error> {
-    let row = sqlx::query("SELECT COUNT(id) as count FROM jobs WHERE status = 'running'")
-        .fetch_one(pool)
+pub async fn get_running_jobs(pool: &SqlitePool) -> Result<Vec<Job>, sqlx::Error> {
+    let rows = sqlx::query("SELECT id, job_type, status, priority, results, created_at FROM jobs WHERE status = 'running'")
+        .fetch_all(pool)
         .await?;
     
-    Ok(row.get::<i64, _>("count") as usize)
+    Ok(rows.into_iter().map(|r| self::from_row(&r)).collect())
 }
 
 pub async fn get_queued_jobs(pool: &SqlitePool) -> Result<Vec<Job>, sqlx::Error> {
@@ -117,26 +99,7 @@ pub async fn get_queued_jobs(pool: &SqlitePool) -> Result<Vec<Job>, sqlx::Error>
         .fetch_all(pool)
         .await?;
     
-    Ok(rows.into_iter().map(|r| {
-        // Convert priority string back to enum
-        let priority_int = r.get::<i32, _>("priority");
-        let priority = match priority_int {
-            0 => JobPriority::LOW,
-            1 => JobPriority::NORMAL,
-            2 => JobPriority::HIGH,
-            3 => JobPriority::CRITICAL,
-            _ => JobPriority::NORMAL,
-        };
-        
-        Job {
-            id: r.get("id"),
-            job_type: r.get("job_type"),
-            status: r.get("status"),
-            priority, 
-            results: r.get("results"),
-            created_at: r.get("created_at")
-        }
-    }).collect())
+    Ok(rows.into_iter().map(|r| self::from_row(&r)).collect())
 }
 
 /// Update job results
@@ -155,6 +118,27 @@ pub async fn update_job_results(
     
     Ok(())
 }
+
+pub fn from_row(row: &SqliteRow) -> Job {
+    let priority_int = row.get::<i32, _>("priority");
+    let priority = match priority_int {
+        0 => JobPriority::LOW,
+        1 => JobPriority::NORMAL,
+        2 => JobPriority::HIGH,
+        3 => JobPriority::CRITICAL,
+        _ => JobPriority::NORMAL,
+    };
+
+    Job {
+        id: row.get("id"),
+        job_type: row.get("job_type"),
+        status: row.get("status"),
+        priority,
+        results: row.get("results"),
+        created_at: row.get("created_at"),
+    }
+}
+
 
 // ==================== HOST REPOSITORY ====================
 

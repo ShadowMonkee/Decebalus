@@ -13,6 +13,8 @@ use tracing_subscriber;
 
 pub use state::AppState;
 
+use crate::services::JobExecutor;
+
 async fn shutdown_signal() {
     tokio::signal::ctrl_c()
         .await
@@ -36,6 +38,9 @@ async fn main() {
         .expect("Failed to initialize database");
 
     let state = Arc::new(AppState::new(db_pool));
+
+    // Handle unfinished jobs in case of previously closed app without finalising all jobs:
+    JobExecutor::resume_incomplete_jobs(state.clone()).await;
 
     let app = Router::new()
         // Job routes
