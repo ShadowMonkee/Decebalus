@@ -1,4 +1,6 @@
-use tokio::sync::broadcast;
+use std::sync::Arc;
+
+use tokio::sync::{Semaphore, broadcast};
 use crate::db::DbPool;
 
 #[derive(Clone)]
@@ -9,6 +11,7 @@ pub struct AppState {
     /// Database connection pool
     pub db: DbPool,
     pub max_threads: usize, 
+    pub semaphore: Arc<Semaphore>,
 }
 
 impl AppState {
@@ -25,6 +28,7 @@ impl AppState {
             broadcaster: tx,
             db,
             max_threads,
+            semaphore: Arc::new(Semaphore::new(max_threads)),
         }
     }
 }
