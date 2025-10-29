@@ -309,3 +309,28 @@ pub async fn update_display_status(
     
     Ok(())
 }
+
+
+// ==================== LOGS ====================
+
+pub async fn add_log(
+    pool: &SqlitePool,
+    severity: &str,
+    service: &str,
+    content: &str,
+) -> Result<(), sqlx::Error> {
+    let id = uuid::Uuid::new_v4().to_string();
+
+    sqlx::query(
+        "INSERT INTO logs (id, severity, service, content, created_at)
+         VALUES (?1, ?2, ?3, ?4, CURRENT_TIMESTAMP)"
+    )
+    .bind(id)
+    .bind(severity)
+    .bind(service)
+    .bind(content)
+    .execute(pool)
+    .await?;
+
+    Ok(())
+}

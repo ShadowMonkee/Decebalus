@@ -54,5 +54,20 @@ CREATE TABLE IF NOT EXISTS display_status (
     CHECK (id = 1)
 );
 
+CREATE TABLE IF NOT EXISTS logs (
+    id TEXT PRIMARY KEY NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    severity TEXT NOT NULL DEFAULT 'INFO',
+    service TEXT NOT NULL, -- The service invoking the log:decebalus_backend::services::scanner, decebalus_backend::services::job_executor
+    module TEXT NULL, -- Is it related to the scanning module, attack module, etc... Useful for future proofing app expansion
+    job_id TEXT NULL,
+    content TEXT NOT NULL
+);
+
+CREATE INDEX idx_logs_created_at ON logs(created_at);
+CREATE INDEX idx_logs_job_id ON logs(job_id);
+CREATE INDEX idx_logs_level ON logs(severity);
+CREATE INDEX idx_logs_service ON logs(service);
+
 -- Insert default display status
 INSERT INTO display_status (id, status, last_update) VALUES (1, 'idle', 'never');
