@@ -7,6 +7,7 @@ mod port;
 mod service;
 mod vulnerability;
 mod jobpriority;
+mod log;
 
 pub use job::Job;
 pub use host::Host;
@@ -17,3 +18,4 @@ pub use port::Port;
 pub use service::Service;
 pub use vulnerability::Vulnerability;
 pub use jobpriority::JobPriority;
+pub use log::Log;

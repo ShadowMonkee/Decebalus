@@ -10,13 +10,14 @@ use crate::db::repository;
 /// Job Executor Service
 /// Responsible for executing jobs based on their type
 pub struct JobExecutor;
+const THIS_SERVICE: &str = "job_executor";
 
 impl JobExecutor {
     /// Execute a job based on its type
     /// This runs in a separate tokio task (background worker)
     pub async fn execute_job(job: Job, state: Arc<AppState>, _permit: OwnedSemaphorePermit) {
-        tracing::info!("Starting job execution: {} (type: {})", job.id, job.job_type);
-
+        tracing::info!("Starting job execution: {} (type: {})", &job.id, job.job_type);
+        let _ = repository::add_log(&state.db, "INFO", "scanner", Some("job_executor"), Some(&job.id), "Starting job execution").await;
         // Double-check that the job hasn't already been picked up
         match repository::get_job(&state.db, &job.id).await {
             Ok(Some(job)) => {
@@ -188,7 +189,11 @@ impl JobExecutor {
         /// Resume any jobs that were marked as "running" when the app last shut down.
     /// These are treated as interrupted jobs and re-executed.
     pub async fn resume_incomplete_jobs(state: Arc<AppState>) {
-        tracing::info!("Checking for unfinished jobs after restart...");
+        let content = "Checking for unfinished jobs after restart...";
+        if let Err(e) = repository::add_log(&state.db, "INFO", THIS_SERVICE,None, None, content).await {
+            tracing::warn!("Failed to persist log: {}", e);
+        }
+        tracing::info!("{}", content);
 
         // Step 1: fetch jobs that were left in 'running' state
         let running_jobs = match repository::get_running_jobs(&state.db).await {

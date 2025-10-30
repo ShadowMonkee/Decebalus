@@ -1,5 +1,5 @@
 use sqlx::{Row, SqlitePool, sqlite::SqliteRow};
-use crate::models::{Config, DisplayStatus, Host, Job, JobPriority};
+use crate::models::{Config, DisplayStatus, Host, Job, JobPriority, Log};
 
 // ==================== JOB REPOSITORY ====================
 
@@ -317,20 +317,79 @@ pub async fn add_log(
     pool: &SqlitePool,
     severity: &str,
     service: &str,
+    module: Option<&str>,
+    job_id: Option<&str>,
     content: &str,
 ) -> Result<(), sqlx::Error> {
     let id = uuid::Uuid::new_v4().to_string();
 
     sqlx::query(
-        "INSERT INTO logs (id, severity, service, content, created_at)
-         VALUES (?1, ?2, ?3, ?4, CURRENT_TIMESTAMP)"
+        "INSERT INTO logs (id, severity, service, module, job_id, content, created_at)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, CURRENT_TIMESTAMP)"
     )
     .bind(id)
     .bind(severity)
     .bind(service)
+    .bind(module)
+    .bind(job_id)
     .bind(content)
     .execute(pool)
     .await?;
 
     Ok(())
+}
+
+pub async fn get_logs(pool: &SqlitePool) -> Result<Vec<Log>, sqlx::Error> {
+    let rows = sqlx::query(
+        r#"
+        SELECT id, created_at, severity, service, module, job_id, content
+        FROM logs
+        ORDER BY created_at DESC
+        "#
+    )
+    .fetch_all(pool)
+    .await?;
+
+    let logs = rows.into_iter().map(|row| {
+        Log {
+            id: row.get("id"),
+            created_at: row.get("created_at"),
+            severity: row.get("severity"),
+            service: row.get("service"),
+            module: row.try_get("module").ok().flatten(),
+            job_id: row.try_get("job_id").ok().flatten(),
+            content: row.get("content"),
+        }
+    }).collect();
+
+    Ok(logs)
+}
+
+pub async fn get_log(pool: &SqlitePool, id: String) -> Result<Option<Log>, sqlx::Error> {
+    let row = sqlx::query(
+        "SELECT id, created_at, severity, service, module, job_id, content FROM logs WHERE id = ?1"
+    )
+    .bind(id)
+    .fetch_optional(pool)
+    .await?;
+
+    // TODO: Figure out why getting one log doesn't seem to work
+    tracing::info!("In get_log()");
+    
+      Ok(row.map(|r| {
+        let log = Log {
+            id: r.get("id"),
+            created_at: r.get("created_at"),
+            severity: r.get("severity"),
+            service: r.get("service"),
+            module: r.get("module"),
+            job_id: r.get("job_id"),
+            content: r.get("content")
+        };
+
+        tracing::info!("Log content: {}", log.content);
+        // or println!("{}", log.content);
+
+        log
+    }))
 }

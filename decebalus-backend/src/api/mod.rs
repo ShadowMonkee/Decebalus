@@ -3,3 +3,4 @@ pub mod hosts;
 pub mod display;
 pub mod config;
 pub mod websocket;
+pub mod logs;
