@@ -57,7 +57,7 @@ async fn main() {
         .route("/api/config", get(api::config::get_config).post(api::config::update_config))
         // Logs routes
         .route("/api/logs", get(api::logs::get_all_logs))
-        .route("/api/logs/{id}/logs", get(api::logs::get_log))
+        .route("/api/logs/{id}", get(api::logs::get_logs_by_job_id))
         // WebSocket route
         .route("/ws", get(api::websocket::ws_handler))
         .with_state(state);

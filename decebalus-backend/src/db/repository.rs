@@ -367,7 +367,7 @@ pub async fn get_logs(pool: &SqlitePool) -> Result<Vec<Log>, sqlx::Error> {
 
 pub async fn get_log(pool: &SqlitePool, id: String) -> Result<Option<Log>, sqlx::Error> {
     let row = sqlx::query(
-        "SELECT id, created_at, severity, service, module, job_id, content FROM logs WHERE id = ?1"
+        "SELECT id, created_at, severity, service, module, job_id, content FROM logs WHERE job_id = ?1"
     )
     .bind(id)
     .fetch_optional(pool)
@@ -392,4 +392,28 @@ pub async fn get_log(pool: &SqlitePool, id: String) -> Result<Option<Log>, sqlx:
 
         log
     }))
+}
+
+pub async fn get_logs_by_job_id(pool: &SqlitePool, job_id: String) -> Result<Vec<Log>, sqlx::Error> {
+    let logs = sqlx::query_as!(
+        Log,
+        r#"
+        SELECT
+            id,
+            created_at as "created_at: String", 
+            severity,
+            service,
+            module,
+            job_id,
+            content
+        FROM logs
+        WHERE job_id = ?1
+        ORDER BY datetime(created_at) ASC
+        "#,
+        job_id
+    )
+    .fetch_all(pool)
+    .await?;
+
+    Ok(logs)
 }
