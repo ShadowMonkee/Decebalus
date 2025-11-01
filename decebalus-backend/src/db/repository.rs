@@ -1,3 +1,4 @@
+use chrono::{Duration, Utc};
 use sqlx::{Row, SqlitePool, sqlite::SqliteRow};
 use crate::models::{Config, DisplayStatus, Host, Job, JobPriority, Log};
 
@@ -416,4 +417,20 @@ pub async fn get_logs_by_job_id(pool: &SqlitePool, job_id: String) -> Result<Vec
     .await?;
 
     Ok(logs)
+}
+
+pub async fn cleanup_old_logs(pool: &SqlitePool, days: i64) -> Result<u64, sqlx::Error> {
+    // Calculate the cutoff timestamp
+    let cutoff_date = (Utc::now() - Duration::days(days)).to_rfc3339();
+
+    // Delete logs older than the cutoff date
+    let result = sqlx::query("DELETE FROM logs WHERE created_at < ?1")
+        .bind(cutoff_date)
+        .execute(pool)
+        .await?;
+
+    let deleted = result.rows_affected();
+    tracing::info!("🧹 Deleted {} old logs (older than {} days)", deleted, days);
+
+    Ok(deleted)
 }

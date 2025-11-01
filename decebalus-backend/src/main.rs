@@ -13,7 +13,7 @@ use tracing_subscriber;
 
 pub use state::AppState;
 
-use crate::services::JobExecutor;
+use crate::{db::repository, services::JobExecutor};
 
 async fn shutdown_signal() {
     tokio::signal::ctrl_c()
@@ -38,6 +38,16 @@ async fn main() {
         .expect("Failed to initialize database");
 
     let state = Arc::new(AppState::new(db_pool));
+
+
+    // On startup check and cleanup logs older than X amount of days, in case of not set in .env, make it 30 days
+    let retention_days: i64 = std::env::var("LOG_RETENTION_DAYS")
+        .unwrap_or_else(|_| "30".to_string()) // Default to 30 days if not set
+        .parse()
+        .unwrap_or(30);
+
+    let _ = repository::cleanup_old_logs(&state.db, retention_days).await;
+
 
     // Handle unfinished jobs in case of previously closed app without finalising all jobs:
     JobExecutor::resume_incomplete_jobs(state.clone()).await;

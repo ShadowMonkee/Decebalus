@@ -24,7 +24,7 @@ impl JobExecutor {
                 if job.is_queued() {
                     // Update job status to running
                     Self::update_job_status(&state, &job.id, "running").await;
-
+                    println!("Execute job test");
                     // Broadcast that job started
                     let _ = state.broadcaster.send(format!("job_running:{}", job.id));
 
