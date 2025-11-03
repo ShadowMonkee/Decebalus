@@ -19,6 +19,9 @@ export function connectWebSocket() {
   const ws = new WebSocketClient('ws://0.0.0.0:8080/ws', {
     onOpen: () => connectionStatus.set('connected'),
     onClose: () => connectionStatus.set('disconnected'),
+    onMessage: (data) => {
+      console.log('Message from backend through WS: ', data);
+    }
   });
 
   // While connecting

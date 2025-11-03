@@ -18,13 +18,13 @@ impl JobExecutor {
     pub async fn execute_job(job: Job, state: Arc<AppState>, _permit: OwnedSemaphorePermit) {
         tracing::info!("Starting job execution: {} (type: {})", &job.id, job.job_type);
         let _ = repository::add_log(&state.db, "INFO", "scanner", Some("job_executor"), Some(&job.id), "Starting job execution").await;
+        let _ = state.broadcaster.send(format!("Starting job execution: {} (type: {})", &job.id, job.job_type));
         // Double-check that the job hasn't already been picked up
         match repository::get_job(&state.db, &job.id).await {
             Ok(Some(job)) => {
                 if job.is_queued() {
                     // Update job status to running
                     Self::update_job_status(&state, &job.id, "running").await;
-                    println!("Execute job test");
                     // Broadcast that job started
                     let _ = state.broadcaster.send(format!("job_running:{}", job.id));
 
