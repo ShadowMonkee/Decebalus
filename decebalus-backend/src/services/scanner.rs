@@ -21,23 +21,23 @@ impl NetworkScanner {
     /// # Returns
     /// Number of hosts discovered
     pub async fn discover_hosts(network: &str, state: &Arc<AppState>) -> Result<usize, String> {
-        tracing::info!("Starting network discovery on {}", network);
+        Self::log_and_broadcast(state, &format!("Starting network discovery on {}", network));
         
         // Parse network CIDR
         let (base_ip, range) = Self::parse_network(network)?;
         
-        tracing::info!("Scanning {} IPs in range {}", range, network);
-        
+        Self::log_and_broadcast(state, &format!("Scanning {} IPs in range {}", range, network));
+
         let mut hosts_found = 0;
         
         // Scan each IP in range
         for i in 1..=range {
             let ip = format!("{}.{}", base_ip, i);
-            tracing::info!("Scanning now: {}", ip);
+            Self::log_and_broadcast(state, &format!("Scanning now: {}", ip));
             
             if Self::is_host_alive(&ip).await {
-                tracing::info!("Host found: {}", ip);
-                
+                Self::log_and_broadcast(state, &format!("Host found: {}", ip));
+
                 let host = Host::new(ip.clone());
                 
                 // Save to database
@@ -109,4 +109,10 @@ impl NetworkScanner {
         
         false
     }
+
+    fn log_and_broadcast(state: &Arc<AppState>, message: &str) {
+        tracing::info!("{}", message);
+        let _ = state.broadcaster.send(format!("log:{}", message));
+    }
+
 }
