@@ -1,6 +1,8 @@
 use std::cmp::Ordering;
 use std::sync::Arc;
+use chrono::Utc;
 use tokio::sync::OwnedSemaphorePermit;
+use tokio::time::{self, Duration};
 use crate::models::{Job, JobPriority};
 use crate::AppState;
 use crate::services::{scanner, port_scanner};
@@ -315,5 +317,59 @@ impl JobExecutor {
             tracing::error!("Failed to update job results: {}", e);
         }
     }
+
+    pub async fn start_scheduler(state: Arc<AppState>) {
+        // Run every 30 seconds
+        let mut interval = time::interval(Duration::from_secs(30));
+
+        loop {
+            interval.tick().await;
+
+            if let Err(e) = Self::check_and_run_scheduled_jobs(state).await {
+                tracing::error!("Scheduler error: {}", e);
+            }
+        }
+    }
+    pub async fn check_and_run_scheduled_jobs(state: Arc<AppState>) {
+        let check_interval = Duration::from_secs(60); // check every 60 seconds
+
+        loop {
+            // Fetch jobs that are scheduled but not yet started and due for execution
+            match repository::get_scheduled_jobs_due(&state.db, Utc::now()).await {
+                Ok(jobs) if !jobs.is_empty() => {
+                    tracing::info!("Found {} scheduled job(s) ready to run", jobs.len());
+
+                    for job in jobs {
+                        let state_clone = Arc::clone(&state);
+
+                        // Acquire a semaphore permit before starting the job
+                        let permit = match state_clone.semaphore.clone().acquire_owned().await {
+                            Ok(p) => p,
+                            Err(e) => {
+                                tracing::error!("Failed to acquire semaphore permit: {}", e);
+                                continue;
+                            }
+                        };
+
+                        // Spawn each job execution in the background
+                        tokio::spawn(async move {
+                            JobExecutor::execute_job(job, state_clone, permit).await;
+                        });
+                    }
+                }
+                Ok(_) => {
+                    tracing::debug!("No scheduled jobs ready at this time");
+                }
+                Err(e) => {
+                    tracing::error!("Error checking scheduled jobs: {}", e);
+                }
+            }
+
+            // Wait before checking again
+            sleep(check_interval).await;
+        }
+    }
+
+
 
 }

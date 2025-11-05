@@ -10,7 +10,8 @@ pub struct Job {
     pub priority: JobPriority,
     pub status: String,
     pub results: Option<String>,
-    pub created_at: String
+    pub created_at: String,
+    pub scheduled_at: Option<String>,
 }
 
 impl Job {
@@ -22,6 +23,7 @@ impl Job {
             priority: JobPriority::NORMAL,
             results: None,
             created_at: String::new(),
+            scheduled_at: None,
         }
     }
     
