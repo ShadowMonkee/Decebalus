@@ -2,7 +2,7 @@ use std::cmp::Ordering;
 use std::sync::Arc;
 use chrono::Utc;
 use tokio::sync::OwnedSemaphorePermit;
-use tokio::time::{self, Duration};
+use tokio::time::{self, Duration, sleep};
 use crate::models::{Job, JobPriority};
 use crate::AppState;
 use crate::services::{scanner, port_scanner};
@@ -324,12 +324,10 @@ impl JobExecutor {
 
         loop {
             interval.tick().await;
-
-            if let Err(e) = Self::check_and_run_scheduled_jobs(state).await {
-                tracing::error!("Scheduler error: {}", e);
-            }
+            Self::check_and_run_scheduled_jobs(state.clone()).await;
         }
     }
+    
     pub async fn check_and_run_scheduled_jobs(state: Arc<AppState>) {
         let check_interval = Duration::from_secs(60); // check every 60 seconds
 

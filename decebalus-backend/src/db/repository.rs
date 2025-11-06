@@ -90,7 +90,7 @@ pub async fn update_job_status(
 }
 
 pub async fn get_running_jobs(pool: &SqlitePool) -> Result<Vec<Job>, sqlx::Error> {
-    let rows = sqlx::query("SELECT id, job_type, status, priority, results, created_at FROM jobs WHERE status = 'running'")
+    let rows = sqlx::query("SELECT id, job_type, status, priority, results, created_at, scheduled_at FROM jobs WHERE status = 'running'")
         .fetch_all(pool)
         .await?;
     
@@ -98,7 +98,7 @@ pub async fn get_running_jobs(pool: &SqlitePool) -> Result<Vec<Job>, sqlx::Error
 }
 
 pub async fn get_queued_jobs(pool: &SqlitePool) -> Result<Vec<Job>, sqlx::Error> {
-    let rows = sqlx::query("SELECT id, job_type, status, priority, results, created_at FROM jobs WHERE status = 'queued'")
+    let rows = sqlx::query("SELECT id, job_type, status, priority, results, created_at, scheduled_at FROM jobs WHERE status = 'queued'")
         .fetch_all(pool)
         .await?;
     
@@ -110,15 +110,15 @@ pub async fn get_scheduled_jobs_due(
     now: DateTime<Utc>,
 ) -> Result<Vec<Job>, sqlx::Error> {
     let rows = sqlx::query(
-        "SELECT * FROM jobs 
+        "SELECT id, job_type, status, priority, results, created_at, scheduled_at FROM jobs 
          WHERE status = 'scheduled' 
-         AND scheduled_for <= ?1"
+         AND scheduled_at <= ?1"
     )
-    .bind(now.into())
+    .bind(now.to_rfc3339())
     .fetch_all(pool)
     .await?;
 
-    Ok(rows)
+    Ok(rows.into_iter().map(|r| self::from_row(&r)).collect())
 }
 
 /// Update job results
