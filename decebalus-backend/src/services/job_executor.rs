@@ -318,18 +318,9 @@ impl JobExecutor {
         }
     }
 
-    pub async fn start_scheduler(state: Arc<AppState>) {
-        // Run every 30 seconds
-        let mut interval = time::interval(Duration::from_secs(30));
-
-        loop {
-            interval.tick().await;
-            Self::check_and_run_scheduled_jobs(state.clone()).await;
-        }
-    }
-    
     pub async fn check_and_run_scheduled_jobs(state: Arc<AppState>) {
-        let check_interval = Duration::from_secs(60); // check every 60 seconds
+        let check_interval = Duration::from_secs(30); // check every 60 seconds
+        tracing::info!("Scheduler started...");
 
         loop {
             // Fetch jobs that are scheduled but not yet started and due for execution

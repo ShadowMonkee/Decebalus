@@ -39,6 +39,10 @@ async fn main() {
 
     let state = Arc::new(AppState::new(db_pool));
 
+    let scheduler_state = Arc::clone(&state);
+     tokio::spawn(async move {
+        JobExecutor::check_and_run_scheduled_jobs(scheduler_state).await;
+    });
 
     // On startup check and cleanup logs older than X amount of days, in case of not set in .env, make it 30 days
     let retention_days: i64 = std::env::var("LOG_RETENTION_DAYS")
