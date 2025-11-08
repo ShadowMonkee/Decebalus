@@ -3,6 +3,7 @@ use axum::{
     response::IntoResponse,
     Json,
 };
+use chrono::Utc;
 use std::sync::Arc;
 use crate::models::Job;
 use crate::AppState;
@@ -40,6 +41,41 @@ pub async fn create_job(
     tokio::spawn(async move {
         JobExecutor::run_queue(&state_clone).await;
     });
+
+    (axum::http::StatusCode::CREATED, Json(job)).into_response()
+}
+
+pub async fn schedule_job(
+    State(state): State<Arc<AppState>>,
+    Json(payload): Json<serde_json::Value>,
+) -> impl IntoResponse {
+    let job_type = payload
+        .get("job_type")
+        .and_then(|v| v.as_str())
+        .unwrap_or("discovery")
+        .to_string();
+    let scheduled_at = payload
+        .get("scheduled_at")
+        .and_then(|v| v.as_str())
+        .unwrap_or(&Utc::now().to_rfc3339())
+        .to_string();
+
+    let mut job = Job::new(job_type.clone());
+    job.scheduled_at = Some(scheduled_at);
+
+    if let Err(e) = repository::create_job(&state.db, &job).await {
+        tracing::error!("Failed to create job in database: {}", e);
+        return (
+            axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+            Json(serde_json::json!({"error": "Failed to create job"})),
+        ).into_response();
+    }
+
+    let scheduled_at = job.scheduled_at.clone().unwrap_or_else(|| "unscheduled".to_string());
+    let _ = state
+        .broadcaster
+        .send(format!("job_scheduled:{}:{}:{}", job.id, job_type, scheduled_at));
+    tracing::info!("job_scheduled:{}:{}:{}", job.id, job_type, scheduled_at);
 
     (axum::http::StatusCode::CREATED, Json(job)).into_response()
 }

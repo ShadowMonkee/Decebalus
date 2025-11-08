@@ -59,6 +59,7 @@ async fn main() {
     let app = Router::new()
         // Job routes
         .route("/api/jobs", post(api::jobs::create_job).get(api::jobs::list_jobs))
+        .route("/api/jobs/schedule", post(api::jobs::schedule_job).get(api::jobs::list_jobs))
         .route("/api/jobs/{id}", get(api::jobs::get_job))
         .route("/api/jobs/{id}/cancel", post(api::jobs::cancel_job))
         // Host routes

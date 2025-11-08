@@ -118,6 +118,8 @@ pub async fn get_scheduled_jobs_due(
     .fetch_all(pool)
     .await?;
 
+    tracing::info!("{}", now.to_rfc3339());
+
     Ok(rows.into_iter().map(|r| self::from_row(&r)).collect())
 }
 
