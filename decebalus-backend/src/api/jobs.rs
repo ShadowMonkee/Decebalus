@@ -56,9 +56,8 @@ pub async fn schedule_job(
         .to_string();
     let scheduled_at = payload
         .get("scheduled_at")
-        .and_then(|v| v.as_str())
-        .unwrap_or(&Utc::now().to_rfc3339())
-        .to_string();
+        .and_then(|v| v.as_i64())
+        .unwrap_or(Utc::now().timestamp());
 
     let mut job = Job::new(job_type.clone());
     job.scheduled_at = Some(scheduled_at);

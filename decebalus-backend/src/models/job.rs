@@ -11,7 +11,7 @@ pub struct Job {
     pub status: String,
     pub results: Option<String>,
     pub created_at: String,
-    pub scheduled_at: Option<String>,
+    pub scheduled_at: Option<i64>,
 }
 
 impl Job {
