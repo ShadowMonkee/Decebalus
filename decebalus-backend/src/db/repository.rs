@@ -112,13 +112,13 @@ pub async fn get_scheduled_jobs_due(
     let rows = sqlx::query(
         "SELECT id, job_type, status, priority, results, created_at, scheduled_at FROM jobs 
          WHERE status = 'scheduled' 
-         AND scheduled_at <= ?1"
+         AND scheduled_at < ?1"
     )
-    .bind(now.to_rfc3339())
+    .bind(now.timestamp())
     .fetch_all(pool)
     .await?;
 
-    tracing::info!("{}", now.to_rfc3339());
+    tracing::info!("{}", now.timestamp());
 
     Ok(rows.into_iter().map(|r| self::from_row(&r)).collect())
 }

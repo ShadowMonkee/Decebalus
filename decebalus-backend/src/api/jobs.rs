@@ -61,6 +61,7 @@ pub async fn schedule_job(
 
     let mut job = Job::new(job_type.clone());
     job.scheduled_at = Some(scheduled_at);
+    job.status = "scheduled".to_string();
 
     if let Err(e) = repository::create_job(&state.db, &job).await {
         tracing::error!("Failed to create job in database: {}", e);
@@ -70,7 +71,7 @@ pub async fn schedule_job(
         ).into_response();
     }
 
-    let scheduled_at = job.scheduled_at.clone().unwrap_or_else(|| "unscheduled".to_string());
+    let scheduled_at = job.scheduled_at.clone().unwrap_or_else(|| Utc::now().timestamp());
     let _ = state
         .broadcaster
         .send(format!("job_scheduled:{}:{}:{}", job.id, job_type, scheduled_at));
