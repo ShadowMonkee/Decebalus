@@ -109,7 +109,7 @@ impl JobExecutor {
             };
 
             tokio::spawn(async move {
-                // Run job with a semaphore permit
+                // Run job with a semaphore permit.
                 // Permit is dropped automatically at the end of the async block
                 Self::execute_job(job_clone, state_clone, permit).await;
             });
@@ -342,7 +342,7 @@ impl JobExecutor {
 
                         // Spawn each job execution in the background
                         tokio::spawn(async move {
-                            JobExecutor::execute_job(job, state_clone, permit).await;
+                            Self::execute_job(job, state_clone, permit).await;
                         });
                     }
                 }

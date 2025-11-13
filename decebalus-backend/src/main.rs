@@ -27,10 +27,10 @@ async fn main() {
     dotenvy::dotenv().ok();
     
     tracing_subscriber::fmt::init();
-
+    //Connect to DB
     let database_url = std::env::var("DATABASE_URL")
         .unwrap_or_else(|_| "sqlite:data/decebalus.db".to_string());
-    
+
     std::fs::create_dir_all("data").expect("Failed to create data directory");
     
     let db_pool = db::init_pool(&database_url)
@@ -39,6 +39,7 @@ async fn main() {
 
     let state = Arc::new(AppState::new(db_pool));
 
+    //Run Scheduled jobs that haven't been run yet
     let scheduler_state = Arc::clone(&state);
      tokio::spawn(async move {
         JobExecutor::check_and_run_scheduled_jobs(scheduler_state).await;
