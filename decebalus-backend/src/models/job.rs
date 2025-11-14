@@ -42,4 +42,8 @@ impl Job {
     pub fn is_queued(&self) -> bool {
         self.status == "queued"
     }
+
+    pub fn is_scheduled(&self) -> bool {
+        self.status == "scheduled"
+    }
 }

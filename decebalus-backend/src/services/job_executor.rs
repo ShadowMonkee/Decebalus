@@ -24,7 +24,7 @@ impl JobExecutor {
         // Double-check that the job hasn't already been picked up
         match repository::get_job(&state.db, &job.id).await {
             Ok(Some(job)) => {
-                if job.is_queued() {
+                if job.is_queued() || job.is_scheduled() {
                     // Update job status to running
                     Self::update_job_status(&state, &job.id, "running").await;
                     // Broadcast that job started
@@ -70,19 +70,13 @@ impl JobExecutor {
     }
 
     pub async fn run_queue(state: &Arc<AppState>) {
-        let jobs = repository::get_queued_jobs(&state.db).await.unwrap_or_default();
+        let mut jobs = repository::get_queued_jobs(&state.db).await.unwrap_or_default();
 
         if jobs.is_empty() {
             return;
         }
 
-        // Filter queued jobs and sort by priority
-        let mut jobs_to_run: Vec<_> = jobs
-            .into_iter()
-            .filter(|job| job.status == "queued")
-            .collect();
-
-        jobs_to_run.sort_by(|a, b| {
+        jobs.sort_by(|a, b| {
             use JobPriority::*;
             match (&a.priority, &b.priority) {
                 (CRITICAL, LOW | NORMAL | HIGH) => Ordering::Less,
@@ -94,7 +88,7 @@ impl JobExecutor {
         });
 
         // Spawn jobs up to available permits
-        for job in jobs_to_run {
+        for job in jobs {
             let state_clone = state.clone();
             let job_clone = job.clone();
             let semaphore = state.semaphore.clone();
