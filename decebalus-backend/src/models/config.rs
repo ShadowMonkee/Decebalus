@@ -28,3 +28,60 @@ impl Default for Config {
         Self::new()
     }
 }
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+
+    #[test]
+    fn test_new_config_is_empty() {
+        let cfg = Config::new();
+        assert!(cfg.settings.as_object().unwrap().is_empty());
+    }
+
+    #[test]
+    fn test_default_config_is_empty() {
+        let cfg: Config = Default::default();
+        assert!(cfg.settings.as_object().unwrap().is_empty());
+    }
+
+    #[test]
+    fn test_set_and_get_value() {
+        let mut cfg = Config::new();
+        cfg.set("username".to_string(), json!("narcis"));
+
+        assert_eq!(
+            cfg.get("username"),
+            Some(&json!("narcis"))
+        );
+    }
+
+    #[test]
+    fn test_get_missing_key_returns_none() {
+        let cfg = Config::new();
+        assert!(cfg.get("missing").is_none());
+    }
+
+    #[test]
+    fn test_setting_multiple_values() {
+        let mut cfg = Config::new();
+        cfg.set("user".to_string(), json!("narcis"));
+        cfg.set("age".to_string(), json!(29));
+
+        let obj = cfg.settings.as_object().unwrap();
+        assert_eq!(obj.len(), 2);
+        assert_eq!(cfg.get("user"), Some(&json!("narcis")));
+        assert_eq!(cfg.get("age"), Some(&json!(29)));
+    }
+
+    #[test]
+    fn test_set_overwrites_old_value() {
+        let mut cfg = Config::new();
+        cfg.set("theme".to_string(), json!("light"));
+        cfg.set("theme".to_string(), json!("dark"));
+
+        assert_eq!(cfg.get("theme"), Some(&json!("dark")));
+    }
+}

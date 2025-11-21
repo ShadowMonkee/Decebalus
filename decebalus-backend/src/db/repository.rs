@@ -105,14 +105,6 @@ pub async fn get_queued_jobs(pool: &SqlitePool) -> Result<Vec<Job>, sqlx::Error>
     Ok(rows.into_iter().map(|r| self::from_row(&r)).collect())
 }
 
-pub async fn get_scheduled_jobs_due2(pool: &SqlitePool) -> Result<Vec<Job>, sqlx::Error> {
-    let rows = sqlx::query("SELECT id, job_type, status, priority, results, created_at, scheduled_at FROM jobs WHERE status = 'scheduled'")
-        .fetch_all(pool)
-        .await?;
-    
-    Ok(rows.into_iter().map(|r| self::from_row(&r)).collect())
-}
-
 pub async fn get_scheduled_jobs_due(
     pool: &SqlitePool,
     now: DateTime<Utc>,
@@ -125,8 +117,6 @@ pub async fn get_scheduled_jobs_due(
     .bind(now.timestamp())
     .fetch_all(pool)
     .await?;
-
-    tracing::info!("{}", now.timestamp());
 
     Ok(rows.into_iter().map(|r| self::from_row(&r)).collect())
 }
