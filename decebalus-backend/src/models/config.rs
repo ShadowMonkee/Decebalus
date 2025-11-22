@@ -50,11 +50,11 @@ mod tests {
     #[test]
     fn test_set_and_get_value() {
         let mut cfg = Config::new();
-        cfg.set("username".to_string(), json!("narcis"));
+        cfg.set("username".to_string(), json!("shadowmonk"));
 
         assert_eq!(
             cfg.get("username"),
-            Some(&json!("narcis"))
+            Some(&json!("shadowmonk"))
         );
     }
 
@@ -67,13 +67,13 @@ mod tests {
     #[test]
     fn test_setting_multiple_values() {
         let mut cfg = Config::new();
-        cfg.set("user".to_string(), json!("narcis"));
-        cfg.set("age".to_string(), json!(29));
+        cfg.set("user".to_string(), json!("shadowmonk"));
+        cfg.set("age".to_string(), json!(31));
 
         let obj = cfg.settings.as_object().unwrap();
         assert_eq!(obj.len(), 2);
-        assert_eq!(cfg.get("user"), Some(&json!("narcis")));
-        assert_eq!(cfg.get("age"), Some(&json!(29)));
+        assert_eq!(cfg.get("user"), Some(&json!("shadowmonk")));
+        assert_eq!(cfg.get("age"), Some(&json!(31)));
     }
 
     #[test]
