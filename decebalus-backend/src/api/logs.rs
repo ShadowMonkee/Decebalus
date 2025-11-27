@@ -4,7 +4,7 @@ use axum::{
     Json,
 };
 use std::sync::Arc;
-use crate::AppState;
+use crate::state::AppState;
 use crate::db::repository;
 
 pub async fn get_all_logs(state: State<Arc<AppState>>) -> impl IntoResponse {

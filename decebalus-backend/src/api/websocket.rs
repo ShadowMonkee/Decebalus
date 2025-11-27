@@ -4,7 +4,7 @@ use axum::{
 };
 use futures_util::{SinkExt, StreamExt};
 use std::sync::Arc;
-use crate::AppState;
+use crate::state::AppState;
 
 /// WebSocket endpoint for real-time updates
 /// GET /ws

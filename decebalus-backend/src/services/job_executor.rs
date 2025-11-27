@@ -2,9 +2,9 @@ use std::cmp::Ordering;
 use std::sync::Arc;
 use chrono::Utc;
 use tokio::sync::OwnedSemaphorePermit;
-use tokio::time::{self, Duration, sleep};
+use tokio::time::{Duration, sleep};
 use crate::models::{Job, JobPriority};
-use crate::AppState;
+use crate::state::AppState;
 use crate::services::{scanner, port_scanner};
 use crate::db::repository;
 

@@ -4,7 +4,7 @@ use axum::{
     Json,
 };
 use std::sync::Arc;
-use crate::AppState;
+use crate::state::AppState;
 use crate::db::repository;
 
 /// List all discovered hosts

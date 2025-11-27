@@ -1,7 +1,7 @@
 use std::sync::Arc;
 use std::time::Duration;
 use crate::models::Host;
-use crate::AppState;
+use crate::state::AppState;
 use ipnetwork::Ipv4Network;
 use crate::db::repository;
 

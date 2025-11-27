@@ -7,7 +7,7 @@ use axum::{
 use chrono::Utc;
 use std::sync::Arc;
 use crate::models::DisplayStatus;
-use crate::AppState;
+use crate::state::AppState;
 use crate::db::repository;
 
 /// Get e-paper display status

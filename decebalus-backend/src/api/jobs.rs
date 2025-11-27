@@ -6,7 +6,7 @@ use axum::{
 use chrono::Utc;
 use std::sync::Arc;
 use crate::models::Job;
-use crate::AppState;
+use crate::state::AppState;
 use crate::services::JobExecutor;
 use crate::db::repository;
 
