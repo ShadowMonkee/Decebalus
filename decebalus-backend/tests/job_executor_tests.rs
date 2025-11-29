@@ -112,22 +112,31 @@ mod port_scanner {
     }
 }
 
-fn fake_state() -> Arc<AppState> {
+fn test_state() -> Arc<AppState> {
+    // Broadcast channel for tests
     let (tx, _rx) = broadcast::channel(32);
 
-    Arc::new(AppState {
-        db: (), // we mock repository calls
-        semaphore: Arc::new(Semaphore::new(10)),
-        state_store: Arc::new(tokio::sync::Mutex::new(HashMap::new())),
+    // In-memory SQLite database
+    let db_pool = sqlx::sqlite::SqlitePoolOptions::new()
+        .max_connections(5)
+        .connect_lazy("sqlite::memory:")
+        .expect("failed to create mock pool");
+
+    // Manual AppState (do NOT use AppState::new here)
+    let state = AppState {
         broadcaster: tx,
-        max_threads: todo!(),
-    })
+        db: db_pool,
+        max_threads: 5,
+        semaphore: Arc::new(Semaphore::new(5)),
+    };
+
+    Arc::new(state)
 }
 
 
 #[tokio::test]
 async fn scenario_job_executor_runs_discovery_successfully() {
-    let state = fake_state();
+    let state = test_state();
 
     let job = Job {id:"job1".into(),created_at:"now".into(),job_type:"discovery".into(),priority:JobPriority::NORMAL,status:"queued".into(),results:None,schedule_time:None, scheduled_at: todo!() };
 
@@ -148,7 +157,7 @@ async fn scenario_job_executor_runs_discovery_successfully() {
 
 #[tokio::test]
 async fn scenario_run_queue_spawns_jobs() {
-    let state = fake_state();
+    let state = test_state();
 
     let j1 = Job {
         id: "jobA".into(),
@@ -188,7 +197,7 @@ async fn scenario_run_queue_spawns_jobs() {
 
 #[tokio::test]
 async fn scenario_resume_incomplete_jobs_requeues_and_runs() {
-    let state = fake_state();
+    let state = test_state();
 
     let job = Job {
         id: "jobR".into(),
