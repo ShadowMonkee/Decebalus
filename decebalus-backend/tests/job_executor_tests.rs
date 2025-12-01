@@ -12,71 +12,69 @@ use decebalus_backend::models::{Job, JobPriority};
 
 mod repository {
     use decebalus_backend::models::{Config, Host};
-
     use super::*;
+    use once_cell::sync::Lazy;
+    use std::sync::Mutex;
 
-    static mut JOBS: Vec<Job> = Vec::new();
-    static mut LOGS: Vec<String> = Vec::new();
+    // thread-safe statics protected by Mutex
+    static JOBS: Lazy<Mutex<Vec<Job>>> = Lazy::new(|| Mutex::new(Vec::new()));
+    static LOGS: Lazy<Mutex<Vec<String>>> = Lazy::new(|| Mutex::new(Vec::new()));
 
     pub async fn get_job(_db: &(), id: &str) -> Result<Option<Job>, String> {
-        unsafe {
-            Ok(JOBS.iter().cloned().find(|j| j.id == id))
-        }
+        let jobs = JOBS.lock().map_err(|e| format!("lock error: {}", e))?;
+        Ok(jobs.iter().cloned().find(|j| j.id == id))
     }
 
     pub async fn add_log(_db: &(), _sev: &str, _service: &str, _module: Option<&str>, _job_id: Option<&str>, content: &str) 
         -> Result<(), String> 
     {
-        unsafe {
-            LOGS.push(content.to_string());
-        }
+        let mut logs = LOGS.lock().map_err(|e| format!("lock error: {}", e))?;
+        logs.push(content.to_string());
         Ok(())
     }
 
     pub async fn update_job_status(_db: &(), id: &str, new_status: &str) -> Result<(), String> {
-        unsafe {
-            for j in JOBS.iter_mut() {
-                if j.id == id {
-                    j.status = new_status.to_string();
-                }
+        let mut jobs = JOBS.lock().map_err(|e| format!("lock error: {}", e))?;
+        for j in jobs.iter_mut() {
+            if j.id == id {
+                j.status = new_status.to_string();
             }
         }
         Ok(())
     }
 
     pub async fn update_job_results(_db: &(), id: &str, results: Option<String>) -> Result<(), String> {
-        unsafe {
-            for j in JOBS.iter_mut() {
-                if j.id == id {
-                    j.results = results.clone();
-                }
+        let mut jobs = JOBS.lock().map_err(|e| format!("lock error: {}", e))?;
+        for j in jobs.iter_mut() {
+            if j.id == id {
+                j.results = results.clone();
             }
         }
         Ok(())
     }
 
     pub async fn insert_job(job: Job) {
-        unsafe { JOBS.push(job); }
+        // This is fine to unwrap in test code, but map_err pattern above is more explicit
+        let mut jobs = JOBS.lock().expect("failed to lock JOBS");
+        jobs.push(job);
     }
 
     pub async fn get_queued_jobs(_db: &()) -> Result<Vec<Job>, String> {
-        unsafe {
-            Ok(JOBS
-                .iter()
-                .cloned()
-                .filter(|j| j.status == "queued")
-                .collect())
-        }
+        let jobs = JOBS.lock().map_err(|e| format!("lock error: {}", e))?;
+        Ok(jobs
+            .iter()
+            .cloned()
+            .filter(|j| j.status == "queued")
+            .collect())
     }
 
     pub async fn get_running_jobs(_db: &()) -> Result<Vec<Job>, String> {
-        unsafe {
-            Ok(JOBS
-                .iter()
-                .cloned()
-                .filter(|j| j.status == "running")
-                .collect())
-        }
+        let jobs = JOBS.lock().map_err(|e| format!("lock error: {}", e))?;
+        Ok(jobs
+            .iter()
+            .cloned()
+            .filter(|j| j.status == "running")
+            .collect())
     }
 
     pub async fn list_hosts(_db: &()) -> Result<Vec<Host>, String> {
@@ -138,7 +136,7 @@ fn test_state() -> Arc<AppState> {
 async fn scenario_job_executor_runs_discovery_successfully() {
     let state = test_state();
 
-    let job = Job {id:"job1".into(),created_at:"now".into(),job_type:"discovery".into(),priority:JobPriority::NORMAL,status:"queued".into(),results:None,schedule_time:None, scheduled_at: todo!() };
+    let job = Job {id:"job1".into(),created_at:"now".into(),job_type:"discovery".into(),priority:JobPriority::NORMAL,status:"queued".into(),results:None, scheduled_at: None };
 
     // Insert into mock DB
     repository::insert_job(job.clone()).await;
@@ -148,7 +146,7 @@ async fn scenario_job_executor_runs_discovery_successfully() {
     JobExecutor::execute_job(job.clone(), state.clone(), permit).await;
 
     // Retrieve updated job
-    let updated = repository::get_job(&state.db, "job1").await.unwrap().unwrap();
+    let updated = repository::get_job(&(), "job1").await.unwrap().unwrap();
 
     assert_eq!(updated.status, "completed");
     assert!(updated.results.is_some());
@@ -166,7 +164,7 @@ async fn scenario_run_queue_spawns_jobs() {
         priority: JobPriority::CRITICAL,
         status: "queued".into(),
         results: None,
-        schedule_time: None,
+        scheduled_at: None,
     };
 
     let j2 = Job {
@@ -176,7 +174,7 @@ async fn scenario_run_queue_spawns_jobs() {
         priority: JobPriority::LOW,
         status: "queued".into(),
         results: None,
-        schedule_time: None,
+        scheduled_at: None,
     };
 
     repository::insert_job(j1).await;
@@ -188,8 +186,8 @@ async fn scenario_run_queue_spawns_jobs() {
     // Give tasks time to run
     tokio::time::sleep(std::time::Duration::from_millis(200)).await;
 
-    let a = repository::get_job(&state.db, "jobA").await.unwrap().unwrap();
-    let b = repository::get_job(&state.db, "jobB").await.unwrap().unwrap();
+    let a = repository::get_job(&(), "jobA").await.unwrap().unwrap();
+    let b = repository::get_job(&(), "jobB").await.unwrap().unwrap();
 
     assert_eq!(a.status, "completed"); // CRITICAL should run first AND complete
     assert_eq!(b.status, "completed"); // lower priority but still gets run
@@ -206,7 +204,7 @@ async fn scenario_resume_incomplete_jobs_requeues_and_runs() {
         priority: JobPriority::NORMAL,
         status: "running".into(), // leftover unfinished
         results: None,
-        schedule_time: None,
+        scheduled_at: None,
     };
 
     repository::insert_job(job.clone()).await;
@@ -215,7 +213,7 @@ async fn scenario_resume_incomplete_jobs_requeues_and_runs() {
 
     tokio::time::sleep(std::time::Duration::from_millis(200)).await;
 
-    let updated = repository::get_job(&state.db, "jobR").await.unwrap().unwrap();
+    let updated = repository::get_job(&(), "jobR").await.unwrap().unwrap();
 
     assert_eq!(updated.status, "completed");
     assert!(updated.results.is_some());
