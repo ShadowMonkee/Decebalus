@@ -1,5 +1,5 @@
 use async_trait::async_trait;
-use crate::models::{Job, JobPriority, Host, Config, Log, DisplayStatus};
+use crate::models::{Job, Host, Config, Log, DisplayStatus};
 use chrono::{DateTime, Utc};
 
 #[async_trait]
