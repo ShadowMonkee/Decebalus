@@ -113,6 +113,11 @@ Rust is the ideal language for this project because:
 git clone https://github.com/yourusername/decebalus.git
 cd decebalus
 
+# Create .env file with the following variables:
+DATABASE_URL=sqlite:data/decebalus.db
+LOG_RETENTION_DAYS=30
+MAX_THREADS=5
+
 # Fetch dependencies to install sqlx command
 cargo fetch
 
