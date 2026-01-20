@@ -204,13 +204,13 @@ Always ensure you have explicit permission before scanning any network.
 - [x] API structure and routing
 - [x] Database integration (SQLite)
 - [x] Job management system
-- [ ] Scheduled Jobs management system
+- [x] Scheduled Jobs management system
 - [x] Basic network discovery
 - [x] WebSocket support
 - [ ] Enhanced port scanning
 - [ ] Service detection
 - [ ] Vulnerability matching
-- [ ] Web dashboard
+- [ ] Web dashboard (WIP)
 - [ ] E-Paper display integration
 - [ ] Attack modules
 
