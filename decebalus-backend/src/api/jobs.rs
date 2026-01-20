@@ -5,7 +5,10 @@ use axum::{
 };
 use chrono::Utc;
 use std::sync::Arc;
-use crate::models::Job;
+use axum::http::StatusCode;
+use ipnet::IpNet;
+use serde_json::{Map, Value};
+use crate::models::{CreateJobRequest, Job};
 use crate::state::AppState;
 use crate::services::JobExecutor;
 use crate::db::repository;
@@ -13,16 +16,36 @@ use crate::db::repository;
 /// Create a new job
 pub async fn create_job(
     State(state): State<Arc<AppState>>,
-    Json(payload): Json<serde_json::Value>,
+    Json(payload): Json<CreateJobRequest>,
 ) -> impl IntoResponse {
-    let job_type = payload
-        .get("job_type")
-        .and_then(|v| v.as_str())
-        .unwrap_or("discovery")
-        .to_string();
 
-    let job = Job::new(job_type.clone());
-    
+    let job_type = payload.job_type.clone();
+    let mut job = Job::new(job_type.clone());
+
+    let mut config = Map::new();
+
+    if job_type == "discovery" {
+        let target = match payload.target.clone() {
+            Some(t) => t,
+            None => {
+                return (
+                    StatusCode::BAD_REQUEST,
+                    Json(serde_json::json!({"error": "target is required for discovery jobs"})),
+                ).into_response();
+            }
+        };
+
+        if let Err(e) = validate_cidr(&target) {
+            return (
+                StatusCode::BAD_REQUEST,
+                Json(serde_json::json!({"error": e})),
+            ).into_response();
+        }
+
+        config.insert("target".to_string(), serde_json::Value::String(target));
+    }
+    job.config = Value::Object(config);
+
     // Save to database
     if let Err(e) = repository::create_job(&state.db, &job).await {
         tracing::error!("Failed to create job in database: {}", e);
@@ -138,4 +161,9 @@ pub async fn cancel_job(
             ).into_response()
         }
     }
+}
+
+fn validate_cidr(cidr: &str) -> Result<IpNet, String> {
+    cidr.parse::<IpNet>()
+        .map_err(|_| format!("Invalid CIDR notation: {}", cidr))
 }

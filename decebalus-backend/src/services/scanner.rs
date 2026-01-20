@@ -1,8 +1,13 @@
+use std::net::IpAddr;
 use std::sync::Arc;
 use std::time::Duration;
+use futures_util::stream::FuturesUnordered;
+use futures_util::StreamExt;
+use ipnet::IpNet;
 use crate::models::Host;
 use crate::state::AppState;
 use ipnetwork::Ipv4Network;
+use tokio::sync::Semaphore;
 use crate::db::repository;
 
 
@@ -20,39 +25,57 @@ impl NetworkScanner {
     /// 
     /// # Returns
     /// Number of hosts discovered
-    pub async fn discover_hosts(network: &str, state: &Arc<AppState>) -> Result<usize, String> {
+    pub async fn discover_hosts(network: IpNet, state: &Arc<AppState>) -> Result<usize, String> {
         Self::log_and_broadcast(state, &format!("Starting network discovery on {}", network));
-        
-        // Parse network CIDR
-        let (base_ip, range) = Self::parse_network(network)?;
-        
-        Self::log_and_broadcast(state, &format!("Scanning {} IPs in range {}", range, network));
 
-        let mut hosts_found = 0;
-        
-        // Scan each IP in range
-        for i in 1..=range {
-            let ip = format!("{}.{}", base_ip, i);
-            Self::log_and_broadcast(state, &format!("Scanning now: {}", ip));
-            
-            if Self::is_host_alive(&ip).await {
-                Self::log_and_broadcast(state, &format!("Host found: {}", ip));
+        let ips: Vec<IpAddr> = network.hosts().collect();
+        Self::log_and_broadcast(state, &format!("Scanning {} IPs", ips.len()));
 
-                let host = Host::new(ip.clone());
-                
-                // Save to database
-                if let Err(e) = repository::upsert_host(&state.db, &host).await {
-                    tracing::error!("Failed to save host to database: {}", e);
+        let hosts_found = Arc::new(tokio::sync::Mutex::new(0));
+        let max_discover_threads = std::env::var("MAX_DISCOVER_THREADS")
+            .ok()
+            .and_then(|s| s.parse::<usize>().ok())
+            .unwrap_or(256);
+        let sem = Arc::new(Semaphore::new(max_discover_threads));
+
+        let mut futures = FuturesUnordered::new();
+
+        for ip in ips {
+            let state_clone = state.clone();
+            let hosts_found_clone = hosts_found.clone();
+            let sem_clone = sem.clone();
+
+            futures.push(tokio::spawn(async move {
+                // acquire semaphore permit
+                let _permit = sem_clone.acquire_owned().await.unwrap();
+
+                let ip_str = ip.to_string();
+                Self::log_and_broadcast(&state_clone, &format!("Scanning now: {}", ip_str));
+
+                if Self::is_host_alive(&ip_str).await {
+                    Self::log_and_broadcast(&state_clone, &format!("Host found: {}", ip_str));
+
+                    let host = Host::new(ip_str.clone());
+
+                    if let Err(e) = repository::upsert_host(&state_clone.db, &host).await {
+                        tracing::error!("Failed to save host to database: {}", e);
+                    }
+
+                    let _ = state_clone.broadcaster.send(format!("host_found:{}", ip_str));
+
+                    // increment counter safely
+                    let mut count = hosts_found_clone.lock().await;
+                    *count += 1;
                 }
-
-                let _ = state.broadcaster.send(format!("host_found:{}", ip));
-                hosts_found += 1;
-            }
-
+            }));
         }
-        
-        tracing::info!("Discovery complete. Found {} hosts", hosts_found);
-        Ok(hosts_found)
+
+        // wait for all tasks to complete
+        while let Some(_) = futures.next().await {}
+
+        let total = *hosts_found.lock().await;
+        tracing::info!("Discovery complete. Found {} hosts", total);
+        Ok(total)
     }
     
     /// Parse network CIDR notation

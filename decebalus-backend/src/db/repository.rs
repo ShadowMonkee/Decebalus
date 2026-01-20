@@ -14,7 +14,7 @@ pub async fn create_job(pool: &SqlitePool, job: &Job) -> Result<(), sqlx::Error>
     };
 
     sqlx::query(
-        "INSERT INTO jobs (id, job_type, status, priority, results, scheduled_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6)"
+        "INSERT INTO jobs (id, job_type, status, priority, results, scheduled_at, config) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)"
     )
     .bind(&job.id)
     .bind(&job.job_type)
@@ -22,6 +22,7 @@ pub async fn create_job(pool: &SqlitePool, job: &Job) -> Result<(), sqlx::Error>
     .bind(priority_int)
     .bind(&job.results)
     .bind(&job.scheduled_at)
+    .bind(&job.config)
     .execute(pool)
     .await?;
     
@@ -31,7 +32,7 @@ pub async fn create_job(pool: &SqlitePool, job: &Job) -> Result<(), sqlx::Error>
 /// Get a job by ID
 pub async fn get_job(pool: &SqlitePool, id: &str) -> Result<Option<Job>, sqlx::Error> {
     let row = sqlx::query(
-        "SELECT id, job_type, status, priority, results, created_at, scheduled_at FROM jobs WHERE id = ?1"
+        "SELECT id, job_type, status, priority, results, created_at, scheduled_at, config FROM jobs WHERE id = ?1"
     )
     .bind(id)
     .fetch_optional(pool)
@@ -43,7 +44,7 @@ pub async fn get_job(pool: &SqlitePool, id: &str) -> Result<Option<Job>, sqlx::E
 /// List all jobs
 pub async fn list_jobs(pool: &SqlitePool) -> Result<Vec<Job>, sqlx::Error> {
     let rows = sqlx::query(
-        "SELECT id, job_type, status, priority, results, created_at, scheduled_at FROM jobs ORDER BY created_at DESC"
+        "SELECT id, job_type, status, priority, results, created_at, scheduled_at, config FROM jobs ORDER BY created_at DESC"
     )
     .fetch_all(pool)
     .await?;
@@ -66,6 +67,7 @@ pub async fn list_jobs(pool: &SqlitePool) -> Result<Vec<Job>, sqlx::Error> {
         results: r.get("results"),
         created_at: r.get("created_at"),
         scheduled_at: r.get("scheduled_at"),
+        config: r.get("config"),
         }
     }).collect();
     
@@ -90,7 +92,7 @@ pub async fn update_job_status(
 }
 
 pub async fn get_running_jobs(pool: &SqlitePool) -> Result<Vec<Job>, sqlx::Error> {
-    let rows = sqlx::query("SELECT id, job_type, status, priority, results, created_at, scheduled_at FROM jobs WHERE status = 'running'")
+    let rows = sqlx::query("SELECT id, job_type, status, priority, results, created_at, scheduled_at, config FROM jobs WHERE status = 'running'")
         .fetch_all(pool)
         .await?;
     
@@ -98,7 +100,7 @@ pub async fn get_running_jobs(pool: &SqlitePool) -> Result<Vec<Job>, sqlx::Error
 }
 
 pub async fn get_queued_jobs(pool: &SqlitePool) -> Result<Vec<Job>, sqlx::Error> {
-    let rows = sqlx::query("SELECT id, job_type, status, priority, results, created_at, scheduled_at FROM jobs WHERE status = 'queued'")
+    let rows = sqlx::query("SELECT id, job_type, status, priority, results, created_at, scheduled_at, config FROM jobs WHERE status = 'queued'")
         .fetch_all(pool)
         .await?;
     
@@ -110,7 +112,7 @@ pub async fn get_scheduled_jobs_due(
     now: DateTime<Utc>,
 ) -> Result<Vec<Job>, sqlx::Error> {
     let rows = sqlx::query(
-        "SELECT id, job_type, status, priority, results, created_at, scheduled_at FROM jobs 
+        "SELECT id, job_type, status, priority, results, created_at, scheduled_at, config FROM jobs
          WHERE status = 'scheduled' 
          AND scheduled_at < ?1"
     )
@@ -155,7 +157,8 @@ pub fn from_row(row: &SqliteRow) -> Job {
         priority,
         results: row.get("results"),
         created_at: row.get("created_at"),
-        scheduled_at: row.get("scheduled_at")
+        scheduled_at: row.get("scheduled_at"),
+        config: row.get("config")
     }
 }
 

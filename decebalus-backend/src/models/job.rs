@@ -1,3 +1,4 @@
+use ipnet::IpNet;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
@@ -9,6 +10,7 @@ pub struct Job {
     pub job_type: String,
     pub priority: JobPriority,
     pub status: String,
+    pub config: serde_json::Value,
     pub results: Option<String>,
     pub created_at: String,
     pub scheduled_at: Option<i64>,
@@ -24,6 +26,7 @@ impl Job {
             results: None,
             created_at: String::new(),
             scheduled_at: None,
+            config: Default::default(),
         }
     }
     
@@ -45,6 +48,18 @@ impl Job {
 
     pub fn is_scheduled(&self) -> bool {
         self.status == "scheduled"
+    }
+
+    pub fn target(&self) -> Result<IpNet, String> {
+        let target_str = self
+            .config
+            .get("target")
+            .and_then(|v| v.as_str())
+            .ok_or_else(|| "Job config missing 'target' field".to_string())?;
+
+        target_str
+            .parse::<IpNet>()
+            .map_err(|_| format!("Invalid CIDR in job config: {}", target_str))
     }
 }
 

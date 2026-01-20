@@ -7,7 +7,8 @@ CREATE TABLE IF NOT EXISTS jobs (
     results TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    scheduled_at INTEGER
+    scheduled_at INTEGER,
+    config TEXT NOT NULL
 );
 
 CREATE INDEX idx_jobs_status ON jobs(status);

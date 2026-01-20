@@ -117,6 +117,7 @@ cd decebalus
 DATABASE_URL=sqlite:data/decebalus.db
 LOG_RETENTION_DAYS=30
 MAX_THREADS=5
+MAX_DISCOVER_THREADS=256 # need to research how many are doable, but 256 will handle a full /24 subnet in one cycle
 
 # Fetch dependencies to install sqlx command
 cargo fetch
@@ -138,7 +139,7 @@ The server will start on `http://0.0.0.0:8080`
 # Create a network discovery job
 curl -X POST http://localhost:8080/api/jobs \
   -H "Content-Type: application/json" \
-  -d '{"job_type": "discovery"}'
+  -d '{"job_type": "discovery", "target": "192.168.68.0/24"}'
 
 # List all jobs
 curl http://localhost:8080/api/jobs
