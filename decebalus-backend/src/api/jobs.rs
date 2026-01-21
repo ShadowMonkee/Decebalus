@@ -110,24 +110,52 @@ pub async fn cancel_job(
     State(state): State<Arc<AppState>>,
     Path(id): Path<String>,
 ) -> impl IntoResponse {
-    match repository::update_job_status(&state.db, &id, "cancelled").await {
-        Ok(_) => {
-            let _ = state.broadcaster.send(format!("job_cancelled:{}", id));
-            (
-                axum::http::StatusCode::OK,
-                Json(json!({
-                    "message": format!("Cancelling job with {} ID", id)
-                })),
-            ).into_response()
+
+    let job = match repository::get_job(&state.db, &id).await {
+        Ok(Some(job)) => job,
+        Ok(None) => {
+            return (
+                StatusCode::NOT_FOUND,
+                Json(json!({ "error": format!("Job with ID {} not found", id) })),
+            )
+                .into_response();
         }
         Err(e) => {
-            tracing::error!("Failed to cancel job: {}", e);
-            (
-                axum::http::StatusCode::INTERNAL_SERVER_ERROR,
-                Json(json!({"error": "Failed to cancel job"})),
-            ).into_response()
+            tracing::error!("Failed to get job: {}", e);
+            return (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                Json(json!({ "error": "Failed to get job" })),
+            )
+                .into_response();
         }
+    };
+
+    if !job.is_queued() && !job.is_running() {
+        return (
+            StatusCode::BAD_REQUEST,
+            Json(json!({ "error": "Job cannot be cancelled" })),
+        )
+            .into_response();
     }
+
+    if let Err(e) = repository::update_job_status(&state.db, &id, "cancelled").await {
+        tracing::error!("Failed to cancel job: {}", e);
+        return (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            Json(json!({ "error": "Failed to cancel job" })),
+        )
+            .into_response();
+    }
+
+    let _ = state.broadcaster.send(format!("job_cancelled:{}", id));
+
+    (
+        StatusCode::OK,
+        Json(json!({
+            "message": format!("Cancelling job with {} ID", id)
+        })),
+    )
+        .into_response()
 }
 
 fn parse_job_from_request(payload: &CreateJobRequest) -> Result<Job, Response>  {
