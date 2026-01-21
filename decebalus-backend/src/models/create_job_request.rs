@@ -7,6 +7,7 @@ pub struct CreateJobRequest {
 
     // Discovery-specific (optional for now)
     pub target: Option<String>,
+    pub scheduled_at: Option<i64>
 }
 
 fn default_job_type() -> String {
