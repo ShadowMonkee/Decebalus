@@ -167,17 +167,31 @@ pub fn from_row(row: &SqliteRow) -> Job {
 
 /// Create or update a host
 pub async fn upsert_host(pool: &SqlitePool, host: &Host) -> Result<(), sqlx::Error> {
-    let ports_json = serde_json::to_string(&host.ports).unwrap();
-    let banners_json = serde_json::to_string(&host.banners).unwrap();
-    
+    let ports_json = serde_json::to_string(&host.ports).unwrap_or_else(|_| "[]".to_string());
+    let banners_json = serde_json::to_string(&host.banners).unwrap_or_else(|_| "[]".to_string());
+    let services_json = serde_json::to_string(&host.services).unwrap_or_else(|_| "[]".to_string());
+    let vulns_json = serde_json::to_string(&host.vulnerabilities).unwrap_or_else(|_| "[]".to_string());
+    let status_str = serde_json::to_string(&host.status)
+        .unwrap_or_else(|_| "\"Unknown\"".to_string())
+        .trim_matches('"')
+        .to_string();
+
     sqlx::query(
         r#"
-        INSERT INTO hosts (ip, ports, banners, last_seen)
-        VALUES (?1, ?2, ?3, ?4)
+        INSERT INTO hosts (ip, ports, banners, last_seen, first_seen, os, os_version, device_type, mac_address, hostname, status, services, vulnerabilities)
+        VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)
         ON CONFLICT(ip) DO UPDATE SET
             ports = ?2,
             banners = ?3,
             last_seen = ?4,
+            os = ?6,
+            os_version = ?7,
+            device_type = ?8,
+            mac_address = ?9,
+            hostname = ?10,
+            status = ?11,
+            services = ?12,
+            vulnerabilities = ?13,
             updated_at = CURRENT_TIMESTAMP
         "#
     )
@@ -185,73 +199,86 @@ pub async fn upsert_host(pool: &SqlitePool, host: &Host) -> Result<(), sqlx::Err
     .bind(ports_json)
     .bind(banners_json)
     .bind(&host.last_seen)
+    .bind(&host.first_seen)
+    .bind(&host.os)
+    .bind(&host.os_version)
+    .bind(&host.device_type)
+    .bind(&host.mac_address)
+    .bind(&host.hostname)
+    .bind(status_str)
+    .bind(services_json)
+    .bind(vulns_json)
     .execute(pool)
     .await?;
-    
+
     Ok(())
 }
 
 /// Get a host by IP
 pub async fn get_host(pool: &SqlitePool, ip: &str) -> Result<Option<Host>, sqlx::Error> {
     let row = sqlx::query(
-        "SELECT ip, ports, banners, last_seen FROM hosts WHERE ip = ?1"
+        "SELECT ip, ports, banners, last_seen, first_seen, os, os_version, device_type, mac_address, hostname, status, services, vulnerabilities FROM hosts WHERE ip = ?1"
     )
     .bind(ip)
     .fetch_optional(pool)
     .await?;
-    
-    Ok(row.map(|r| {
-        let ports_str: String = r.get("ports");
-        let banners_str: String = r.get("banners");
-        
-        Host {
-            ip: r.get("ip"),
-            ports: serde_json::from_str(&ports_str).unwrap_or_default(),
-            banners: serde_json::from_str(&banners_str).unwrap_or_default(),
-            last_seen: r.get("last_seen"),
-            os: todo!(),
-            os_version: todo!(),
-            device_type: todo!(),
-            mac_address: todo!(),
-            hostname: todo!(),
-            status: todo!(),
-            first_seen: todo!(),
-            services: todo!(),
-            vulnerabilities: todo!(),
-        }
-    }))
+
+    Ok(row.map(|r| host_from_row(&r)))
 }
 
 /// List all hosts
 pub async fn list_hosts(pool: &SqlitePool) -> Result<Vec<Host>, sqlx::Error> {
     let rows = sqlx::query(
-        "SELECT ip, ports, banners, last_seen FROM hosts ORDER BY last_seen DESC"
+        "SELECT ip, ports, banners, last_seen, first_seen, os, os_version, device_type, mac_address, hostname, status, services, vulnerabilities FROM hosts ORDER BY last_seen DESC"
     )
     .fetch_all(pool)
     .await?;
-    
-    let hosts = rows.into_iter().map(|r| {
-        let ports_str: String = r.get("ports");
-        let banners_str: String = r.get("banners");
-        
-        Host {
-            ip: r.get("ip"),
-            ports: serde_json::from_str(&ports_str).unwrap_or_default(),
-            banners: serde_json::from_str(&banners_str).unwrap_or_default(),
-            last_seen: r.get("last_seen"),
-            os: todo!(),
-            os_version: todo!(),
-            device_type: todo!(),
-            mac_address: todo!(),
-            hostname: todo!(),
-            status: todo!(),
-            first_seen: todo!(),
-            services: todo!(),
-            vulnerabilities: todo!(),
-        }
-    }).collect();
-    
-    Ok(hosts)
+
+    Ok(rows.into_iter().map(|r| host_from_row(&r)).collect())
+}
+
+fn host_from_row(r: &SqliteRow) -> Host {
+    let ports: Vec<crate::models::Port> = r.try_get::<String, _>("ports")
+        .ok()
+        .and_then(|s| serde_json::from_str(&s).ok())
+        .unwrap_or_default();
+
+    let banners: Vec<String> = r.try_get::<String, _>("banners")
+        .ok()
+        .and_then(|s| serde_json::from_str(&s).ok())
+        .unwrap_or_default();
+
+    let services: Vec<crate::models::Service> = r.try_get::<String, _>("services")
+        .ok()
+        .and_then(|s| serde_json::from_str(&s).ok())
+        .unwrap_or_default();
+
+    let vulnerabilities: Vec<crate::models::Vulnerability> = r.try_get::<String, _>("vulnerabilities")
+        .ok()
+        .and_then(|s| serde_json::from_str(&s).ok())
+        .unwrap_or_default();
+
+    let status = match r.try_get::<String, _>("status").as_deref() {
+        Ok("Up") => crate::models::HostStatus::Up,
+        Ok("Down") => crate::models::HostStatus::Down,
+        _ => crate::models::HostStatus::Unknown,
+    };
+
+    Host {
+        ip: r.get("ip"),
+        ports,
+        banners,
+        last_seen: r.get("last_seen"),
+        first_seen: r.try_get("first_seen").unwrap_or_else(|_| r.get("last_seen")),
+        os: r.try_get("os").ok().flatten(),
+        os_version: r.try_get("os_version").ok().flatten(),
+        device_type: r.try_get("device_type").ok().flatten(),
+        mac_address: r.try_get("mac_address").ok().flatten(),
+        hostname: r.try_get("hostname").ok().flatten(),
+        status,
+        services,
+        vulnerabilities,
+    }
 }
 
 // ==================== CONFIG REPOSITORY ====================
@@ -390,30 +417,20 @@ pub async fn get_logs(pool: &SqlitePool) -> Result<Vec<Log>, sqlx::Error> {
 
 pub async fn get_log(pool: &SqlitePool, id: String) -> Result<Option<Log>, sqlx::Error> {
     let row = sqlx::query(
-        "SELECT id, created_at, severity, service, module, job_id, content FROM logs WHERE job_id = ?1"
+        "SELECT id, created_at, severity, service, module, job_id, content FROM logs WHERE id = ?1"
     )
     .bind(id)
     .fetch_optional(pool)
     .await?;
 
-    // TODO: Figure out why getting one log doesn't seem to work
-    tracing::info!("In get_log()");
-    
-      Ok(row.map(|r| {
-        let log = Log {
-            id: r.get("id"),
-            created_at: r.get("created_at"),
-            severity: r.get("severity"),
-            service: r.get("service"),
-            module: r.get("module"),
-            job_id: r.get("job_id"),
-            content: r.get("content")
-        };
-
-        tracing::info!("Log content: {}", log.content);
-        // or println!("{}", log.content);
-
-        log
+    Ok(row.map(|r| Log {
+        id: r.get("id"),
+        created_at: r.get("created_at"),
+        severity: r.get("severity"),
+        service: r.get("service"),
+        module: r.try_get("module").ok().flatten(),
+        job_id: r.try_get("job_id").ok().flatten(),
+        content: r.get("content"),
     }))
 }
 

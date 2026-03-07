@@ -4,7 +4,7 @@ use async_trait::async_trait;
 use std::sync::{Arc, Mutex};
 use chrono::{DateTime, Utc};
 use crate::db::repository_trait::Repository;
-use crate::models::{Job, JobPriority, Host, Config, DisplayStatus, Log};
+use crate::models::{Job, Host, Config, DisplayStatus, Log};
 
 #[derive(Clone, Default)]
 pub struct InMemoryRepository {
@@ -164,7 +164,7 @@ impl Repository for InMemoryRepository {
 
     async fn get_log(&self, id: String) -> Result<Option<Log>, sqlx::Error> {
         let logs = self.logs.lock().unwrap();
-        Ok(logs.iter().cloned().find(|l| l.job_id.as_ref() == Some(&id)))
+        Ok(logs.iter().cloned().find(|l| l.id == id))
     }
 
     async fn get_logs_by_job_id(&self, job_id: String) -> Result<Vec<Log>, sqlx::Error> {

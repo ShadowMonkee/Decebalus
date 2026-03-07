@@ -36,21 +36,26 @@ pub async fn update_config(
     State(state): State<Arc<AppState>>,
     Json(payload): Json<Value>,
 ) -> impl IntoResponse {
-    if let Ok(mut config) = repository::get_config(&state.db).await {
-        config.settings = payload;
-
-        if let Err(e) = repository::update_config(&state.db, &config).await {
-            tracing::error!("Failed to update config: {}", e);
+    let mut config = match repository::get_config(&state.db).await {
+        Ok(c) => c,
+        Err(e) => {
+            tracing::error!("Failed to load config: {}", e);
+            return (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                Json(json!({ "status": "error", "message": e.to_string() })),
+            ).into_response();
         }
-    
-        Json(json!({
-            "message": "Configuration updated successfully",
-            "status": "success"
-        }))
-    } else {
-        Json(json!({
-            "message": "Configuration updated failed",
-            "status": "failed"
-        }))
+    };
+
+    config.settings = payload;
+
+    if let Err(e) = repository::update_config(&state.db, &config).await {
+        tracing::error!("Failed to update config: {}", e);
+        return (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            Json(json!({ "status": "error", "message": e.to_string() })),
+        ).into_response();
     }
+
+    Json(json!({ "status": "success", "message": "Configuration updated successfully" })).into_response()
 }

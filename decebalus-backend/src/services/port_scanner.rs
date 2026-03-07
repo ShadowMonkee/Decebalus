@@ -177,6 +177,9 @@ impl PortScanner {
     async fn add_banner_to_host(state: &Arc<AppState>, ip: &str, banner: String) {
         if let Ok(Some(mut host)) = repository::get_host(&state.db, ip).await {
             host.add_banner(banner);
+            if let Err(e) = repository::upsert_host(&state.db, &host).await {
+                tracing::error!("Failed to save banner for host {}: {}", ip, e);
+            }
         }
     }
 }

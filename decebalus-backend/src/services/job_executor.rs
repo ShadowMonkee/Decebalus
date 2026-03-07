@@ -1,4 +1,3 @@
-use std::cmp::Ordering;
 use std::sync::Arc;
 use chrono::Utc;
 use tokio::sync::OwnedSemaphorePermit;
@@ -77,14 +76,15 @@ impl JobExecutor {
         }
 
         jobs.sort_by(|a, b| {
-            use JobPriority::*;
-            match (&a.priority, &b.priority) {
-                (CRITICAL, LOW | NORMAL | HIGH) => Ordering::Less,
-                (HIGH, CRITICAL) => Ordering::Greater,
-                (NORMAL, CRITICAL) => Ordering::Greater,
-                (LOW, CRITICAL) => Ordering::Greater,
-                _ => Ordering::Equal,
+            fn rank(p: &JobPriority) -> u8 {
+                match p {
+                    JobPriority::LOW => 0,
+                    JobPriority::NORMAL => 1,
+                    JobPriority::HIGH => 2,
+                    JobPriority::CRITICAL => 3,
+                }
             }
+            rank(&b.priority).cmp(&rank(&a.priority)) // descending: highest priority first
         });
 
         // Spawn jobs up to available permits

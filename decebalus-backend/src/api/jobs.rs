@@ -52,6 +52,13 @@ pub async fn schedule_job(
     Json(payload): Json<CreateJobRequest>,
 ) -> impl IntoResponse {
 
+    if payload.scheduled_at.is_none() {
+        return (
+            StatusCode::BAD_REQUEST,
+            Json(json!({ "error": "scheduled_at is required for scheduled jobs" })),
+        ).into_response();
+    }
+
     let mut job = match parse_job_from_request(&payload) {
         Ok(job) => job,
         Err(resp) => return resp

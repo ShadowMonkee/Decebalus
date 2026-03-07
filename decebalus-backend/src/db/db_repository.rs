@@ -3,7 +3,7 @@
 use async_trait::async_trait;
 use sqlx::SqlitePool;
 use crate::db::repository_trait::Repository;
-use crate::models::{Job, JobPriority, Host, Config, DisplayStatus, Log};
+use crate::models::{Job, Host, Config, DisplayStatus, Log};
 use chrono::DateTime;
 use chrono::Utc;
 

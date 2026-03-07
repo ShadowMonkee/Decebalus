@@ -1,6 +1,6 @@
 use axum::{
     extract::State,
-    response::IntoResponse,
+    response::{IntoResponse, Response},
     http::StatusCode,
     Json,
 };
@@ -18,7 +18,7 @@ pub async fn get_display_status(State(state): State<Arc<AppState>>) -> impl Into
         Ok(status) => Json(status).into_response(),
         Err(e) => (
             StatusCode::INTERNAL_SERVER_ERROR,
-            format!("Failed to get display status: {}", e),
+            Json(json!({ "error": format!("Failed to get display status: {}", e) })),
         ).into_response(),
     }
 }
@@ -29,7 +29,7 @@ pub async fn get_display_status(State(state): State<Arc<AppState>>) -> impl Into
 pub async fn update_display(
     State(state): State<Arc<AppState>>,
     Json(payload): Json<Value>,
-) -> impl IntoResponse {
+) -> Response {
     let text = payload
         .get("text")
         .and_then(|v| v.as_str())
@@ -41,18 +41,16 @@ pub async fn update_display(
         last_update: Utc::now().to_rfc3339(),
     };
 
-    // Save to DB through the repository
     if let Err(e) = repository::update_display_status(&state.db, &new_status).await {
         tracing::error!("Failed to update display status: {}", e);
+        return (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            Json(json!({ "error": "Failed to update display status" })),
+        ).into_response();
     }
 
-    // Broadcast update
     let _ = state.broadcaster.send(format!("display_updated:{}", text));
 
-    // Return JSON response
-    Json(json!({
-        "message": format!("Updating e-paper display with: {}", text),
-        "status": "success"
-    }))
+    Json(json!({ "status": "success", "message": format!("Display updated: {}", text) })).into_response()
 }
 

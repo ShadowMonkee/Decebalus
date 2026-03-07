@@ -6,7 +6,6 @@ use futures_util::StreamExt;
 use ipnet::{IpNet, Ipv4Net};
 use crate::models::Host;
 use crate::state::AppState;
-use ipnetwork::{IpNetwork, Ipv4Network};
 use tokio::sync::Semaphore;
 use crate::db::repository;
 use pnet_datalink::interfaces;
@@ -87,30 +86,6 @@ impl NetworkScanner {
         Ok(total)
     }
     
-    /// Parse network CIDR notation
-    /// 
-    /// # Arguments
-    /// * `network` - CIDR notation (e.g., "192.168.1.0/24")
-    /// 
-    /// # Returns
-    /// Tuple of (base_ip, range_size)
-    fn parse_network(network: &str) -> Result<(String, u32), String> {
-        // Try to parse the CIDR using ipnetwork
-        match network.parse::<Ipv4Network>() {
-            Ok(net) => {
-                // Example: 192.168.1.0/24 → base_ip = "192.168.1", range = 254
-                let base_ip = net.network().octets();
-                
-                // Calculate number of usable host addresses
-                let total_ips = (2u32.pow((32 - net.prefix()) as u32)).saturating_sub(2);
-                
-                let base_ip_str = format!("{}.{}.{}", base_ip[0], base_ip[1], base_ip[2]);
-                Ok((base_ip_str, total_ips))
-            }
-            Err(_) => Err(format!("Invalid CIDR notation: {}", network)),
-        }
-    }
-    
     /// Check if a host is alive
     /// Uses a simple TCP connection attempt to common ports
     /// 
@@ -120,22 +95,39 @@ impl NetworkScanner {
     /// # Returns
     /// true if host responds, false otherwise
     async fn is_host_alive(ip: &str) -> bool {
-        // Try to connect to common ports (faster than ICMP ping)
-        let common_ports = [80, 443, 22, 21, 445, 3389];
-        
-        for port in common_ports {
+        // Probe a broad set of ports to cover servers, IoT devices, printers, etc.
+        // Connection refused is an instant response and also confirms the host is up.
+        let ports = [
+            80, 443, 8080, 8443,        // HTTP/S
+            22, 23,                      // SSH, Telnet
+            21,                          // FTP
+            25, 587,                     // SMTP
+            445, 139,                    // SMB
+            3389,                        // RDP
+            3306, 5432,                  // MySQL, PostgreSQL
+            6379,                        // Redis
+            9100,                        // Printer JetDirect
+            1883, 8883,                  // MQTT (IoT)
+            5000, 8888,                  // Common dev/API ports
+        ];
+
+        let mut handles = Vec::new();
+        for port in ports {
             let addr = format!("{}:{}", ip, port);
-            
-            // Try to connect with short timeout
-            match tokio::time::timeout(
-                Duration::from_millis(500),
-                tokio::net::TcpStream::connect(&addr)
-            ).await {
-                Ok(Ok(_)) => {
-                    // Connection successful - host is alive
-                    return true;
-                }
-                _ => continue,
+            handles.push(tokio::spawn(async move {
+                tokio::time::timeout(
+                    Duration::from_millis(500),
+                    tokio::net::TcpStream::connect(&addr),
+                )
+                .await
+                .map(|r| r.is_ok())
+                .unwrap_or(false)
+            }));
+        }
+
+        for handle in handles {
+            if let Ok(true) = handle.await {
+                return true;
             }
         }
         false
@@ -184,15 +176,6 @@ impl NetworkScanner {
             // }
         }
         Err("No suitable local network interface found".to_string())
-    }
-
-    fn is_private_network(net: &IpNetwork) -> bool {
-        match net {
-            IpNetwork::V4(v4) =>
-                v4.ip().is_private(),
-            IpNetwork::V6(v6) =>
-                v6.ip().is_unique_local(),
-        }
     }
 
     fn log_and_broadcast(state: &Arc<AppState>, message: &str) {
