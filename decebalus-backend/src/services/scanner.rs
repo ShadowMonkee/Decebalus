@@ -26,7 +26,15 @@ impl NetworkScanner {
     /// 
     /// # Returns
     /// Number of hosts discovered
-    pub async fn discover_hosts(network: IpNet, state: &Arc<AppState>) -> Result<usize, String> {
+    pub async fn discover_hosts(target: &str, state: &Arc<AppState>) -> Result<usize, String> {
+        let network = if target == "self" {
+            Self::detect_local_network()?
+        } else {
+            target
+                .parse::<IpNet>()
+                .map_err(|_| format!("Invalid network CIDR: {}", target))?
+        };
+
         Self::log_and_broadcast(state, &format!("Starting network discovery on {}", network));
 
         let ips: Vec<IpAddr> = network.hosts().collect();
@@ -133,7 +141,7 @@ impl NetworkScanner {
         false
     }
 
-    pub async fn detect_local_network() -> Result<IpNet, String> {
+    pub fn detect_local_network() -> Result<IpNet, String> {
         let interfaces = interfaces();
 
         for iface in interfaces {

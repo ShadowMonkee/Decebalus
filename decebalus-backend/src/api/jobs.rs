@@ -175,13 +175,15 @@ fn parse_job_from_request(payload: &CreateJobRequest) -> Result<Job, Response>  
                 .into_response()
         })?;
 
-        validate_cidr(&target).map_err(|e| {
-            (
-                StatusCode::BAD_REQUEST,
-                Json(json!({ "error": e })),
-            )
-                .into_response()
-        })?;
+        if target != "self" {
+            validate_cidr(&target).map_err(|e| {
+                (
+                    StatusCode::BAD_REQUEST,
+                    Json(json!({ "error": e })),
+                )
+                    .into_response()
+            })?;
+        }
 
         config.insert("target".to_string(), Value::String(target));
     }

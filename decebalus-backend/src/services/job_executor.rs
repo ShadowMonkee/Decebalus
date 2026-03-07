@@ -112,24 +112,18 @@ impl JobExecutor {
     /// Run network discovery
     async fn run_discovery(state: &Arc<AppState>, job: &Job) -> Result<String, String> {
         tracing::info!("Running network discovery for job {}", job.id);
-        let target_network = match job.target() {
-            Ok(cidr) => cidr,
-            Err(e) => {
-                tracing::error!("Failed to get target network: {}", e);
-                return Err(e);
-            }
-        };
+        let target = job.target()?;
 
-        let hosts_found = scanner::NetworkScanner::discover_hosts(target_network, state).await?;
-        
+        let hosts_found = scanner::NetworkScanner::discover_hosts(&target, state).await?;
+
         let results = serde_json::json!({
             "job_id": job.id,
             "job_type": "discovery",
-            "target_network": target_network.to_string(),
+            "target_network": target,
             "hosts_found": hosts_found,
             "timestamp": chrono::Utc::now().to_rfc3339(),
         });
-        
+
         Ok(results.to_string())
     }
     

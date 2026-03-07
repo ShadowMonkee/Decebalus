@@ -1,9 +1,7 @@
-use ipnet::IpNet;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 use crate::models::JobPriority;
-use crate::services::scanner;
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct Job {
@@ -51,20 +49,12 @@ impl Job {
         self.status == "scheduled"
     }
 
-    pub fn target(&self) -> Result<IpNet, String> {
-        let target_str = self
-            .config
+    pub fn target(&self) -> Result<String, String> {
+        self.config
             .get("target")
             .and_then(|v| v.as_str())
-            .ok_or_else(|| "Job config missing 'target' field".to_string())?;
-
-        if target_str == "self" {
-            return scanner::NetworkScanner::detect_local_network();
-        }
-
-        target_str
-            .parse::<IpNet>()
-            .map_err(|_| format!("Invalid CIDR in job config: {}", target_str))
+            .map(|s| s.to_string())
+            .ok_or_else(|| "Job config missing 'target' field".to_string())
     }
 }
 
