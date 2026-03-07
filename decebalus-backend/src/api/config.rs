@@ -5,7 +5,7 @@ use axum::{
     Json,
 };
 use std::sync::Arc;
-use serde_json::json;
+use serde_json::{json, Value};
 use crate::state::AppState;
 use crate::db::repository;
 
@@ -34,7 +34,7 @@ pub async fn get_config(State(state): State<Arc<AppState>>) -> impl IntoResponse
 /// Body: { "key": "value", ... } (any JSON object)
 pub async fn update_config(
     State(state): State<Arc<AppState>>,
-    Json(payload): Json<serde_json::Value>,
+    Json(payload): Json<Value>,
 ) -> impl IntoResponse {
     if let Ok(mut config) = repository::get_config(&state.db).await {
         config.settings = payload;
@@ -43,12 +43,12 @@ pub async fn update_config(
             tracing::error!("Failed to update config: {}", e);
         }
     
-        Json(serde_json::json!({
+        Json(json!({
             "message": "Configuration updated successfully",
             "status": "success"
         }))
     } else {
-        Json(serde_json::json!({
+        Json(json!({
             "message": "Configuration updated failed",
             "status": "failed"
         }))

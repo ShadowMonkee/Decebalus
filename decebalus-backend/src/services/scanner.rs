@@ -3,12 +3,13 @@ use std::sync::Arc;
 use std::time::Duration;
 use futures_util::stream::FuturesUnordered;
 use futures_util::StreamExt;
-use ipnet::IpNet;
+use ipnet::{IpNet, Ipv4Net};
 use crate::models::Host;
 use crate::state::AppState;
-use ipnetwork::Ipv4Network;
+use ipnetwork::{IpNetwork, Ipv4Network};
 use tokio::sync::Semaphore;
 use crate::db::repository;
+use pnet_datalink::interfaces;
 
 
 
@@ -129,8 +130,61 @@ impl NetworkScanner {
                 _ => continue,
             }
         }
-        
         false
+    }
+
+    pub async fn detect_local_network() -> Result<IpNet, String> {
+        let interfaces = interfaces();
+
+        for iface in interfaces {
+            if !iface.is_up() || iface.is_loopback() {
+                continue;
+            }
+            // skip docker/vpn/etc
+            if iface.name.starts_with("docker")
+                || iface.name.starts_with("veth")
+                || iface.name.starts_with("tun")
+            {
+                continue;
+            }
+            for ip in iface.ips {
+                match ip.ip() {
+                    IpAddr::V4(v4) => {
+                        if v4.is_loopback() || v4.is_link_local() {
+                            continue;
+                        }
+
+                        let prefix = ip.prefix();
+                        let net = Ipv4Net::new(v4, prefix)
+                            .map_err(|e| e.to_string())?
+                            .trunc();
+
+                        return Ok(IpNet::V4(net));
+                    }
+                    IpAddr::V6(_) => continue,
+                }
+            }
+            // for ip in iface.ips {
+            //     // Skip loopback / link-local
+            //     if let std::net::IpAddr::V4(v4) = ip.ip() {
+            //         if v4.is_loopback() || v4.is_link_local() {
+            //             continue;
+            //         }
+            //         return Ok(ip);
+            //     }
+            //     return Ok(ip);
+            // }
+        }
+        Err("No suitable local network interface found".to_string())
+    }
+
+    fn is_private_network(net: &IpNetwork) -> bool {
+        match net {
+            IpNetwork::V4(v4) =>
+                v4.ip().is_private(),
+            IpNetwork::V6(v6) =>
+                v6.ip().is_unique_local(),
+        }
     }
 
     fn log_and_broadcast(state: &Arc<AppState>, message: &str) {

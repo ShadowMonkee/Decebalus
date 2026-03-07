@@ -4,6 +4,7 @@ use axum::{
 };
 use futures_util::{SinkExt, StreamExt};
 use std::sync::Arc;
+use tracing::info;
 use crate::state::AppState;
 
 /// WebSocket endpoint for real-time updates
@@ -12,7 +13,7 @@ pub async fn ws_handler(
     ws: WebSocketUpgrade,
     State(state): State<Arc<AppState>>,
 ) -> impl IntoResponse {
-    tracing::info!("Connected to WS!");
+    info!("Connected to WS!");
     ws.on_upgrade(move |socket| handle_socket(socket, state))
 }
 
@@ -35,7 +36,7 @@ async fn handle_socket(socket: WebSocket, state: Arc<AppState>) {
         while let Some(Ok(msg)) = receiver.next().await {
             match msg {
                 Message::Text(t) => {
-                    tracing::info!("Received message from client: {}", t);
+                    info!("Received message from client: {}", t);
                 }
                 Message::Close(_) => break,
                 _ => {}
@@ -49,5 +50,5 @@ async fn handle_socket(socket: WebSocket, state: Arc<AppState>) {
         _ = (&mut recv_task) => send_task.abort(),
     }
 
-    tracing::info!("WebSocket connection closed");
+    info!("WebSocket connection closed");
 }

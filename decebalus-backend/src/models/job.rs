@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 use crate::models::JobPriority;
+use crate::services::scanner;
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct Job {
@@ -56,6 +57,10 @@ impl Job {
             .get("target")
             .and_then(|v| v.as_str())
             .ok_or_else(|| "Job config missing 'target' field".to_string())?;
+
+        if target_str == "self" {
+            return scanner::NetworkScanner::detect_local_network();
+        }
 
         target_str
             .parse::<IpNet>()

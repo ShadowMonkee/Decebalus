@@ -6,6 +6,7 @@ use axum::{
 };
 use chrono::Utc;
 use std::sync::Arc;
+use serde_json::{json, Value};
 use crate::models::DisplayStatus;
 use crate::state::AppState;
 use crate::db::repository;
@@ -27,7 +28,7 @@ pub async fn get_display_status(State(state): State<Arc<AppState>>) -> impl Into
 /// Body: { "text": "Status message", "image": "optional_base64_image" }
 pub async fn update_display(
     State(state): State<Arc<AppState>>,
-    Json(payload): Json<serde_json::Value>,
+    Json(payload): Json<Value>,
 ) -> impl IntoResponse {
     let text = payload
         .get("text")
@@ -49,7 +50,7 @@ pub async fn update_display(
     let _ = state.broadcaster.send(format!("display_updated:{}", text));
 
     // Return JSON response
-    Json(serde_json::json!({
+    Json(json!({
         "message": format!("Updating e-paper display with: {}", text),
         "status": "success"
     }))

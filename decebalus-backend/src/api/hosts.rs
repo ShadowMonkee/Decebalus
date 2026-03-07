@@ -4,6 +4,7 @@ use axum::{
     Json,
 };
 use std::sync::Arc;
+use serde_json::json;
 use crate::state::AppState;
 use crate::db::repository;
 
@@ -15,7 +16,7 @@ pub async fn list_hosts(State(state): State<Arc<AppState>>) -> impl IntoResponse
             tracing::error!("Failed to list hosts: {}", e);
             (
                 axum::http::StatusCode::INTERNAL_SERVER_ERROR,
-                Json(serde_json::json!({"error": "Failed to list hosts"})),
+                Json(json!({"error": "Failed to list hosts"})),
             ).into_response()
         }
     }
@@ -30,13 +31,13 @@ pub async fn get_host(
         Ok(Some(host)) => (axum::http::StatusCode::OK, Json(host)).into_response(),
         Ok(None) => (
             axum::http::StatusCode::NOT_FOUND,
-            Json(serde_json::json!({"error": format!("Host with IP {} not found", ip)})),
+            Json(json!({"error": format!("Host with IP {} not found", ip)})),
         ).into_response(),
         Err(e) => {
             tracing::error!("Failed to get host: {}", e);
             (
                 axum::http::StatusCode::INTERNAL_SERVER_ERROR,
-                Json(serde_json::json!({"error": "Failed to get host"})),
+                Json(json!({"error": "Failed to get host"})),
             ).into_response()
         }
     }

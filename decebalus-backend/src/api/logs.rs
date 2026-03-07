@@ -4,6 +4,7 @@ use axum::{
     Json,
 };
 use std::sync::Arc;
+use serde_json::json;
 use crate::state::AppState;
 use crate::db::repository;
 
@@ -14,7 +15,7 @@ pub async fn get_all_logs(state: State<Arc<AppState>>) -> impl IntoResponse {
             tracing::error!("Failed to list logs: {}", e);
             (
                 axum::http::StatusCode::INTERNAL_SERVER_ERROR,
-                Json(serde_json::json!({"error": "Failed to list logs"})),
+                Json(json!({"error": "Failed to list logs"})),
             ).into_response()
         }
     }
@@ -31,7 +32,7 @@ pub async fn get_logs_by_job_id(
             tracing::error!("Failed to get logs for job: {}", e);
             (
                 axum::http::StatusCode::INTERNAL_SERVER_ERROR,
-                Json(serde_json::json!({ "error": "Failed to retrieve logs" })),
+                Json(json!({ "error": "Failed to retrieve logs" })),
             )
             .into_response()
         }
