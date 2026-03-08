@@ -2,85 +2,84 @@
 @import '@fontsource/atkinson-hyperlegible';
 
 :root {
-	--pico-font-family: 'Atkinson Hyperlegible', sans-serif;
-	--nav-height: 64px;
+  --pico-font-family: 'Atkinson Hyperlegible', sans-serif;
+
+  /* Override PicoCSS primary to bronze */
+  --pico-primary:             hsl(30, 60%, 50%);
+  --pico-primary-hover:       hsl(30, 60%, 42%);
+  --pico-primary-focus:       hsla(30, 60%, 50%, 0.25);
+  --pico-primary-inverse:     #fff;
+
+  --nav-height: 3.5rem;
+
+  /* Custom palette */
+  --color-bronze: hsl(30, 60%, 50%);
+  --color-ash:       #9ca3af;
+  --color-ash-light: #d1d5db;
+  --color-danger:    #ef4444;
+  --color-success:   #22c55e;
 }
 
-#app {
-	height: 100svh;
-	display: grid;
-	place-content: top;
+body {
+  min-height: 100svh;
 }
-/* Main content area - accounts for fixed navbar */
+
 main {
-	flex: 1;
-	margin-top: calc(var(--nav-height)); /* Add extra padding if needed */
-	padding: 2rem 1.5rem 3rem;
-	max-width: 1200px;
-	margin-left: auto;
-	margin-right: auto;
-	width: 100%;
-	box-sizing: border-box;
-}
-
-/* Footer styling */
-footer {
-	text-align: center;
-	padding: 1rem;
-	border-top: 1px solid rgba(255, 140, 0, 0.3);
-	color: #aaa;
-	font-size: 0.9rem;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-	:root {
-		--nav-height: 72px;
-	}
-
-	nav {
-		flex-direction: column;
-		align-items: flex-start;
-		height: auto;
-		padding: 1rem;
-	}
-
-	main {
-		padding: 1.5rem 1rem 2rem;
-	}
-}
-
-.card {
+  margin-top: var(--nav-height);
   padding: 1.5rem;
-  border-radius: 0.75rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+  width: 100%;
 }
 
-.progress-bar {
-  position: relative;
-  height: 0.75rem;
-  background-color: #e2e8f0;
-  border-radius: 0.375rem;
-  overflow: hidden;
+footer {
+  text-align: center;
+  padding: 1rem;
+  border-top: 1px solid var(--pico-muted-border-color);
+  color: var(--color-ash);
+  font-size: 0.9rem;
 }
 
-.progress-fill {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  background-color: red;
-  transition: width 0.3s ease-in-out;
+/* Badges */
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.badge-success { background: #14532d; color: #bbf7d0; }
+.badge-info    { background: #1e3a8a; color: #bfdbfe; }
+.badge-warn    { background: #78350f; color: #fde68a; }
+.badge-danger  { background: #7f1d1d; color: #fecaca; }
+.badge-neutral { background: #1f2937; color: #d1d5db; }
+
+/* Error / success text */
+.error   { color: var(--color-danger); }
+.success { color: var(--color-success); }
+
+/* Shared table / button utilities */
+.table-wrap { overflow-x: auto; }
+.sm { padding: 0.2rem 0.6rem; font-size: 0.85rem; }
+
+/* Expandable detail rows */
+.detail-row td {
+  background: var(--pico-card-background-color);
+  border-top: none;
+  padding: 1rem 1.25rem;
+}
+.detail-row pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 0.82rem;
+  color: var(--color-ash-light);
 }
 
-.card-hover:hover {
-  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
-}
-
-.badge-info {
-  padding: 0.25rem 0.5rem;
-  text-transform: capitalize;
-  font-weight: bold;
-  color: white;
-  background-color: #4a90e2;
-  border-radius: 0.375rem;
+@media (max-width: 768px) {
+  main {
+    padding: 1rem;
+  }
 }

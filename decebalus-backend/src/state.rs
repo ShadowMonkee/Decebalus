@@ -10,7 +10,8 @@ pub struct AppState {
     
     /// Database connection pool
     pub db: DbPool,
-    pub max_threads: usize, 
+    pub max_threads: usize,
+    pub max_scan_concurrency: usize,
     pub semaphore: Arc<Semaphore>,
 }
 
@@ -23,11 +24,17 @@ impl AppState {
             .ok()
             .and_then(|s| s.parse::<usize>().ok())
             .unwrap_or(5);
-        
+
+        let max_scan_concurrency = std::env::var("MAX_SCAN_CONCURRENCY")
+            .ok()
+            .and_then(|s| s.parse::<usize>().ok())
+            .unwrap_or(500);
+
         Self {
             broadcaster: tx,
             db,
             max_threads,
+            max_scan_concurrency,
             semaphore: Arc::new(Semaphore::new(max_threads)),
         }
     }

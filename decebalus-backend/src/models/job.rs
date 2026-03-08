@@ -1,3 +1,4 @@
+use chrono::Utc;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
@@ -23,7 +24,7 @@ impl Job {
             status: "queued".to_string(),
             priority: JobPriority::NORMAL,
             results: None,
-            created_at: String::new(),
+            created_at: Utc::now().format("%Y-%m-%d %H:%M:%S").to_string(),
             scheduled_at: None,
             config: Default::default(),
         }
@@ -71,7 +72,7 @@ mod tests {
         assert_eq!(job.status, "queued");
         assert_eq!(job.priority, JobPriority::NORMAL);
         assert!(job.results.is_none());
-        assert!(job.created_at.is_empty());
+        assert!(!job.created_at.is_empty());
         assert!(job.scheduled_at.is_none());
 
         // ID should not be empty

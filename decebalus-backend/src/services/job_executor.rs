@@ -127,35 +127,50 @@ impl JobExecutor {
         Ok(results.to_string())
     }
     
-    /// Run port scanning on discovered hosts
+    /// Run port scanning — either a single host (if job.config.target is set) or all hosts.
     async fn run_port_scan(state: &Arc<AppState>, job: &Job) -> Result<String, String> {
-        tracing::info!("Running port scan for job {}", job.id);
-        
-        // Get all hosts to scan
-        let hosts_to_scan = {
-            let hosts = repository::list_hosts(&state.db)
-            .await.map_err(|e| format!("Failed to list hosts: {}", e))?;
-            hosts.iter().map(|h| h.ip.clone()).collect::<Vec<_>>()
+        let hosts_to_scan: Vec<String> = match job.target() {
+            Ok(ip) => {
+                let msg = format!(
+                    "[port-scan] Job {} — mode: single host | target: {} | concurrency: {}",
+                    job.id, ip, state.max_scan_concurrency
+                );
+                tracing::info!("{}", msg);
+                let _ = repository::add_log(&state.db, "INFO", "port_scanner", Some("run_port_scan"), Some(&job.id), &msg).await;
+                vec![ip]
+            }
+            Err(_) => {
+                let hosts = repository::list_hosts(&state.db)
+                    .await
+                    .map_err(|e| format!("Failed to list hosts: {}", e))?;
+                let ips: Vec<String> = hosts.iter().map(|h| h.ip.clone()).collect();
+                let msg = format!(
+                    "[port-scan] Job {} — mode: all hosts | targets: [{}] | concurrency: {}",
+                    job.id,
+                    ips.join(", "),
+                    state.max_scan_concurrency
+                );
+                tracing::info!("{}", msg);
+                let _ = repository::add_log(&state.db, "INFO", "port_scanner", Some("run_port_scan"), Some(&job.id), &msg).await;
+                ips
+            }
         };
-        
+
         if hosts_to_scan.is_empty() {
-            return Err("No hosts available to scan. Run discovery first.".to_string());
+            return Err("No hosts to scan. Run discovery first.".to_string());
         }
-        
+
         let mut total_ports_found = 0;
-        
-        // Scan each host
+
         for ip in &hosts_to_scan {
-            let open_ports = port_scanner::PortScanner::scan_host(ip, state).await?;
+            let open_ports = port_scanner::PortScanner::scan_host(ip, state, &job.id).await?;
             total_ports_found += open_ports;
-            
-            // Broadcast progress
             let _ = state.broadcaster.send(format!(
                 "scan_progress:{}:{}:{}",
                 job.id, ip, open_ports
             ));
         }
-        
+
         let results = serde_json::json!({
             "job_id": job.id,
             "job_type": "port-scan",
@@ -163,7 +178,7 @@ impl JobExecutor {
             "total_ports_found": total_ports_found,
             "timestamp": chrono::Utc::now().to_rfc3339(),
         });
-        
+
         Ok(results.to_string())
     }
 
@@ -246,7 +261,7 @@ impl JobExecutor {
     }
     
     /// Run full Nmap vulnerability scan
-    async fn run_nmap_scan(state: &Arc<AppState>, job: &Job) -> Result<String, String> {
+    async fn run_nmap_scan(_state: &Arc<AppState>, job: &Job) -> Result<String, String> {
         tracing::info!("Running nmap scan for job {}", job.id);
         
         // TODO: Implement nmap integration

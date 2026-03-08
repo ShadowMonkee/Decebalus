@@ -1,47 +1,35 @@
 import { writable } from 'svelte/store';
 import { WebSocketClient } from './websocket';
 
-// Create stores (reactive containers)
-export const websocket = writable<WebSocketClient | null>(null);
 export const connectionStatus = writable<'connected' | 'connecting' | 'disconnected'>('disconnected');
+
+// Every incoming WS message is pushed here. Pages subscribe to this store.
+export const wsMessages = writable<string | object | null>(null);
+
 let activeConnection: WebSocketClient | null = null;
 
-
-// Function that connects and updates the stores
-export function connectWebSocket() {
-
+export function connectWebSocket(): WebSocketClient {
   if (activeConnection && activeConnection.readyState === WebSocket.OPEN) {
-    console.log('Reusing existing connection');
     return activeConnection;
   }
 
-  // Create your WebSocket client
-  const ws = new WebSocketClient('ws://0.0.0.0:8080/ws', {
-    onOpen: () => connectionStatus.set('connected'),
-    onClose: () => connectionStatus.set('disconnected'),
-    onMessage: (data) => {
-      console.log('Message from backend through WS: ', data);
-    }
+  // Relative URL works in dev (Vite proxies /ws) and in prod (served from same host)
+  const wsUrl = `ws://${window.location.host}/ws`;
+
+  const ws = new WebSocketClient(wsUrl, {
+    onOpen:    () => connectionStatus.set('connected'),
+    onClose:   () => connectionStatus.set('disconnected'),
+    onMessage: (data) => wsMessages.set(data),
   });
 
-  // While connecting
   connectionStatus.set('connecting');
-
-  // Actually connect
   ws.connect();
   activeConnection = ws;
-
-  // Save the active WebSocket instance in the store
-  websocket.set(ws);
-
   return ws;
 }
 
-// Function to disconnect safely
-export function closeWebSocket() {
-  websocket.update((ws) => {
-    ws?.close(); // close connection if open
-    return null;
-  });
+export function closeWebSocket(): void {
+  activeConnection?.close();
+  activeConnection = null;
   connectionStatus.set('disconnected');
 }

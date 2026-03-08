@@ -1,244 +1,466 @@
 <script lang="ts">
-  import { onMount, onDestroy } from 'svelte';
-  import { connectWebSocket } from '../stores/websocketStore';
+  import { onMount } from 'svelte';
+  import { wsMessages } from '../stores/websocketStore';
+  import { getHosts, getJobs, createJob, cancelJob, scheduleJob, type Host, type Job } from '../api';
+  import { fmtDate } from '../utils';
 
-  // --- Interfaces ---
-  interface WifiNetwork {
-    ssid?: string;
-    bssid: string;
-    channel: number;
-    signal: number;
-    security: string;
+  let hosts: Host[] = [];
+  let jobs: Job[] = [];
+  let target = 'self';
+  let error = '';
+  let success = '';
+  let submitting = false;
+  let scanningIps = new Set<string>();
+  let scanningAll = false;
+  let refreshing = false;
+  let expandedHostIp: string | null = null;
+  let scheduleMode = false;
+  let scheduledAt = '';
+  let scanProgress = new Map<string, string>(); // jobId → latest phase message
+
+  function minDatetime(): string {
+    const d = new Date(Date.now() + 60_000);
+    const p = (n: number) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
   }
 
-  interface NetworkHost {
-    ip: string;
-    hostname?: string;
-    mac?: string;
-    ports?: number[];
+  onMount(async () => {
+    await refresh();
+  });
+
+  async function refresh() {
+    refreshing = true;
+    try {
+      [hosts, jobs] = await Promise.all([getHosts(), getJobs()]);
+      error = '';
+    } catch (e: any) {
+      error = e.message;
+    } finally {
+      refreshing = false;
+    }
   }
 
-  interface BluetoothDevice {
-    name?: string;
-    address: string;
-    deviceClass?: string;
-  }
-
-  // --- State ---
-  let activeTab: 'wifi' | 'network' | 'bluetooth' = 'wifi';
-  let scanning = false;
-  let scanProgress = 0;
-  let scanStatus = '';
-
-  let wifiNetworks: WifiNetwork[] = [];
-  let networkHosts: NetworkHost[] = [];
-  let bluetoothDevices: BluetoothDevice[] = [];
-
-  let wsInstance: any = null;
-
-  // --- Helpers ---
-  function getSignalStrength(signal: number) {
-    const percentage = Math.min(100, Math.max(0, (signal + 100) * 2));
-    const bars = Math.ceil(percentage / 25);
-    return bars;
-  }
-
-  function getSecurityBadge(security: string) {
-    if (security.includes('WPA3')) return 'badge-success';
-    if (security.includes('WPA2')) return 'badge-info';
-    if (security.includes('WEP')) return 'badge-danger';
-    return 'badge-warning';
-  }
-
-  function startScan() {
-    scanning = true;
-    scanProgress = 0;
-    scanStatus = 'Initializing scan...';
-
-    const scanTypes = {
-      wifi: 'start_wifi_scan',
-      network: 'start_network_scan',
-      bluetooth: 'start_bluetooth_scan'
-    };
-
-    wsInstance?.send({ type: scanTypes[activeTab] });
-  }
-
-  function stopScan() {
-    scanning = false;
-    wsInstance?.send({ type: 'stop_scan' });
-  }
-
-  // --- Lifecycle ---
-  onMount(() => {
-    // Connect WebSocket
-    wsInstance = connectWebSocket();
-
-    // Override onMessage for all incoming events
-    wsInstance.onMessage = (data: any) => {
-      switch (data.type) {
-        case 'wifi_scan_result':
-          wifiNetworks = data.networks;
-          scanning = false;
-          scanProgress = 100;
-          break;
-        case 'network_scan_result':
-          networkHosts = data.hosts;
-          scanning = false;
-          scanProgress = 100;
-          break;
-        case 'bluetooth_scan_result':
-          bluetoothDevices = data.devices;
-          scanning = false;
-          scanProgress = 100;
-          break;
-        case 'scan_progress':
-          scanProgress = data.percent;
-          scanStatus = data.status;
-          break;
+  $: if ($wsMessages) {
+    const msg = $wsMessages;
+    if (typeof msg === 'string') {
+      if (msg.startsWith('scan_progress:')) {
+        const rest = msg.slice('scan_progress:'.length);
+        const colon = rest.indexOf(':');
+        if (colon !== -1) {
+          const jobId = rest.slice(0, colon);
+          const phase = rest.slice(colon + 1);
+          scanProgress = new Map(scanProgress).set(jobId, phase);
+        }
+      } else if (msg.startsWith('job_completed:') || msg.startsWith('job_failed:')) {
+        const jobId = msg.split(':')[1];
+        if (jobId) {
+          scanProgress = new Map(scanProgress);
+          scanProgress.delete(jobId);
+        }
+        refresh();
+      } else if (msg.startsWith('job_')) {
+        refresh();
       }
-    };
-  });
+    }
+  }
 
-  onDestroy(() => {
-    wsInstance = null;
-  });
+  async function startDiscovery() {
+    submitting = true;
+    error = '';
+    try {
+      const t = target.trim() || 'self';
+      if (scheduleMode) {
+        if (!scheduledAt) { error = 'Please pick a date and time.'; submitting = false; return; }
+        const ts = Math.floor(new Date(scheduledAt).getTime() / 1000);
+        await scheduleJob('discovery', t, ts);
+        scheduleMode = false;
+        scheduledAt = '';
+        success = 'Discovery scan scheduled.';
+      } else {
+        await createJob('discovery', t);
+        success = '';
+      }
+      await refresh();
+    } catch (e: any) {
+      error = e.message;
+    } finally {
+      submitting = false;
+    }
+  }
+
+  async function startFullPortScan() {
+    if (scanningAll) return;
+    error = '';
+    scanningAll = true;
+    try {
+      await createJob('port-scan');
+      await refresh();
+    } catch (e: any) {
+      error = e.message;
+    } finally {
+      scanningAll = false;
+    }
+  }
+
+  async function startPortScan(ip: string) {
+    if (scanningIps.has(ip)) return;
+    error = '';
+    scanningIps = new Set(scanningIps).add(ip);
+    try {
+      await createJob('port-scan', ip);
+      await refresh();
+    } catch (e: any) {
+      error = e.message;
+    } finally {
+      scanningIps = new Set([...scanningIps].filter(x => x !== ip));
+    }
+  }
+
+  async function handleCancel(id: string) {
+    try {
+      await cancelJob(id);
+      await refresh();
+    } catch (e: any) {
+      error = e.message;
+    }
+  }
+
+  function toggleDetail(ip: string) {
+    expandedHostIp = expandedHostIp === ip ? null : ip;
+  }
+
+  // Find an active discovery job
+  $: activeDiscovery = jobs.find(
+    j => j.job_type === 'discovery' && (j.status === 'running' || j.status === 'queued')
+  );
+
+  // Find a running/queued port-scan job for a given host IP, or any full scan (no target)
+  function portScanFor(ip: string): Job | undefined {
+    return jobs.find(
+      j => j.job_type === 'port-scan' &&
+           (j.config.target === ip || !j.config.target) &&
+           (j.status === 'running' || j.status === 'queued')
+    );
+  }
+
+  $: activeFullScan = jobs.find(
+    j => j.job_type === 'port-scan' && !j.config.target &&
+         (j.status === 'running' || j.status === 'queued')
+  );
+
+  function openPorts(host: Host): string {
+    const open = host.ports.filter(p => p.status === 'open').map(p => p.number);
+    return open.length ? open.join(', ') : '—';
+  }
 </script>
 
-<div class="space-y-6">
-  <!-- Header -->
-  <div class="flex items-center justify-between">
-    <div>
-      <h1 class="text-3xl font-bold text-bronze text-glow">Reconnaissance</h1>
-      <p class="text-ash mt-2">Scout the battlefield and identify targets</p>
+<hgroup>
+  <h1>Reconnaissance</h1>
+  <p>Discover hosts and scan open ports on your network</p>
+</hgroup>
+
+{#if error}<p class="error">{error}</p>{/if}
+{#if success}<p class="success">{success}</p>{/if}
+
+<!-- Discovery form / active scan status -->
+<article>
+  <header><strong>Network Discovery</strong></header>
+
+  {#if activeDiscovery}
+    <p>
+      Scan running on <code>{activeDiscovery.config.target ?? '—'}</code>
+      <span class="badge badge-warn">running</span>
+    </p>
+    <button class="outline secondary" on:click={() => handleCancel(activeDiscovery.id)}>
+      Cancel Scan
+    </button>
+  {:else}
+    <label for="target">
+      Target — CIDR range (e.g. <code>192.168.1.0/24</code>) or <code>self</code> to auto-detect
+    </label>
+    <div class="input-row">
+      <input
+        id="target"
+        type="text"
+        bind:value={target}
+        placeholder="192.168.1.0/24 or self"
+      />
+      <label class="schedule-toggle">
+        <input type="checkbox" bind:checked={scheduleMode} role="switch" />
+        Schedule
+      </label>
+      <button on:click={startDiscovery} disabled={submitting} aria-busy={submitting}>
+        {submitting ? 'Starting...' : scheduleMode ? 'Schedule' : 'Start Discovery'}
+      </button>
     </div>
-
-    {#if scanning}
-      <button on:click={stopScan} class="btn-danger">
-        ⏹️ Stop Scan
-      </button>
-    {:else}
-      <button on:click={startScan} class="btn-primary">
-        🔍 Start Scan
-      </button>
-    {/if}
-  </div>
-
-  <!-- Scan Progress -->
-  {#if scanning}
-    <div class="card fade-in">
-      <div class="flex items-center gap-4">
-        <div class="flex-1">
-          <div class="flex justify-between mb-2">
-            <span class="text-ash-light font-medium">{scanStatus}</span>
-            <span class="text-bronze">{scanProgress}%</span>
-          </div>
-          <div class="progress-bar">
-            <div class="progress-fill" style="width: {scanProgress}%"></div>
-          </div>
-        </div>
-        <div class="text-4xl animate-pulse">🔍</div>
+    {#if scheduleMode}
+      <div class="schedule-row">
+        <label for="scheduled-at">Run at</label>
+        <input
+          id="scheduled-at"
+          type="datetime-local"
+          bind:value={scheduledAt}
+          min={minDatetime()}
+        />
       </div>
+    {/if}
+  {/if}
+</article>
+
+<!-- Hosts table -->
+<article>
+  <header>
+    <strong>Discovered Hosts ({hosts.length})</strong>
+    <div class="header-actions">
+      {#if activeFullScan}
+        <span class="badge badge-warn">scanning all hosts</span>
+        {#if scanProgress.get(activeFullScan.id)}
+          <span class="scan-phase">{scanProgress.get(activeFullScan.id)}</span>
+        {/if}
+        <button class="outline secondary sm" on:click={() => handleCancel(activeFullScan.id)}>Cancel</button>
+      {:else}
+        <button
+          class="outline sm"
+          on:click={startFullPortScan}
+          disabled={scanningAll || hosts.length === 0}
+          aria-busy={scanningAll}
+        >Scan All Ports</button>
+      {/if}
+      <button class="outline secondary sm" on:click={refresh} disabled={refreshing} aria-busy={refreshing}>Refresh</button>
+    </div>
+  </header>
+
+  {#if hosts.length === 0}
+    <p>No hosts discovered yet. Run a network discovery scan above.</p>
+  {:else}
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>IP</th>
+            <th>Hostname</th>
+            <th>MAC</th>
+            <th>Open Ports</th>
+            <th>Last Seen</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {#each hosts as host}
+            {@const scanning = portScanFor(host.ip)}
+            <tr>
+              <td><code>{host.ip}</code></td>
+              <td>{host.hostname ?? '—'}</td>
+              <td><code>{host.mac_address ?? '—'}</code></td>
+              <td>{openPorts(host)}</td>
+              <td>{fmtDate(host.last_seen)}</td>
+              <td class="actions">
+                {#if scanning}
+                  <div class="scan-status">
+                    <span class="badge badge-warn">scanning</span>
+                    {#if scanProgress.get(scanning.id)}
+                      <span class="scan-phase">{scanProgress.get(scanning.id)}</span>
+                    {/if}
+                  </div>
+                  <button class="outline secondary sm" on:click={() => handleCancel(scanning.id)}>
+                    Cancel
+                  </button>
+                {:else}
+                  <button
+                    class="outline sm"
+                    on:click={() => startPortScan(host.ip)}
+                    disabled={scanningIps.has(host.ip)}
+                    aria-busy={scanningIps.has(host.ip)}
+                  >
+                    Port Scan
+                  </button>
+                {/if}
+                <button
+                  class="outline sm"
+                  on:click={() => toggleDetail(host.ip)}
+                  aria-expanded={expandedHostIp === host.ip}
+                >
+                  {expandedHostIp === host.ip ? 'Hide' : 'Details'}
+                </button>
+              </td>
+            </tr>
+            {#if expandedHostIp === host.ip}
+              <tr class="detail-row">
+                <td colspan="6">
+                  <div class="host-detail">
+                    <div class="detail-meta">
+                      {#if host.os}<span><strong>OS:</strong> {host.os}</span>{/if}
+                      {#if host.device_type}<span><strong>Type:</strong> {host.device_type}</span>{/if}
+                      <span><strong>First seen:</strong> {fmtDate(host.first_seen)}</span>
+                      <span><strong>Status:</strong> {host.status}</span>
+                    </div>
+
+                    {#if host.ports.length > 0}
+                      <table class="ports-table">
+                        <thead>
+                          <tr>
+                            <th>Port</th>
+                            <th>Protocol</th>
+                            <th>Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {#each host.ports as port}
+                            <tr>
+                              <td><code>{port.number}</code></td>
+                              <td>{port.protocol}</td>
+                              <td>
+                                <span class="badge {port.status === 'open' ? 'badge-success' : 'badge-neutral'}">
+                                  {port.status}
+                                </span>
+                              </td>
+                            </tr>
+                          {/each}
+                        </tbody>
+                      </table>
+                    {:else}
+                      <p class="no-data">No port data — run a port scan to populate.</p>
+                    {/if}
+
+                    {#if host.banners.length > 0}
+                      <div class="banners">
+                        <strong>Banners</strong>
+                        {#each host.banners as banner}
+                          <pre>{banner}</pre>
+                        {/each}
+                      </div>
+                    {/if}
+                  </div>
+                </td>
+              </tr>
+            {/if}
+          {/each}
+        </tbody>
+      </table>
     </div>
   {/if}
+</article>
 
-  <!-- Tabs -->
-  <div class="card">
-    <div class="flex gap-2 border-b border-bronze/20 pb-2 overflow-x-auto">
-      <button
-        class="px-4 py-2 rounded transition-colors {activeTab === 'wifi' ? 'bg-bronze text-forest-dark' : 'bg-forest-dark/50 text-ash-light hover:bg-bronze/20'}"
-        on:click={() => activeTab = 'wifi'}>
-        📡 WiFi Networks ({wifiNetworks.length})
-      </button>
-      <button
-        class="px-4 py-2 rounded transition-colors {activeTab === 'network' ? 'bg-bronze text-forest-dark' : 'bg-forest-dark/50 text-ash-light hover:bg-bronze/20'}"
-        on:click={() => activeTab = 'network'}>
-        🌐 Network Hosts ({networkHosts.length})
-      </button>
-      <button
-        class="px-4 py-2 rounded transition-colors {activeTab === 'bluetooth' ? 'bg-bronze text-forest-dark' : 'bg-forest-dark/50 text-ash-light hover:bg-bronze/20'}"
-        on:click={() => activeTab = 'bluetooth'}>
-        🔵 Bluetooth ({bluetoothDevices.length})
-      </button>
-    </div>
+<style>
+  .input-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    margin-top: 0.5rem;
+  }
 
-    <div class="mt-4">
-      {#if activeTab === 'wifi'}
-        {#if wifiNetworks.length === 0}
-          <p class="text-ash text-center py-8">No WiFi networks discovered yet.</p>
-        {:else}
-          {#each wifiNetworks as network}
-            <div class="card-hover flex items-center justify-between fade-in">
-              <div class="flex-1 flex items-center gap-3">
-                <span class="text-2xl">📡</span>
-                <div>
-                  <h4 class="text-ash-light font-bold">{network.ssid || '(Hidden SSID)'}</h4>
-                  <p class="text-ash text-sm mt-1">
-                    <span class="mr-3">📍 {network.bssid}</span>
-                    <span class="mr-3">📊 Channel {network.channel}</span>
-                  </p>
-                </div>
-              </div>
-              <div class="flex items-center gap-4">
-                <div class="signal-strength">
-                  {#each Array(4) as _, i}
-                    <div class="signal-bar {i < getSignalStrength(network.signal) ? 'active' : ''}" style="height: {(i + 1) * 4}px"></div>
-                  {/each}
-                </div>
-                <span class="{getSecurityBadge(network.security)}">{network.security}</span>
-                <button class="btn-ghost text-sm">Details</button>
-              </div>
-            </div>
-          {/each}
-        {/if}
+  .input-row input {
+    flex: 1;
+    margin-bottom: 0;
+  }
 
-      {:else if activeTab === 'network'}
-        {#if networkHosts.length === 0}
-          <p class="text-ash text-center py-8">No network hosts discovered yet.</p>
-        {:else}
-          {#each networkHosts as host}
-            <div class="card-hover flex items-center justify-between fade-in">
-              <div class="flex items-center gap-3">
-                <span class="text-2xl">🖥️</span>
-                <div>
-                  <h4 class="text-ash-light font-bold">{host.ip}</h4>
-                  <p class="text-ash text-sm mt-1">
-                    {#if host.hostname}<span class="mr-3">🏷️ {host.hostname}</span>{/if}
-                    {#if host.mac}<span>📇 {host.mac}</span>{/if}
-                  </p>
-                </div>
-              </div>
-              <div class="flex items-center gap-2">
-                {#if host.ports && host.ports.length > 0}
-                  <span class="badge-info">{host.ports.length} ports open</span>
-                {/if}
-                <button class="btn-ghost text-sm">Details</button>
-              </div>
-            </div>
-          {/each}
-        {/if}
+  .input-row button {
+    flex-shrink: 0;
+    width: auto;
+    margin-bottom: 0;
+  }
 
-      {:else if activeTab === 'bluetooth'}
-        {#if bluetoothDevices.length === 0}
-          <p class="text-ash text-center py-8">No Bluetooth devices discovered yet.</p>
-        {:else}
-          {#each bluetoothDevices as device}
-            <div class="card-hover flex items-center justify-between fade-in">
-              <div class="flex items-center gap-3">
-                <span class="text-2xl">🔵</span>
-                <div>
-                  <h4 class="text-ash-light font-bold">{device.name || 'Unknown Device'}</h4>
-                  <p class="text-ash text-sm mt-1">
-                    <span class="mr-3">📍 {device.address}</span>
-                    {#if device.deviceClass}<span>🏷️ {device.deviceClass}</span>{/if}
-                  </p>
-                </div>
-              </div>
-              <button class="btn-ghost text-sm">Details</button>
-            </div>
-          {/each}
-        {/if}
-      {/if}
-    </div>
-  </div>
-</div>
+  .schedule-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    white-space: nowrap;
+    margin: 0;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+
+  .schedule-toggle input[type="checkbox"] {
+    margin: 0;
+  }
+
+  .schedule-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  .schedule-row label {
+    white-space: nowrap;
+    margin: 0;
+    font-size: 0.9rem;
+  }
+
+  .schedule-row input {
+    margin: 0;
+    width: auto;
+  }
+
+  article header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .actions {
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  .scan-status {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .scan-phase {
+    font-size: 0.75rem;
+    color: var(--color-ash);
+    max-width: 260px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Host detail panel */
+  .host-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .detail-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 0.9rem;
+    color: var(--color-ash-light);
+  }
+
+  .ports-table {
+    margin: 0;
+    font-size: 0.875rem;
+  }
+
+  .ports-table th,
+  .ports-table td {
+    padding: 0.3rem 0.6rem;
+  }
+
+  .banners {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .no-data {
+    color: var(--color-ash);
+    font-size: 0.875rem;
+    margin: 0;
+  }
+</style>
