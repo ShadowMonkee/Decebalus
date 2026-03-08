@@ -10,40 +10,115 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  DATABASE_URL: sqlite:data/decebalus.db
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: github.ref_type != 'tag'   
+    if: github.ref_type != 'tag'
+    defaults:
+      run:
+        working-directory: decebalus-backend
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: sudo apt-get install -y libpcap-dev
+        working-directory: .
+
+      - name: Cache cargo registry and build artifacts
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            decebalus-backend/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('decebalus-backend/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-
+
+      - name: Cache sqlx-cli binary
+        uses: actions/cache@v4
+        id: cache-sqlx
+        with:
+          path: ~/.cargo/bin/sqlx
+          key: ${{ runner.os }}-sqlx-cli-0.8
+
+      - name: Install sqlx-cli
+        if: steps.cache-sqlx.outputs.cache-hit != 'true'
+        run: cargo install sqlx-cli --no-default-features --features sqlite
+        working-directory: .
+
+      - name: Set up database
+        run: |
+          mkdir -p data
+          cargo sqlx database create
+          cargo sqlx migrate run
 
       - name: Build
         run: cargo build --verbose
 
       - name: Run tests
         run: cargo test --verbose
+        env:
+          LOG_RETENTION_DAYS: 30
+          MAX_THREADS: 5
+          MAX_DISCOVER_THREADS: 256
+          MAX_SCAN_CONCURRENCY: 500
 
   release:
     runs-on: ubuntu-latest
-    if: github.ref_type == 'tag'  
-    
+    if: github.ref_type == 'tag'
+    defaults:
+      run:
+        working-directory: decebalus-backend
+
     steps:
       - uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: sudo apt-get install -y libpcap-dev
+        working-directory: .
+
+      - name: Cache cargo registry and build artifacts
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            decebalus-backend/target
+          key: ${{ runner.os }}-cargo-release-${{ hashFiles('decebalus-backend/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-release-
+
+      - name: Cache sqlx-cli binary
+        uses: actions/cache@v4
+        id: cache-sqlx
+        with:
+          path: ~/.cargo/bin/sqlx
+          key: ${{ runner.os }}-sqlx-cli-0.8
+
+      - name: Install sqlx-cli
+        if: steps.cache-sqlx.outputs.cache-hit != 'true'
+        run: cargo install sqlx-cli --no-default-features --features sqlite
+        working-directory: .
+
+      - name: Set up database
+        run: |
+          mkdir -p data
+          cargo sqlx database create
+          cargo sqlx migrate run
 
       - name: Build release binary
         run: cargo build --release
 
-      - name: Create output directory
-        run: mkdir -p release
+      - name: Stage release artifact
+        run: |
+          mkdir -p release
+          cp target/release/decebalus-backend release/
 
-      - name: Copy binary to release folder
-        run: cp target/release/* release/
-
-      - name: Upload binaries to GitHub Release
+      - name: Upload to GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          files: release/**
+          files: decebalus-backend/release/decebalus-backend
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
