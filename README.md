@@ -46,24 +46,23 @@ This is a sandbox project to explore:
 
 ### Current Capabilities
 
-- **Network Discovery**: Identify alive hosts on your network
-- **Port Scanning**: Find open ports on discovered hosts
-- **Service Detection**: Identify services and grab banners
-- **Job Management**: Queue, track, and execute scans as background jobs
-- **Real-time Updates**: WebSocket support for live progress tracking
+- **Network Discovery**: Identify alive hosts via ARP/ICMP/TCP probes
+- **Port Scanning**: Fast concurrent TCP connect scan across all 65 535 ports
+- **Nmap Integration**: Full nmap scan with service/version detection, OS fingerprinting, and UDP scanning (see [Nmap Capabilities](#nmap-capabilities))
+- **Service Detection**: Banner grabbing + heuristic fingerprinting fallback when nmap is unavailable
+- **OS Detection**: Inferred from SSH banners, HTTP headers, and nmap extrainfo
+- **Job Management**: Queue, schedule, cancel, and track scans as background jobs with priority ordering
+- **Real-time Updates**: WebSocket for live scan progress and phase messages
+- **Scan Logging**: Per-job structured logs visible in the web UI, filterable by severity and job type
 - **REST API**: Full API for programmatic control
-- **Persistent Storage**: SQLite database for scan results and history
+- **Persistent Storage**: SQLite database for scan results, job history, and logs
+- **Web Dashboard**: Svelte SPA with host detail view, port/service table, job history, and log browser
 
 ### Planned Capabilities
 
-- Full Nmap integration with NSE scripts (fully implementing nmap from scratch would take months and not even come close to the real thing)
-- OS fingerprinting and device classification
 - CVE matching and vulnerability assessment
 - Brute force attacks (SSH, FTP, SMB, RDP)
-- File exfiltration
 - E-Paper display for standalone monitoring
-- Web dashboard for visualization
-- Scan scheduling and automation
 - Historical tracking and change detection
 
 ## Architecture
@@ -104,6 +103,7 @@ Rust is the ideal language for this project because:
 
 - Rust 1.75+
 - SQLite
+- nmap
 - Linux/macOS/WSL (for network access)
 
 ### Installation
@@ -111,18 +111,19 @@ Rust is the ideal language for this project because:
 ```bash
 # Clone the repository
 git clone https://github.com/yourusername/decebalus.git
-cd decebalus
+cd decebalus/decebalus-backend
 
-# Create .env file with the following variables:
+# Create .env file
+cat > .env <<'EOF'
 DATABASE_URL=sqlite:data/decebalus.db
 LOG_RETENTION_DAYS=30
 MAX_THREADS=5
-MAX_DISCOVER_THREADS=256 # need to research how many are doable, but 256 will handle a full /24 subnet in one cycle
+MAX_DISCOVER_THREADS=256
+MAX_SCAN_CONCURRENCY=500
+EOF
 
-# Fetch dependencies to install sqlx command
+# Fetch dependencies and initialise the database
 cargo fetch
-
-# Initialize database
 mkdir -p data
 cargo sqlx database create
 cargo sqlx migrate run
@@ -132,6 +133,31 @@ cargo run
 ```
 
 The server will start on `http://0.0.0.0:8080`
+
+### Nmap Capabilities
+
+The `nmap-scan` job runs a three-phase pipeline:
+
+| Phase | What it does | Requires |
+|-------|-------------|----------|
+| TCP scan | `nmap -sV -O --osscan-guess -p 1-65535` | `CAP_NET_RAW` for `-O`; falls back to `-sV` only without it |
+| UDP scan | `nmap -sU --top-ports 200` | `CAP_NET_RAW`; skipped gracefully without it |
+| Persist | Saves ports, services, OS info to SQLite | — |
+
+**Enabling full capabilities without running the backend as root:**
+
+nmap performs a hard root UID check (`geteuid() == 0`) for OS detection and UDP scanning — Linux capabilities (`setcap`) alone are not sufficient. The recommended approach is a tightly-scoped sudoers rule that allows nmap to run as root without a password prompt, while the backend process stays unprivileged:
+
+```bash
+echo "$USER ALL=(root) NOPASSWD: /usr/bin/nmap" | sudo tee /etc/sudoers.d/decebalus-nmap
+```
+
+This unlocks:
+- **SYN scan** (`-sS`) — nmap chooses this automatically as root; faster and quieter than TCP connect
+- **OS fingerprinting** (`-O`) — dedicated OS detection engine, more reliable than banner heuristics
+- **UDP scanning** (`-sU`) — discovers services invisible to TCP: SNMP (161), DNS (53), NTP (123), DHCP (67/68), SSDP (1900), etc.
+
+Without the sudoers rule the nmap-scan job still completes with full TCP service detection — OS fingerprinting and UDP scanning are skipped with a log warning and the command above is printed as a hint.
 
 ### Basic Usage
 
@@ -203,16 +229,16 @@ Always ensure you have explicit permission before scanning any network.
 
 - [x] API structure and routing
 - [x] Database integration (SQLite)
-- [x] Job management system
-- [x] Scheduled Jobs management system
-- [x] Basic network discovery
-- [x] WebSocket support
-- [ ] Enhanced port scanning
-- [ ] Service detection
-- [ ] Vulnerability matching
-- [ ] Web dashboard (WIP)
+- [x] Job management system with priority and scheduling
+- [x] Network discovery (ARP/ICMP/TCP)
+- [x] Fast concurrent port scanning (all 65 535 TCP ports)
+- [x] Nmap integration — service detection, OS fingerprinting, UDP scan
+- [x] Service fingerprinting and banner grabbing fallback
+- [x] WebSocket real-time progress streaming
+- [x] Web dashboard (host detail, job history, log browser)
+- [ ] Vulnerability matching / CVE lookup
 - [ ] E-Paper display integration
-- [ ] Attack modules
+- [ ] Attack modules (brute force, etc.)
 
 ## Roadmap
 

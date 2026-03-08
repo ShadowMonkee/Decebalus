@@ -40,12 +40,29 @@ impl NetworkScanner {
 
         let arp_results = Self::arp_scan(&ips).await;
 
-        let hosts_found = if !arp_results.is_empty() {
-            Self::log_and_broadcast(state, &format!("ARP scan found {} hosts", arp_results.len()));
-            Self::save_arp_results(state, arp_results).await
-        } else {
-            Self::log_and_broadcast(state, "ARP unavailable, falling back to TCP probe");
+        let hosts_found = if arp_results.is_empty() {
+            // ARP not available (no raw socket access) — use TCP only
+            Self::log_and_broadcast(state, "ARP unavailable, using TCP probe");
             Self::tcp_discover(&ips, state).await
+        } else {
+            Self::log_and_broadcast(state, &format!("ARP scan found {} hosts", arp_results.len()));
+            let arp_ips: std::collections::HashSet<Ipv4Addr> = arp_results.keys().cloned().collect();
+            let saved = Self::save_arp_results(state, arp_results).await;
+
+            // TCP probe the IPs that didn't respond to ARP — catches hosts that
+            // block ARP or only have open ports visible (e.g. firewalled devices).
+            let remaining: Vec<Ipv4Addr> = ips.iter()
+                .filter(|ip| !arp_ips.contains(ip))
+                .cloned()
+                .collect();
+            if !remaining.is_empty() {
+                Self::log_and_broadcast(state, &format!(
+                    "TCP probing {} IPs that didn't respond to ARP", remaining.len()
+                ));
+                saved + Self::tcp_discover(&remaining, state).await
+            } else {
+                saved
+            }
         };
 
         tracing::info!("Discovery complete. Found {} hosts", hosts_found);
@@ -82,8 +99,9 @@ impl NetworkScanner {
             _ => return HashMap::new(),
         };
 
-        // Send ARP request for each target
-        for target_ip in &targets {
+        // Build and send ARP request packets. Send each request twice with a
+        // short pause between passes to recover from dropped packets.
+        let send_packet = |tx: &mut Box<dyn pnet_datalink::DataLinkSender>, target_ip: &Ipv4Addr| {
             let mut arp_buf = [0u8; 28];
             {
                 let mut arp = MutableArpPacket::new(&mut arp_buf).unwrap();
@@ -97,7 +115,6 @@ impl NetworkScanner {
                 arp.set_target_hw_addr(MacAddr(0, 0, 0, 0, 0, 0));
                 arp.set_target_proto_addr(*target_ip);
             }
-
             let mut eth_buf = [0u8; 42];
             {
                 let mut eth = MutableEthernetPacket::new(&mut eth_buf).unwrap();
@@ -107,10 +124,20 @@ impl NetworkScanner {
                 eth.set_payload(&arp_buf);
             }
             let _ = tx.send_to(&eth_buf, None);
+        };
+
+        // First pass
+        for target_ip in &targets {
+            send_packet(&mut tx, target_ip);
+        }
+        // Brief pause then retry — catches devices that missed the first burst
+        std::thread::sleep(Duration::from_millis(500));
+        for target_ip in &targets {
+            send_packet(&mut tx, target_ip);
         }
 
-        // Collect ARP replies for up to 2 seconds
-        let deadline = std::time::Instant::now() + Duration::from_secs(2);
+        // Collect ARP replies for up to 3 seconds after the last send pass
+        let deadline = std::time::Instant::now() + Duration::from_secs(3);
         let mut results = HashMap::new();
 
         while std::time::Instant::now() < deadline {

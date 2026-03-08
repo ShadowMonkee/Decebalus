@@ -229,7 +229,11 @@ pub async fn get_host(pool: &SqlitePool, ip: &str) -> Result<Option<Host>, sqlx:
 /// List all hosts
 pub async fn list_hosts(pool: &SqlitePool) -> Result<Vec<Host>, sqlx::Error> {
     let rows = sqlx::query(
-        "SELECT ip, ports, banners, last_seen, first_seen, os, os_version, device_type, mac_address, hostname, status, services, vulnerabilities FROM hosts ORDER BY last_seen DESC"
+        "SELECT ip, ports, banners, last_seen, first_seen, os, os_version, device_type, mac_address, hostname, status, services, vulnerabilities FROM hosts ORDER BY \
+         CAST(SUBSTR(ip, 1, INSTR(ip, '.')-1) AS INTEGER), \
+         CAST(SUBSTR(ip, INSTR(ip, '.')+1, INSTR(SUBSTR(ip, INSTR(ip, '.')+1), '.')-1) AS INTEGER), \
+         CAST(SUBSTR(ip, INSTR(ip, '.')+INSTR(SUBSTR(ip, INSTR(ip, '.')+1), '.')+1, INSTR(SUBSTR(ip, INSTR(ip, '.')+INSTR(SUBSTR(ip, INSTR(ip, '.')+1), '.')+1), '.')-1) AS INTEGER), \
+         CAST(SUBSTR(ip, INSTR(ip, '.')+INSTR(SUBSTR(ip, INSTR(ip, '.')+1), '.')+INSTR(SUBSTR(ip, INSTR(ip, '.')+INSTR(SUBSTR(ip, INSTR(ip, '.')+1), '.')+1), '.')+1) AS INTEGER)"
     )
     .fetch_all(pool)
     .await?;

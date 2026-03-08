@@ -260,21 +260,53 @@ impl JobExecutor {
         }
     }
     
-    /// Run full Nmap vulnerability scan
-    async fn run_nmap_scan(_state: &Arc<AppState>, job: &Job) -> Result<String, String> {
-        tracing::info!("Running nmap scan for job {}", job.id);
-        
-        // TODO: Implement nmap integration
-        // This would shell out to nmap command and parse results
-        
+    /// Run full nmap scan — either a single host or all discovered hosts.
+    async fn run_nmap_scan(state: &Arc<AppState>, job: &Job) -> Result<String, String> {
+        let hosts_to_scan: Vec<String> = match job.target() {
+            Ok(ip) => {
+                let msg = format!(
+                    "[nmap-scan] Job {} — mode: single host | target: {}",
+                    job.id, ip
+                );
+                tracing::info!("{}", msg);
+                let _ = repository::add_log(&state.db, "INFO", "port_scanner", Some("run_nmap_scan"), Some(&job.id), &msg).await;
+                vec![ip]
+            }
+            Err(_) => {
+                let hosts = repository::list_hosts(&state.db)
+                    .await
+                    .map_err(|e| format!("Failed to list hosts: {}", e))?;
+                let ips: Vec<String> = hosts.iter().map(|h| h.ip.clone()).collect();
+                let msg = format!(
+                    "[nmap-scan] Job {} — mode: all hosts | targets: [{}]",
+                    job.id,
+                    ips.join(", ")
+                );
+                tracing::info!("{}", msg);
+                let _ = repository::add_log(&state.db, "INFO", "port_scanner", Some("run_nmap_scan"), Some(&job.id), &msg).await;
+                ips
+            }
+        };
+
+        if hosts_to_scan.is_empty() {
+            return Err("No hosts to scan. Run discovery first.".to_string());
+        }
+
+        let mut total_ports_found = 0;
+
+        for ip in &hosts_to_scan {
+            let count = port_scanner::PortScanner::full_nmap_scan(ip, state, &job.id).await?;
+            total_ports_found += count;
+        }
+
         let results = serde_json::json!({
             "job_id": job.id,
             "job_type": "nmap-scan",
-            "status": "not_implemented",
-            "message": "Nmap scanning not yet implemented",
+            "hosts_scanned": hosts_to_scan.len(),
+            "total_ports_found": total_ports_found,
             "timestamp": chrono::Utc::now().to_rfc3339(),
         });
-        
+
         Ok(results.to_string())
     }
     

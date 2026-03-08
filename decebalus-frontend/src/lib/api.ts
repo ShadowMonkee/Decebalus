@@ -4,6 +4,9 @@ export interface Port {
   number: number;
   protocol: string;
   status: string;
+  service: string | null;
+  version: string | null;
+  cpe: string | null;
 }
 
 export interface Host {

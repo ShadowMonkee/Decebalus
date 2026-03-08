@@ -168,13 +168,6 @@ pub async fn cancel_job(
 fn parse_job_from_request(payload: &CreateJobRequest) -> Result<Job, Response>  {
     let job_type = payload.job_type.clone();
 
-    if job_type == "nmap-scan" {
-        return Err((
-            StatusCode::NOT_IMPLEMENTED,
-            Json(json!({ "error": "nmap-scan is not yet implemented" })),
-        ).into_response());
-    }
-
     let mut job = Job::new(job_type.clone());
 
     let mut config = Map::new();
@@ -204,6 +197,20 @@ fn parse_job_from_request(payload: &CreateJobRequest) -> Result<Job, Response>  
     }
 
     if job_type == "port-scan" {
+        if let Some(target) = payload.target.clone() {
+            target.parse::<std::net::IpAddr>().map_err(|_| {
+                (
+                    StatusCode::BAD_REQUEST,
+                    Json(json!({ "error": format!("Invalid IP address: {}", target) })),
+                )
+                    .into_response()
+            })?;
+            config.insert("target".to_string(), Value::String(target));
+        }
+        // No target = scan all discovered hosts
+    }
+
+    if job_type == "nmap-scan" {
         if let Some(target) = payload.target.clone() {
             target.parse::<std::net::IpAddr>().map_err(|_| {
                 (

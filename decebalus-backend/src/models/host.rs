@@ -45,12 +45,22 @@ impl Host {
     }
 
     
-    pub fn add_port(&mut self, number: u16, protocol: &str, status: &str) {
+    pub fn add_port(&mut self, number: u16, protocol: &str, status: &str, service: Option<String>, version: Option<String>, cpe: Option<String>) {
         // Check if the port already exists
         if let Some(existing) = self.ports.iter_mut().find(|p| p.number == number && p.protocol == protocol) {
             // Update status if changed
             if existing.status != status {
                 existing.status = status.to_string();
+            }
+            // Update service/version/cpe if new values are provided
+            if service.is_some() {
+                existing.service = service;
+            }
+            if version.is_some() {
+                existing.version = version;
+            }
+            if cpe.is_some() {
+                existing.cpe = cpe;
             }
         } else {
             // Otherwise, add a new one
@@ -58,6 +68,9 @@ impl Host {
                 number,
                 protocol: protocol.to_string(),
                 status: status.to_string(),
+                service,
+                version,
+                cpe,
             });
         }
 
@@ -113,7 +126,7 @@ mod tests {
     fn add_port_adds_new_port() {
         let mut h = Host::new("10.0.0.1".into());
 
-        h.add_port(22, "tcp", "open");
+        h.add_port(22, "tcp", "open", None, None, None);
 
         assert_eq!(h.ports.len(), 1);
         let p = &h.ports[0];
@@ -126,8 +139,8 @@ mod tests {
     fn add_port_updates_existing_port() {
         let mut h = Host::new("10.0.0.1".into());
 
-        h.add_port(22, "tcp", "open");
-        h.add_port(22, "tcp", "closed");
+        h.add_port(22, "tcp", "open", None, None, None);
+        h.add_port(22, "tcp", "closed", None, None, None);
 
         assert_eq!(h.ports.len(), 1);
         assert_eq!(h.ports[0].status, "closed");
@@ -137,9 +150,9 @@ mod tests {
     fn add_port_sorts_ports() {
         let mut h = Host::new("10.0.0.1".into());
 
-        h.add_port(443, "tcp", "open");
-        h.add_port(22, "tcp", "open");
-        h.add_port(80, "tcp", "open");
+        h.add_port(443, "tcp", "open", None, None, None);
+        h.add_port(22, "tcp", "open", None, None, None);
+        h.add_port(80, "tcp", "open", None, None, None);
 
         let ordered: Vec<u16> = h.ports.iter().map(|p| p.number).collect();
         assert_eq!(ordered, vec![22, 80, 443]);

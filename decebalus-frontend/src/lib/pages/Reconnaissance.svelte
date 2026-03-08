@@ -143,6 +143,50 @@
     );
   }
 
+  let scanningNmapIps = new Set<string>();
+  let scanningNmapAll = false;
+
+  async function startNmapScan(ip: string) {
+    if (scanningNmapIps.has(ip)) return;
+    error = '';
+    scanningNmapIps = new Set(scanningNmapIps).add(ip);
+    try {
+      await createJob('nmap-scan', ip);
+      await refresh();
+    } catch (e: any) {
+      error = e.message;
+    } finally {
+      scanningNmapIps = new Set([...scanningNmapIps].filter(x => x !== ip));
+    }
+  }
+
+  async function startFullNmapScan() {
+    if (scanningNmapAll) return;
+    error = '';
+    scanningNmapAll = true;
+    try {
+      await createJob('nmap-scan');
+      await refresh();
+    } catch (e: any) {
+      error = e.message;
+    } finally {
+      scanningNmapAll = false;
+    }
+  }
+
+  function nmapScanFor(ip: string): Job | undefined {
+    return jobs.find(
+      j => j.job_type === 'nmap-scan' &&
+           (j.config.target === ip || !j.config.target) &&
+           (j.status === 'running' || j.status === 'queued')
+    );
+  }
+
+  $: activeFullNmapScan = jobs.find(
+    j => j.job_type === 'nmap-scan' && !j.config.target &&
+         (j.status === 'running' || j.status === 'queued')
+  );
+
   $: activeFullScan = jobs.find(
     j => j.job_type === 'port-scan' && !j.config.target &&
          (j.status === 'running' || j.status === 'queued')
@@ -212,6 +256,20 @@
   <header>
     <strong>Discovered Hosts ({hosts.length})</strong>
     <div class="header-actions">
+      {#if activeFullNmapScan}
+        <span class="badge badge-warn">nmap scanning all</span>
+        {#if scanProgress.get(activeFullNmapScan.id)}
+          <span class="scan-phase">{scanProgress.get(activeFullNmapScan.id)}</span>
+        {/if}
+        <button class="outline secondary sm" on:click={() => handleCancel(activeFullNmapScan.id)}>Cancel</button>
+      {:else}
+        <button
+          class="outline sm"
+          on:click={startFullNmapScan}
+          disabled={scanningNmapAll || hosts.length === 0}
+          aria-busy={scanningNmapAll}
+        >Nmap All</button>
+      {/if}
       {#if activeFullScan}
         <span class="badge badge-warn">scanning all hosts</span>
         {#if scanProgress.get(activeFullScan.id)}
@@ -248,6 +306,7 @@
         <tbody>
           {#each hosts as host}
             {@const scanning = portScanFor(host.ip)}
+            {@const nmapJob = nmapScanFor(host.ip)}
             <tr>
               <td><code>{host.ip}</code></td>
               <td>{host.hostname ?? '—'}</td>
@@ -256,32 +315,32 @@
               <td>{fmtDate(host.last_seen)}</td>
               <td class="actions">
                 {#if scanning}
-                  <div class="scan-status">
-                    <span class="badge badge-warn">scanning</span>
-                    {#if scanProgress.get(scanning.id)}
-                      <span class="scan-phase">{scanProgress.get(scanning.id)}</span>
-                    {/if}
-                  </div>
-                  <button class="outline secondary sm" on:click={() => handleCancel(scanning.id)}>
-                    Cancel
-                  </button>
+                  <span class="badge badge-warn" title={scanProgress.get(scanning.id) ?? 'scanning'}>scanning</span>
+                  <button class="outline secondary sm" on:click={() => handleCancel(scanning.id)}>Cancel</button>
                 {:else}
                   <button
                     class="outline sm"
                     on:click={() => startPortScan(host.ip)}
                     disabled={scanningIps.has(host.ip)}
                     aria-busy={scanningIps.has(host.ip)}
-                  >
-                    Port Scan
-                  </button>
+                  >Port Scan</button>
+                {/if}
+                {#if nmapJob}
+                  <span class="badge badge-warn" title={scanProgress.get(nmapJob.id) ?? 'running nmap'}>nmap</span>
+                  <button class="outline secondary sm" on:click={() => handleCancel(nmapJob.id)}>Cancel</button>
+                {:else}
+                  <button
+                    class="outline sm"
+                    on:click={() => startNmapScan(host.ip)}
+                    disabled={scanningNmapIps.has(host.ip)}
+                    aria-busy={scanningNmapIps.has(host.ip)}
+                  >Nmap</button>
                 {/if}
                 <button
                   class="outline sm"
                   on:click={() => toggleDetail(host.ip)}
                   aria-expanded={expandedHostIp === host.ip}
-                >
-                  {expandedHostIp === host.ip ? 'Hide' : 'Details'}
-                </button>
+                >{expandedHostIp === host.ip ? 'Hide' : 'Details'}</button>
               </td>
             </tr>
             {#if expandedHostIp === host.ip}
@@ -300,8 +359,11 @@
                         <thead>
                           <tr>
                             <th>Port</th>
-                            <th>Protocol</th>
+                            <th>Proto</th>
                             <th>Status</th>
+                            <th>Service</th>
+                            <th>Version</th>
+                            <th>CPE</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -314,6 +376,9 @@
                                   {port.status}
                                 </span>
                               </td>
+                              <td>{port.service ?? '—'}</td>
+                              <td class="port-version">{port.version ?? '—'}</td>
+                              <td class="port-cpe" title={port.cpe ?? ''}>{port.cpe ?? '—'}</td>
                             </tr>
                           {/each}
                         </tbody>
@@ -412,21 +477,6 @@
     white-space: nowrap;
   }
 
-  .scan-status {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-  }
-
-  .scan-phase {
-    font-size: 0.75rem;
-    color: var(--color-ash);
-    max-width: 260px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
   /* Host detail panel */
   .host-detail {
     display: flex;
@@ -462,5 +512,24 @@
     color: var(--color-ash);
     font-size: 0.875rem;
     margin: 0;
+  }
+
+  .port-version {
+    font-size: 0.8rem;
+    color: var(--color-ash-light);
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .port-cpe {
+    font-size: 0.75rem;
+    color: var(--color-ash);
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: monospace;
   }
 </style>

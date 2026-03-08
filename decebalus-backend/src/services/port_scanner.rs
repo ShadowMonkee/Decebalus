@@ -13,6 +13,26 @@ struct ServiceInfo {
     product:    Option<String>,
     version:    Option<String>,
     extra_info: Option<String>,
+    tunnel:     Option<String>,    // "ssl" when nmap reports tunnel="ssl"
+    cpe:        Option<String>,    // first CPE string for this service
+}
+
+struct NmapScanResult {
+    services:    Vec<ServiceInfo>,
+    os_name:     Option<String>,    // e.g. "Linux"
+    os_version:  Option<String>,    // e.g. "3.2 - 4.9"
+    mac_address: Option<String>,    // e.g. "00:31:92:C1:60:20"
+    mac_vendor:  Option<String>,    // e.g. "TP-Link Limited"
+    hostname:    Option<String>,    // PTR hostname from nmap
+    scripts:     Vec<String>,       // NSE script outputs (port + host level)
+    os_cpe:      Option<String>,    // OS CPE from osclass (e.g. "cpe:/o:linux:linux_kernel")
+}
+
+/// Extra nmap-derived data passed to update_host_scan_results for nmap-scan jobs.
+struct NmapExtra {
+    hostname: Option<String>,
+    scripts:  Vec<String>,
+    os_cpe:   Option<String>,
 }
 
 /// Port Scanner Service
@@ -69,11 +89,16 @@ impl PortScanner {
         ));
 
         // ── Phase 2: service detection ───────────────────────────────────────
-        let services = Self::detect_services(ip, &open_ports, state, job_id).await;
+        let (services, os_name, os_version) = Self::detect_services(ip, &open_ports, state, job_id).await;
 
         // ── Phase 3: persist ─────────────────────────────────────────────────
         let _ = state.broadcaster.send(format!("scan_progress:{}:Saving results for {}", job_id, ip));
-        Self::update_host_scan_results(state, ip, &open_ports, &services).await;
+        let os_override = if os_name.is_some() {
+            Some((os_name, os_version))
+        } else {
+            None
+        };
+        Self::update_host_scan_results(state, ip, &open_ports, &services, os_override, None, None).await;
 
         let msg = format!(
             "[port-scan] {} — scan complete: {} open port(s), {} service(s) identified",
@@ -83,6 +108,137 @@ impl PortScanner {
         let _ = repository::add_log(&state.db, "INFO", "port_scanner", Some("scan_host"), Some(job_id), &msg).await;
 
         Ok(open_ports.len())
+    }
+
+    /// Full nmap scan entry point for nmap-scan jobs.
+    ///
+    /// Pipeline:
+    ///   1. TCP scan: nmap -sV -O --osscan-guess -p 1-65535 (falls back to no -O if no CAP_NET_RAW)
+    ///   2. UDP scan: nmap -sU --top-ports 200 (skipped gracefully if no CAP_NET_RAW)
+    ///
+    /// Enable both OS detection and UDP scanning without running the backend as root:
+    ///   sudo setcap cap_net_raw,cap_net_admin+eip $(which nmap)
+    ///
+    /// Returns the total number of open TCP + UDP ports found.
+    pub async fn full_nmap_scan(ip: &str, state: &Arc<AppState>, job_id: &str) -> Result<usize, String> {
+        let msg = format!("[nmap-scan] Starting full nmap scan on {}", ip);
+        tracing::info!("{}", msg);
+        let _ = repository::add_log(&state.db, "INFO", "port_scanner", Some("full_nmap_scan"), Some(job_id), &msg).await;
+        let _ = state.broadcaster.send(format!("scan_progress:{}:Full nmap scan starting on {} (TCP all ports + UDP top 200)", job_id, ip));
+
+        // ── TCP scan (with OS detection if capabilities allow) ────────────────
+        let NmapScanResult {
+            services: tcp_services,
+            os_name,
+            os_version,
+            mac_address,
+            mac_vendor,
+            hostname,
+            scripts,
+            os_cpe,
+        } = Self::run_full_nmap(ip, state, job_id).await?;
+        let tcp_ports: Vec<u16> = tcp_services.iter().map(|s| s.port).collect();
+
+        // ── UDP scan (best-effort, requires CAP_NET_RAW) ──────────────────────
+        let udp_result = Self::run_udp_scan(ip, state, job_id).await;
+        let udp_ports: Vec<u16> = udp_result.as_ref()
+            .map(|r| r.services.iter().map(|s| s.port).collect())
+            .unwrap_or_default();
+
+        let total = tcp_ports.len() + udp_ports.len();
+
+        let msg = format!(
+            "[nmap-scan] {} — complete: {} TCP + {} UDP open port(s), {} service(s) identified",
+            ip, tcp_ports.len(), udp_ports.len(),
+            tcp_services.len() + udp_result.as_ref().map(|r| r.services.len()).unwrap_or(0)
+        );
+        tracing::info!("{}", msg);
+        let _ = repository::add_log(&state.db, "INFO", "port_scanner", Some("full_nmap_scan"), Some(job_id), &msg).await;
+        let _ = state.broadcaster.send(format!(
+            "scan_progress:{}:nmap done — {} TCP + {} UDP port(s) on {}",
+            job_id, tcp_ports.len(), udp_ports.len(), ip
+        ));
+
+        // ── Persist ───────────────────────────────────────────────────────────
+        let _ = state.broadcaster.send(format!("scan_progress:{}:Saving results for {}", job_id, ip));
+
+        let os_override = if os_name.is_some() { Some((os_name, os_version)) } else { None };
+        let mac_override = mac_address.map(|mac| (mac, mac_vendor));
+        let nmap_extra = if hostname.is_some() || !scripts.is_empty() || os_cpe.is_some() {
+            Some(NmapExtra { hostname, scripts, os_cpe })
+        } else {
+            None
+        };
+        Self::update_host_scan_results(state, ip, &tcp_ports, &tcp_services, os_override, mac_override, nmap_extra).await;
+
+        if let Some(udp) = udp_result {
+            if !udp_ports.is_empty() {
+                Self::update_host_scan_results(state, ip, &udp_ports, &udp.services, None, None, None).await;
+            }
+        }
+
+        Ok(total)
+    }
+
+    /// UDP scan against the top 200 most common UDP ports.
+    /// Requires root. Invoked via `sudo nmap` — needs NOPASSWD sudoers rule:
+    ///   echo "$USER ALL=(root) NOPASSWD: /usr/bin/nmap" | sudo tee /etc/sudoers.d/decebalus-nmap
+    /// Returns None gracefully if sudo is not configured or nmap is unavailable.
+    async fn run_udp_scan(ip: &str, state: &Arc<AppState>, job_id: &str) -> Option<NmapScanResult> {
+        let msg = format!("[nmap-scan] {} — running UDP scan via sudo nmap (top 200 ports)", ip);
+        tracing::info!("{}", msg);
+        let _ = repository::add_log(&state.db, "INFO", "port_scanner", Some("run_udp_scan"), Some(job_id), &msg).await;
+        let _ = state.broadcaster.send(format!(
+            "scan_progress:{}:Running UDP scan (top 200 ports) on {}",
+            job_id, ip
+        ));
+
+        let output = tokio::process::Command::new("sudo")
+            .args(["/usr/bin/nmap", "-sU", "--top-ports", "200", "--open",
+                   "--max-retries", "1", "--host-timeout", "120s", "-oX", "-", ip])
+            .output()
+            .await;
+
+        match output {
+            Err(e) => {
+                let msg = format!("[nmap-scan] {} — UDP scan failed to start: {}", ip, e);
+                tracing::warn!("{}", msg);
+                let _ = repository::add_log(&state.db, "WARN", "port_scanner", Some("run_udp_scan"), Some(job_id), &msg).await;
+                None
+            }
+            Ok(out) => {
+                let stderr = String::from_utf8_lossy(&out.stderr);
+                if out.stdout.is_empty() {
+                    let msg = format!(
+                        "[nmap-scan] {} — UDP scan skipped (sudo not configured or root required). \
+                         To enable: echo \"$USER ALL=(root) NOPASSWD: /usr/bin/nmap\" | sudo tee /etc/sudoers.d/decebalus-nmap",
+                        ip
+                    );
+                    tracing::warn!("{}", msg);
+                    let _ = repository::add_log(&state.db, "WARN", "port_scanner", Some("run_udp_scan"), Some(job_id), &msg).await;
+                    let _ = state.broadcaster.send(format!(
+                        "scan_progress:{}:UDP scan unavailable on {} (sudo not configured)",
+                        job_id, ip
+                    ));
+                    return None;
+                }
+                if !stderr.trim().is_empty() {
+                    tracing::debug!("[nmap-scan] {} — UDP stderr: {}", ip, stderr.trim());
+                }
+                let result = Self::parse_nmap_xml(&String::from_utf8_lossy(&out.stdout));
+                let msg = format!(
+                    "[nmap-scan] {} — UDP scan complete: {} open port(s)",
+                    ip, result.services.len()
+                );
+                tracing::info!("{}", msg);
+                let _ = repository::add_log(&state.db, "INFO", "port_scanner", Some("run_udp_scan"), Some(job_id), &msg).await;
+                let _ = state.broadcaster.send(format!(
+                    "scan_progress:{}:UDP done — {} open port(s) on {}",
+                    job_id, result.services.len(), ip
+                ));
+                Some(result)
+            }
+        }
     }
 
     // ── Phase 1 ──────────────────────────────────────────────────────────────
@@ -121,20 +277,21 @@ impl PortScanner {
 
     // ── Phase 2 ──────────────────────────────────────────────────────────────
 
-    async fn detect_services(ip: &str, open_ports: &[u16], state: &Arc<AppState>, job_id: &str) -> Vec<ServiceInfo> {
+    async fn detect_services(ip: &str, open_ports: &[u16], state: &Arc<AppState>, job_id: &str) -> (Vec<ServiceInfo>, Option<String>, Option<String>) {
         match Self::run_nmap(ip, open_ports, state, job_id).await {
-            Ok(services) if !services.is_empty() => {
+            Ok(result) if !result.services.is_empty() => {
+                let svc_count = result.services.len();
                 let msg = format!(
                     "[port-scan] {} — nmap identified {} service(s)",
-                    ip, services.len()
+                    ip, svc_count
                 );
                 tracing::info!("{}", msg);
                 let _ = repository::add_log(&state.db, "INFO", "port_scanner", Some("nmap"), Some(job_id), &msg).await;
                 let _ = state.broadcaster.send(format!(
                     "scan_progress:{}:nmap done — {} service(s) identified on {}",
-                    job_id, services.len(), ip
+                    job_id, svc_count, ip
                 ));
-                services
+                (result.services, result.os_name, result.os_version)
             }
             Ok(_) => {
                 let msg = format!(
@@ -144,7 +301,7 @@ impl PortScanner {
                 tracing::warn!("{}", msg);
                 let _ = repository::add_log(&state.db, "WARN", "port_scanner", Some("nmap"), Some(job_id), &msg).await;
                 let _ = state.broadcaster.send(format!("scan_progress:{}:nmap returned no services for {}, using banner fallback", job_id, ip));
-                Self::banner_fallback(ip, open_ports).await
+                (Self::banner_fallback(ip, open_ports).await, None, None)
             }
             Err(e) => {
                 let msg = format!(
@@ -154,15 +311,15 @@ impl PortScanner {
                 tracing::warn!("{}", msg);
                 let _ = repository::add_log(&state.db, "WARN", "port_scanner", Some("nmap"), Some(job_id), &msg).await;
                 let _ = state.broadcaster.send(format!("scan_progress:{}:nmap unavailable for {}, using banner fallback", job_id, ip));
-                Self::banner_fallback(ip, open_ports).await
+                (Self::banner_fallback(ip, open_ports).await, None, None)
             }
         }
     }
 
     /// Shell out to nmap for service/version detection on already-confirmed open ports.
-    async fn run_nmap(ip: &str, open_ports: &[u16], state: &Arc<AppState>, job_id: &str) -> Result<Vec<ServiceInfo>, String> {
+    async fn run_nmap(ip: &str, open_ports: &[u16], state: &Arc<AppState>, job_id: &str) -> Result<NmapScanResult, String> {
         if open_ports.is_empty() {
-            return Ok(vec![]);
+            return Ok(NmapScanResult { services: vec![], os_name: None, os_version: None, mac_address: None, mac_vendor: None, hostname: None, scripts: vec![], os_cpe: None });
         }
 
         let ports_arg = open_ports
@@ -203,20 +360,130 @@ impl PortScanner {
         Ok(Self::parse_nmap_xml(&xml))
     }
 
-    /// Parse nmap's XML output (-oX -) and extract per-port service info.
-    fn parse_nmap_xml(xml: &str) -> Vec<ServiceInfo> {
+    /// Run a full nmap scan (no pre-TCP scan).
+    /// Tries with OS detection (-O) first; automatically falls back to service-only if
+    /// raw socket access is unavailable (i.e. not root and no CAP_NET_RAW capability).
+    async fn run_full_nmap(ip: &str, state: &Arc<AppState>, job_id: &str) -> Result<NmapScanResult, String> {
+        // Attempt 1: with OS detection
+        match Self::run_nmap_cmd(ip, true, state, job_id).await {
+            Ok(result) => return Ok(result),
+            Err(e) if e.contains("CAP_NET_RAW") || e.contains("root") || e.contains("no output") => {
+                let msg = format!(
+                    "[nmap-scan] {} — OS detection unavailable ({}); retrying without -O. \
+                     To enable, add a sudoers rule: \
+                     echo \"$USER ALL=(root) NOPASSWD: /usr/bin/nmap\" | sudo tee /etc/sudoers.d/decebalus-nmap",
+                    ip, e
+                );
+                tracing::warn!("{}", msg);
+                let _ = repository::add_log(&state.db, "WARN", "port_scanner", Some("run_full_nmap"), Some(job_id), &msg).await;
+                let _ = state.broadcaster.send(format!(
+                    "scan_progress:{}:OS detection unavailable on {}, continuing with service scan only",
+                    job_id, ip
+                ));
+            }
+            Err(e) => return Err(e),
+        }
+
+        // Attempt 2: without OS detection
+        Self::run_nmap_cmd(ip, false, state, job_id).await
+    }
+
+    /// Execute nmap and return parsed results.
+    /// `with_os`: include `-O --osscan-guess` flags (requires root).
+    /// When `with_os` is true, nmap is invoked via `sudo` so that OS detection works without
+    /// running the backend as root. Requires a NOPASSWD sudoers entry for nmap:
+    ///   echo "$USER ALL=(root) NOPASSWD: /usr/bin/nmap" | sudo tee /etc/sudoers.d/decebalus-nmap
+    async fn run_nmap_cmd(ip: &str, with_os: bool, state: &Arc<AppState>, job_id: &str) -> Result<NmapScanResult, String> {
+        let os_flags = if with_os { " -O --osscan-guess" } else { "" };
+        let sudo_prefix = if with_os { "sudo " } else { "" };
+        let cmd_str = format!(
+            "{}nmap -sV{} --open --max-retries 2 --host-timeout 300s -p 1-65535 -oX - {}",
+            sudo_prefix, os_flags, ip
+        );
+        let msg = format!("[nmap-scan] {} — running: `{}`", ip, cmd_str);
+        tracing::info!("{}", msg);
+        let _ = repository::add_log(&state.db, "INFO", "port_scanner", Some("run_nmap_cmd"), Some(job_id), &msg).await;
+        let _ = state.broadcaster.send(format!(
+            "scan_progress:{}:Running {}nmap{} on all ports for {} (this may take a few minutes)",
+            job_id, sudo_prefix, os_flags, ip
+        ));
+
+        let nmap_args = {
+            let mut v = vec![
+                "-sV",
+                "--open",
+                "--max-retries", "2",
+                "--host-timeout", "300s",
+                "-p", "1-65535",
+                "-oX", "-",
+            ];
+            if with_os {
+                v.extend(["-O", "--osscan-guess"]);
+            }
+            v.push(ip);
+            v
+        };
+
+        // Privileged scans go through sudo so nmap's root check passes without
+        // running the entire backend as root.
+        let output = if with_os {
+            tokio::process::Command::new("sudo")
+                .args(std::iter::once("/usr/bin/nmap").chain(nmap_args))
+                .output()
+                .await
+                .map_err(|e| format!("sudo nmap failed to start: {}", e))?
+        } else {
+            tokio::process::Command::new("nmap")
+                .args(&nmap_args)
+                .output()
+                .await
+                .map_err(|e| format!("nmap not found or failed to start: {}", e))?
+        };
+
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        if !stderr.trim().is_empty() {
+            let msg = format!("[nmap-scan] {} — nmap stderr: {}", ip, stderr.trim());
+            tracing::debug!("{}", msg);
+            let _ = repository::add_log(&state.db, "DEBUG", "port_scanner", Some("run_nmap_cmd"), Some(job_id), &msg).await;
+        }
+
+        if output.stdout.is_empty() {
+            // Propagate stderr so the caller can detect root/CAP issues
+            return Err(format!("no output: {}", stderr.trim()));
+        }
+
+        let xml = String::from_utf8_lossy(&output.stdout);
+        Ok(Self::parse_nmap_xml(&xml))
+    }
+
+    /// Parse nmap's XML output (-oX -) and extract per-port service info, OS detection,
+    /// hostname, NSE script outputs, and CPE strings.
+    fn parse_nmap_xml(xml: &str) -> NmapScanResult {
         use quick_xml::{Reader, events::Event};
 
         let mut reader = Reader::from_str(xml);
         reader.config_mut().trim_text(true);
 
-        let mut services  = Vec::new();
+        let mut services         = Vec::new();
         let mut cur_port: Option<u16> = None;
-        let mut cur_proto = String::from("tcp");
+        let mut cur_proto        = String::from("tcp");
+        let mut in_os            = false;
+        let mut in_service       = false;   // inside <service> Start (may have <cpe> children)
+        let mut in_osclass       = false;   // inside <osclass> (may have <cpe> children)
+        let mut collecting_cpe   = false;   // collecting text inside <cpe>
+        let mut cpe_buf          = String::new();
+        let mut best_os_accuracy: u32 = 0;
+        let mut best_os_name: Option<String> = None;
+        let mut mac_address: Option<String> = None;
+        let mut mac_vendor:  Option<String> = None;
+        let mut hostname:    Option<String> = None;
+        let mut scripts:     Vec<String>    = Vec::new();
+        let mut os_cpe:      Option<String> = None;
 
         loop {
             match reader.read_event() {
-                Ok(Event::Start(ref e)) | Ok(Event::Empty(ref e)) => {
+                // ── Start elements (may have children) ───────────────────────
+                Ok(Event::Start(ref e)) => {
                     match e.name().as_ref() {
                         b"port" => {
                             cur_port  = None;
@@ -232,11 +499,14 @@ impl PortScanner {
                             }
                         }
                         b"service" => {
+                            // <service> as a Start element means it has children (e.g. <cpe>)
+                            in_service = true;
                             if let Some(port) = cur_port {
                                 let mut name       = "unknown".to_string();
                                 let mut product    = None;
                                 let mut version    = None;
                                 let mut extra_info = None;
+                                let mut tunnel     = None;
                                 for attr in e.attributes().flatten() {
                                     if let Ok(val) = std::str::from_utf8(&attr.value) {
                                         match attr.key.as_ref() {
@@ -244,6 +514,7 @@ impl PortScanner {
                                             b"product"   => product    = Some(val.to_string()),
                                             b"version"   => version    = Some(val.to_string()),
                                             b"extrainfo" => extra_info = Some(val.to_string()),
+                                            b"tunnel"    => tunnel     = Some(val.to_string()),
                                             _ => {}
                                         }
                                     }
@@ -255,15 +526,183 @@ impl PortScanner {
                                     product,
                                     version,
                                     extra_info,
+                                    tunnel,
+                                    cpe: None, // filled in when </cpe> is processed
                                 });
+                            }
+                        }
+                        b"os" => { in_os = true; }
+                        b"osclass" => { in_osclass = true; }
+                        b"cpe" => {
+                            collecting_cpe = true;
+                            cpe_buf.clear();
+                        }
+                        _ => {}
+                    }
+                }
+                // ── Empty elements (self-closing, no children) ────────────────
+                Ok(Event::Empty(ref e)) => {
+                    match e.name().as_ref() {
+                        b"port" => {
+                            cur_port  = None;
+                            cur_proto = "tcp".to_string();
+                            for attr in e.attributes().flatten() {
+                                if let Ok(val) = std::str::from_utf8(&attr.value) {
+                                    match attr.key.as_ref() {
+                                        b"portid"   => cur_port  = val.parse().ok(),
+                                        b"protocol" => cur_proto = val.to_string(),
+                                        _ => {}
+                                    }
+                                }
+                            }
+                        }
+                        b"service" => {
+                            // <service/> as Empty element — no CPE children
+                            if let Some(port) = cur_port {
+                                let mut name       = "unknown".to_string();
+                                let mut product    = None;
+                                let mut version    = None;
+                                let mut extra_info = None;
+                                let mut tunnel     = None;
+                                for attr in e.attributes().flatten() {
+                                    if let Ok(val) = std::str::from_utf8(&attr.value) {
+                                        match attr.key.as_ref() {
+                                            b"name"      => name       = val.to_string(),
+                                            b"product"   => product    = Some(val.to_string()),
+                                            b"version"   => version    = Some(val.to_string()),
+                                            b"extrainfo" => extra_info = Some(val.to_string()),
+                                            b"tunnel"    => tunnel     = Some(val.to_string()),
+                                            _ => {}
+                                        }
+                                    }
+                                }
+                                services.push(ServiceInfo {
+                                    port,
+                                    protocol: cur_proto.clone(),
+                                    name,
+                                    product,
+                                    version,
+                                    extra_info,
+                                    tunnel,
+                                    cpe: None,
+                                });
+                            }
+                        }
+                        b"address" => {
+                            let mut addrtype = String::new();
+                            let mut addr     = String::new();
+                            let mut vendor   = String::new();
+                            for attr in e.attributes().flatten() {
+                                if let Ok(val) = std::str::from_utf8(&attr.value) {
+                                    match attr.key.as_ref() {
+                                        b"addrtype" => addrtype = val.to_string(),
+                                        b"addr"     => addr     = val.to_string(),
+                                        b"vendor"   => vendor   = val.to_string(),
+                                        _ => {}
+                                    }
+                                }
+                            }
+                            if addrtype == "mac" && !addr.is_empty() {
+                                mac_address = Some(addr);
+                                if !vendor.is_empty() {
+                                    mac_vendor = Some(vendor);
+                                }
+                            }
+                        }
+                        b"osmatch" => {
+                            if in_os {
+                                let mut name: Option<String> = None;
+                                let mut accuracy: u32 = 0;
+                                for attr in e.attributes().flatten() {
+                                    if let Ok(val) = std::str::from_utf8(&attr.value) {
+                                        match attr.key.as_ref() {
+                                            b"name"     => name     = Some(val.to_string()),
+                                            b"accuracy" => accuracy = val.parse().unwrap_or(0),
+                                            _ => {}
+                                        }
+                                    }
+                                }
+                                if accuracy > best_os_accuracy {
+                                    best_os_accuracy = accuracy;
+                                    best_os_name = name;
+                                }
+                            }
+                        }
+                        b"hostname" => {
+                            // <hostname name="..." type="PTR"/> — take the PTR record
+                            let mut name: Option<String> = None;
+                            let mut htype = String::new();
+                            for attr in e.attributes().flatten() {
+                                if let Ok(val) = std::str::from_utf8(&attr.value) {
+                                    match attr.key.as_ref() {
+                                        b"name" => name  = Some(val.to_string()),
+                                        b"type" => htype = val.to_string(),
+                                        _ => {}
+                                    }
+                                }
+                            }
+                            // Prefer PTR record; fall back to any first hostname
+                            if hostname.is_none() || htype == "PTR" {
+                                hostname = name;
+                            }
+                        }
+                        b"script" => {
+                            // NSE script output — capture "id: output" string
+                            let mut id     = String::new();
+                            let mut output = String::new();
+                            for attr in e.attributes().flatten() {
+                                if let Ok(val) = std::str::from_utf8(&attr.value) {
+                                    match attr.key.as_ref() {
+                                        b"id"     => id     = val.to_string(),
+                                        b"output" => output = val.to_string(),
+                                        _ => {}
+                                    }
+                                }
+                            }
+                            if !id.is_empty() && !output.is_empty() {
+                                let entry = format!("[{}] {}", id, output.trim());
+                                if !scripts.contains(&entry) {
+                                    scripts.push(entry);
+                                }
                             }
                         }
                         _ => {}
                     }
                 }
+                // ── Text content ─────────────────────────────────────────────
+                Ok(Event::Text(ref e)) => {
+                    if collecting_cpe {
+                        if let Ok(text) = std::str::from_utf8(e.as_ref()) {
+                            cpe_buf.push_str(text);
+                        }
+                    }
+                }
+                // ── End elements ─────────────────────────────────────────────
                 Ok(Event::End(ref e)) => {
-                    if e.name().as_ref() == b"port" {
-                        cur_port = None;
+                    match e.name().as_ref() {
+                        b"port" => { cur_port = None; }
+                        b"os"   => { in_os = false; }
+                        b"service"    => { in_service = false; }
+                        b"osclass"    => { in_osclass = false; }
+                        b"cpe" => {
+                            if collecting_cpe {
+                                collecting_cpe = false;
+                                let cpe = cpe_buf.trim().to_string();
+                                if !cpe.is_empty() {
+                                    if in_service {
+                                        // Attach to the service we're inside
+                                        if let Some(svc) = services.last_mut() {
+                                            if svc.cpe.is_none() {
+                                                svc.cpe = Some(cpe);
+                                            }
+                                        }
+                                    } else if in_osclass && os_cpe.is_none() {
+                                        os_cpe = Some(cpe);
+                                    }
+                                }
+                            }
+                        }
+                        _ => {}
                     }
                 }
                 Ok(Event::Eof) => break,
@@ -275,7 +714,17 @@ impl PortScanner {
             }
         }
 
-        services
+        // Parse os_name and os_version from best_os_name by splitting at first space
+        let (os_name, os_version) = if let Some(ref full_name) = best_os_name {
+            match full_name.split_once(' ') {
+                Some((name, ver)) => (Some(name.to_string()), Some(ver.to_string())),
+                None => (Some(full_name.clone()), None),
+            }
+        } else {
+            (None, None)
+        };
+
+        NmapScanResult { services, os_name, os_version, mac_address, mac_vendor, hostname, scripts, os_cpe }
     }
 
     /// Fallback when nmap is unavailable: grab raw banners and fingerprint heuristically.
@@ -295,9 +744,25 @@ impl PortScanner {
                 product:    None,
                 version:    service.version,
                 extra_info: service.description,
+                tunnel:     None,
+                cpe:        None,
             });
         }
         result
+    }
+
+    /// Map a plain service name to its SSL/TLS variant when nmap reports tunnel="ssl".
+    fn ssl_service_name(name: &str) -> String {
+        match name {
+            "http"   => "https".to_string(),
+            "ftp"    => "ftps".to_string(),
+            "imap"   => "imaps".to_string(),
+            "pop3"   => "pop3s".to_string(),
+            "smtp"   => "smtps".to_string(),
+            "ldap"   => "ldaps".to_string(),
+            "telnet" => "telnets".to_string(),
+            other    => other.to_string(),
+        }
     }
 
     // ── Phase 3 ──────────────────────────────────────────────────────────────
@@ -307,6 +772,9 @@ impl PortScanner {
         ip:          &str,
         open_ports:  &[u16],
         services:    &[ServiceInfo],
+        os_override:  Option<(Option<String>, Option<String>)>,
+        mac_override: Option<(String, Option<String>)>,  // (mac_address, vendor)
+        nmap_extra:   Option<NmapExtra>,
     ) {
         let mut host = match repository::get_host(&state.db, ip).await {
             Ok(Some(h)) => h,
@@ -316,13 +784,27 @@ impl PortScanner {
             }
         };
 
-        // Ports
+        // Ports — pass service name, version, and CPE per port.
+        // Apply SSL tunnel service name correction (http→https, ftp→ftps, etc.).
         for &port_num in open_ports {
-            let protocol = services.iter()
-                .find(|s| s.port == port_num)
-                .map(|s| s.protocol.as_str())
-                .unwrap_or("tcp");
-            host.add_port(port_num, protocol, "open");
+            let svc_info = services.iter().find(|s| s.port == port_num);
+            let protocol = svc_info.map(|s| s.protocol.as_str()).unwrap_or("tcp");
+            let service_name = svc_info.map(|s| {
+                // Correct service name when nmap reports SSL tunnel
+                if s.tunnel.as_deref() == Some("ssl") {
+                    Self::ssl_service_name(&s.name)
+                } else {
+                    s.name.clone()
+                }
+            });
+            let version_str = svc_info.and_then(|s| match (&s.product, &s.version) {
+                (Some(p), Some(v)) => Some(format!("{} {}", p, v)),
+                (Some(p), None)    => Some(p.clone()),
+                (None, Some(v))    => Some(v.clone()),
+                (None, None)       => None,
+            });
+            let cpe = svc_info.and_then(|s| s.cpe.clone());
+            host.add_port(port_num, protocol, "open", service_name, version_str, cpe);
         }
 
         // Services
@@ -357,15 +839,49 @@ impl PortScanner {
             }
         }
 
-        // OS detection — nmap extrainfo strings work alongside raw SSH banners
-        let info_strings: Vec<String> = services.iter()
-            .flat_map(|s| [s.extra_info.clone(), s.version.clone()])
-            .flatten()
-            .collect();
-        let (os, os_version) = Self::detect_os(open_ports, &info_strings);
-        if os.is_some() {
-            host.os         = os;
-            host.os_version = os_version;
+        // OS detection — use nmap override if available, otherwise fall back to heuristics
+        if let Some((name, ver)) = os_override {
+            if name.is_some() {
+                host.os         = name;
+                host.os_version = ver;
+            }
+        } else {
+            let info_strings: Vec<String> = services.iter()
+                .flat_map(|s| [s.extra_info.clone(), s.version.clone()])
+                .flatten()
+                .collect();
+            let (os, os_version) = Self::detect_os(open_ports, &info_strings);
+            if os.is_some() {
+                host.os         = os;
+                host.os_version = os_version;
+            }
+        }
+
+        // MAC address — only set if not already known (discovery may have found it first)
+        if host.mac_address.is_none() {
+            if let Some((mac, vendor)) = mac_override {
+                host.mac_address = Some(mac);
+                // Store vendor in device_type if not already set
+                if host.device_type.is_none() {
+                    host.device_type = vendor;
+                }
+            }
+        }
+
+        // NmapExtra — hostname, NSE scripts, OS CPE
+        if let Some(extra) = nmap_extra {
+            // Hostname: only set if not already known
+            if host.hostname.is_none() {
+                host.hostname = extra.hostname;
+            }
+            // NSE script outputs → banners
+            for script in extra.scripts {
+                host.add_banner(script);
+            }
+            // OS CPE → banner (informational)
+            if let Some(cpe) = extra.os_cpe {
+                host.add_banner(format!("[OS CPE] {}", cpe));
+            }
         }
 
         host.update_last_seen();

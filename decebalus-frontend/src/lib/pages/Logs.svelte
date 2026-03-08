@@ -14,7 +14,8 @@
   let shown = PAGE_SIZE;
 
   let filterSeverity = 'all';
-  let filterJobId = 'all';
+  let filterJobType = 'all';
+  let searchJobId = '';
 
   onMount(async () => {
     await refresh();
@@ -38,15 +39,22 @@
     if (typeof msg === 'string' && msg.startsWith('job_')) refresh();
   }
 
+  // Map job_id → job_type for the type filter
+  $: jobTypeMap = new Map<string, string>(jobs.map(j => [j.id, j.job_type]));
+
+  // Unique job types present in current job list, sorted
+  $: jobTypes = [...new Set(jobs.map(j => j.job_type))].sort();
+
   $: filtered = logs
     .filter(l => filterSeverity === 'all' || l.severity === filterSeverity)
-    .filter(l => filterJobId   === 'all' || l.job_id === filterJobId)
+    .filter(l => filterJobType === 'all' || (l.job_id != null && jobTypeMap.get(l.job_id) === filterJobType))
+    .filter(l => searchJobId.trim() === '' || (l.job_id ?? '').toLowerCase().includes(searchJobId.trim().toLowerCase()))
     .sort((a, b) => b.created_at.localeCompare(a.created_at));
 
   $: visible = filtered.slice(0, shown);
 
   // Reset pagination when filters change
-  $: if (filterSeverity || filterJobId) shown = PAGE_SIZE;
+  $: if (filterSeverity || filterJobType || searchJobId) shown = PAGE_SIZE;
 
   const severityClass: Record<string, string> = {
     ERROR: 'badge badge-danger',
@@ -54,10 +62,6 @@
     INFO:  'badge badge-info',
     DEBUG: 'badge badge-neutral',
   };
-
-  function jobLabel(job: Job): string {
-    return `${job.job_type} — ${job.id.slice(0, 8)}`;
-  }
 </script>
 
 <hgroup>
@@ -77,12 +81,18 @@
         <option value="WARN">WARN</option>
         <option value="ERROR">ERROR</option>
       </select>
-      <select bind:value={filterJobId}>
-        <option value="all">All jobs</option>
-        {#each jobs as job}
-          <option value={job.id}>{jobLabel(job)}</option>
+      <select bind:value={filterJobType}>
+        <option value="all">All job types</option>
+        {#each jobTypes as type}
+          <option value={type}>{type}</option>
         {/each}
       </select>
+      <input
+        type="search"
+        placeholder="Filter by job ID…"
+        bind:value={searchJobId}
+        class="job-id-search"
+      />
     </div>
     <button class="outline secondary" on:click={refresh} disabled={refreshing} aria-busy={refreshing}>Refresh</button>
   </header>
@@ -96,6 +106,7 @@
       <table>
         <thead>
           <tr>
+            <th>Job ID</th>
             <th>Time</th>
             <th>Severity</th>
             <th>Service</th>
@@ -106,6 +117,7 @@
         <tbody>
           {#each visible as log}
             <tr>
+              <td class="job-id-cell">{log.job_id ? log.job_id.slice(0, 8) : '—'}</td>
               <td class="nowrap">{fmtDate(log.created_at)}</td>
               <td><span class={severityClass[log.severity] ?? 'badge badge-neutral'}>{log.severity}</span></td>
               <td class="nowrap"><code>{log.service}</code></td>
@@ -151,14 +163,32 @@
     width: auto;
     margin: 0;
     padding: 0.3rem 0.6rem;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
+  }
+
+  .filters .job-id-search {
+    width: auto;
+    min-width: 220px;
+    margin: 0;
+    font-size: 0.875rem;
+  }
+
+  table {
+    font-size: 0.875rem;
   }
 
   .nowrap { white-space: nowrap; }
 
   .log-content {
     word-break: break-word;
-    min-width: 200px;
+    width: 100%;
+  }
+
+  .job-id-cell {
+    font-family: monospace;
+    font-size: 0.75rem;
+    color: var(--color-ash);
+    white-space: nowrap;
   }
 
   article footer {
