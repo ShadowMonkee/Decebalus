@@ -69,7 +69,7 @@
   <p>System and scan activity logs</p>
 </hgroup>
 
-{#if error}<p class="error">{error}</p>{/if}
+{#if error}<p class="error" role="alert">{error}</p>{/if}
 
 <article>
   <header>
@@ -98,9 +98,9 @@
   </header>
 
   {#if loading}
-    <p aria-busy="true">Loading...</p>
+    <p aria-busy="true">Loading…</p>
   {:else if filtered.length === 0}
-    <p>No logs match the current filters.</p>
+    <div class="empty-state"><p>No logs match the current filters.</p></div>
   {:else}
     <div class="table-wrap">
       <table>
@@ -146,17 +146,17 @@
 
 <style>
   article header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     gap: 1rem;
     margin-bottom: 1rem;
+    flex-wrap: wrap;
   }
 
   .filters {
     display: flex;
-    gap: 0.75rem;
+    gap: 0.5rem;
     flex-wrap: wrap;
+    align-items: center;
+    flex: 1;
   }
 
   .filters select {
@@ -168,12 +168,8 @@
 
   .filters .job-id-search {
     width: auto;
-    min-width: 220px;
+    min-width: 200px;
     margin: 0;
-    font-size: 0.875rem;
-  }
-
-  table {
     font-size: 0.875rem;
   }
 
@@ -182,6 +178,7 @@
   .log-content {
     word-break: break-word;
     width: 100%;
+    font-size: 0.82rem;
   }
 
   .job-id-cell {

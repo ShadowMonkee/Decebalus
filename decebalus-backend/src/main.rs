@@ -74,6 +74,13 @@ async fn main() {
         // Logs routes
         .route("/api/logs", get(api::logs::get_all_logs))
         .route("/api/logs/{id}", get(api::logs::get_logs_by_job_id))
+        // Export routes
+        .route("/api/exports", get(api::exports::list_exports))
+        .route("/api/exports/{filename}", get(api::exports::download_export))
+        // CVE enrichment routes
+        .route("/api/cve", get(api::cve::list_cves))
+        .route("/api/cve/sync", post(api::cve::sync_cves))
+        .route("/api/cve/{id}", get(api::cve::get_cve))
         // WebSocket route
         .route("/ws", get(api::websocket::ws_handler))
         .with_state(state);

@@ -224,6 +224,17 @@ fn parse_job_from_request(payload: &CreateJobRequest) -> Result<Job, Response>  
         // No target = scan all discovered hosts
     }
 
+    // "cve-sync" and "export" take no parameters — fall through as-is
+    if job_type != "discovery" && job_type != "port-scan" && job_type != "nmap-scan"
+        && job_type != "cve-sync" && job_type != "export"
+    {
+        return Err((
+            StatusCode::BAD_REQUEST,
+            Json(json!({ "error": format!("Unknown job type: {}", job_type) })),
+        )
+            .into_response());
+    }
+
     if !payload.scheduled_at.is_none() {
         job.scheduled_at = Some(payload.scheduled_at.unwrap_or(Utc::now().timestamp()));
     }

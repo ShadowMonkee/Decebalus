@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { wsMessages } from '../stores/websocketStore';
-  import { getHosts, getJobs, createJob, cancelJob, scheduleJob, type Host, type Job } from '../api';
+  import { getHosts, getJobs, createJob, cancelJob, scheduleJob, getCve, type Host, type Job, type CveDetail } from '../api';
   import { fmtDate } from '../utils';
 
   let hosts: Host[] = [];
@@ -196,6 +196,40 @@
     const open = host.ports.filter(p => p.status === 'open').map(p => p.number);
     return open.length ? open.join(', ') : '—';
   }
+
+  function severityBadge(severity: string): string {
+    switch (severity) {
+      case 'CRITICAL': return 'badge-danger';
+      case 'HIGH':     return 'badge-warn';
+      case 'MEDIUM':   return 'badge-info';
+      default:         return 'badge-neutral';
+    }
+  }
+
+  // CVE detail expansion
+  let expandedCveId: string | null = null;
+  let cveDetail: CveDetail | null = null;
+  let cveLoading = false;
+  let cveError = '';
+
+  async function toggleCveDetail(cveId: string) {
+    if (expandedCveId === cveId) {
+      expandedCveId = null;
+      cveDetail = null;
+      return;
+    }
+    expandedCveId = cveId;
+    cveDetail = null;
+    cveError = '';
+    cveLoading = true;
+    try {
+      cveDetail = await getCve(cveId);
+    } catch (e: any) {
+      cveError = e.message;
+    } finally {
+      cveLoading = false;
+    }
+  }
 </script>
 
 <hgroup>
@@ -203,8 +237,8 @@
   <p>Discover hosts and scan open ports on your network</p>
 </hgroup>
 
-{#if error}<p class="error">{error}</p>{/if}
-{#if success}<p class="success">{success}</p>{/if}
+{#if error}<p class="error" role="alert">{error}</p>{/if}
+{#if success}<p class="success" role="status">{success}</p>{/if}
 
 <!-- Discovery form / active scan status -->
 <article>
@@ -289,7 +323,9 @@
   </header>
 
   {#if hosts.length === 0}
-    <p>No hosts discovered yet. Run a network discovery scan above.</p>
+    <div class="empty-state">
+      <p>No hosts discovered yet — run a network discovery scan above.</p>
+    </div>
   {:else}
     <div class="table-wrap">
       <table>
@@ -395,6 +431,78 @@
                         {/each}
                       </div>
                     {/if}
+
+                    {#if host.vulnerabilities.length > 0}
+                      <div class="vulns-section">
+                        <strong>
+                          Vulnerabilities
+                          <span class="badge badge-danger" style="margin-left:0.4rem;font-weight:400">
+                            {host.vulnerabilities.length}
+                          </span>
+                        </strong>
+                        <table class="ports-table">
+                          <thead>
+                            <tr>
+                              <th>CVE ID</th>
+                              <th>Severity</th>
+                              <th>CVSS</th>
+                              <th>Description</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {#each host.vulnerabilities as vuln}
+                              <tr
+                                class="vuln-row {expandedCveId === vuln.id ? 'expanded' : ''}"
+                                on:click={() => toggleCveDetail(vuln.id)}
+                                aria-expanded={expandedCveId === vuln.id}
+                                title="Click to {expandedCveId === vuln.id ? 'collapse' : 'expand'} details"
+                              >
+                                <td><code class="cve-id">{vuln.id}</code></td>
+                                <td><span class="badge {severityBadge(vuln.severity)}">{vuln.severity}</span></td>
+                                <td class="cvss-cell">
+                                  {#if expandedCveId === vuln.id && cveDetail}
+                                    {cveDetail.cvss_v3_score ?? cveDetail.cvss_v2_score ?? '—'}
+                                  {:else}
+                                    —
+                                  {/if}
+                                </td>
+                                <td class="vuln-desc">
+                                  {#if expandedCveId === vuln.id}
+                                    {#if cveLoading}
+                                      <span aria-busy="true" style="font-style:italic">Loading…</span>
+                                    {:else if cveError}
+                                      <span class="error">{cveError}</span>
+                                    {:else if cveDetail}
+                                      {cveDetail.description}
+                                    {/if}
+                                  {:else}
+                                    <span class="vuln-hint">Click for details</span>
+                                  {/if}
+                                </td>
+                              </tr>
+
+                              {#if expandedCveId === vuln.id && cveDetail && cveDetail.references.length > 0}
+                                <tr class="cve-refs-row">
+                                  <td colspan="4">
+                                    <div class="cve-refs">
+                                      <strong>References</strong>
+                                      <ul>
+                                        {#each cveDetail.references.slice(0, 5) as ref}
+                                          <li><a href={ref} target="_blank" rel="noopener noreferrer">{ref}</a></li>
+                                        {/each}
+                                        {#if cveDetail.references.length > 5}
+                                          <li class="more-refs">+{cveDetail.references.length - 5} more</li>
+                                        {/if}
+                                      </ul>
+                                    </div>
+                                  </td>
+                                </tr>
+                              {/if}
+                            {/each}
+                          </tbody>
+                        </table>
+                      </div>
+                    {/if}
                   </div>
                 </td>
               </tr>
@@ -407,6 +515,7 @@
 </article>
 
 <style>
+  /* ── Discovery form ──────────────────────────── */
   .input-row {
     display: flex;
     gap: 0.75rem;
@@ -457,10 +566,8 @@
     width: auto;
   }
 
+  /* ── Article header ──────────────────────────── */
   article header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     margin-bottom: 1rem;
   }
 
@@ -468,8 +575,10 @@
     display: flex;
     gap: 0.5rem;
     align-items: center;
+    flex-wrap: wrap;
   }
 
+  /* ── Table actions ───────────────────────────── */
   .actions {
     display: flex;
     gap: 0.4rem;
@@ -477,7 +586,7 @@
     white-space: nowrap;
   }
 
-  /* Host detail panel */
+  /* ── Host detail panel ───────────────────────── */
   .host-detail {
     display: flex;
     flex-direction: column;
@@ -488,8 +597,15 @@
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     color: var(--color-ash-light);
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--pico-muted-border-color);
+  }
+
+  .detail-meta span {
+    display: flex;
+    gap: 0.3rem;
   }
 
   .ports-table {
@@ -508,10 +624,36 @@
     gap: 0.4rem;
   }
 
+  .banners pre {
+    background: var(--surface-raised);
+    border: 1px solid var(--border-bronze-subtle);
+    border-radius: 0.25rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+    color: var(--color-ash-light);
+    white-space: pre-wrap;
+    word-break: break-word;
+    margin: 0;
+  }
+
   .no-data {
     color: var(--color-ash);
     font-size: 0.875rem;
     margin: 0;
+    font-style: italic;
+  }
+
+  .vulns-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .vuln-desc {
+    font-size: 0.78rem;
+    color: var(--color-ash);
+    word-break: break-all;
+    max-width: 340px;
   }
 
   .port-version {
@@ -531,5 +673,83 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     font-family: monospace;
+  }
+
+  /* ── CVE expandable rows ─────────────────────── */
+  .vuln-row {
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .vuln-row:hover {
+    background: var(--surface-raised);
+  }
+
+  .vuln-row.expanded {
+    background: color-mix(in srgb, var(--color-bronze) 8%, transparent);
+  }
+
+  .cve-id {
+    color: var(--color-bronze-bright);
+    font-size: 0.8rem;
+  }
+
+  .cvss-cell {
+    font-variant-numeric: tabular-nums;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    color: var(--color-ash-light);
+  }
+
+  .vuln-hint {
+    font-size: 0.75rem;
+    color: var(--color-ash);
+    font-style: italic;
+  }
+
+  .cve-refs-row td {
+    background: var(--surface-raised);
+    padding: 0.5rem 0.75rem;
+    border-top: none;
+  }
+
+  .cve-refs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .cve-refs strong {
+    font-size: 0.8rem;
+    color: var(--color-ash-light);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .cve-refs ul {
+    margin: 0;
+    padding-left: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .cve-refs li {
+    font-size: 0.78rem;
+  }
+
+  .cve-refs a {
+    color: var(--color-bronze-bright);
+    word-break: break-all;
+  }
+
+  .cve-refs a:hover {
+    color: var(--color-bronze);
+  }
+
+  .more-refs {
+    color: var(--color-ash);
+    font-style: italic;
+    list-style: none;
   }
 </style>

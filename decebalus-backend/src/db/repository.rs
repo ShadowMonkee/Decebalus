@@ -1,6 +1,6 @@
 use chrono::{DateTime, Duration, Utc};
 use sqlx::{Row, SqlitePool, sqlite::SqliteRow};
-use crate::models::{Config, DisplayStatus, Host, Job, JobPriority, Log};
+use crate::models::{Config, CveDetail, DisplayStatus, Host, Job, JobPriority, Log};
 
 // ==================== JOB REPOSITORY ====================
 
@@ -476,4 +476,113 @@ pub async fn cleanup_old_logs(pool: &SqlitePool, days: i64) -> Result<u64, sqlx:
     tracing::info!("🧹 Deleted {} old logs (older than {} days)", deleted, days);
 
     Ok(deleted)
+}
+
+// ==================== CVE DETAIL REPOSITORY ====================
+
+fn cve_from_row(r: &SqliteRow) -> CveDetail {
+    let refs_json: String = r.try_get("references_json").unwrap_or_default();
+    let references: Vec<String> = serde_json::from_str(&refs_json).unwrap_or_default();
+    CveDetail {
+        cve_id:           r.get("cve_id"),
+        description:      r.get("description"),
+        cvss_v3_score:    r.try_get("cvss_v3_score").ok().flatten(),
+        cvss_v3_severity: r.try_get("cvss_v3_severity").ok().flatten(),
+        cvss_v2_score:    r.try_get("cvss_v2_score").ok().flatten(),
+        cvss_v2_severity: r.try_get("cvss_v2_severity").ok().flatten(),
+        published_at:     r.try_get("published_at").ok().flatten(),
+        references,
+        fetched_at:       r.get("fetched_at"),
+    }
+}
+
+/// Look up a single CVE from the local cache.
+pub async fn get_cve_detail(pool: &SqlitePool, cve_id: &str) -> Result<Option<CveDetail>, sqlx::Error> {
+    let row = sqlx::query(
+        "SELECT cve_id, description, cvss_v3_score, cvss_v3_severity, cvss_v2_score, \
+         cvss_v2_severity, published_at, references_json, fetched_at \
+         FROM cve_details WHERE cve_id = ?1"
+    )
+    .bind(cve_id)
+    .fetch_optional(pool)
+    .await?;
+    Ok(row.as_ref().map(cve_from_row))
+}
+
+/// Insert or replace a CVE record in the local cache.
+pub async fn upsert_cve_detail(pool: &SqlitePool, detail: &CveDetail) -> Result<(), sqlx::Error> {
+    let refs_json = serde_json::to_string(&detail.references).unwrap_or_else(|_| "[]".to_string());
+    sqlx::query(
+        "INSERT INTO cve_details \
+         (cve_id, description, cvss_v3_score, cvss_v3_severity, cvss_v2_score, \
+          cvss_v2_severity, published_at, references_json, fetched_at) \
+         VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9) \
+         ON CONFLICT(cve_id) DO UPDATE SET \
+           description      = excluded.description, \
+           cvss_v3_score    = excluded.cvss_v3_score, \
+           cvss_v3_severity = excluded.cvss_v3_severity, \
+           cvss_v2_score    = excluded.cvss_v2_score, \
+           cvss_v2_severity = excluded.cvss_v2_severity, \
+           published_at     = excluded.published_at, \
+           references_json  = excluded.references_json, \
+           fetched_at       = excluded.fetched_at"
+    )
+    .bind(&detail.cve_id)
+    .bind(&detail.description)
+    .bind(detail.cvss_v3_score)
+    .bind(&detail.cvss_v3_severity)
+    .bind(detail.cvss_v2_score)
+    .bind(&detail.cvss_v2_severity)
+    .bind(&detail.published_at)
+    .bind(&refs_json)
+    .bind(&detail.fetched_at)
+    .execute(pool)
+    .await?;
+    Ok(())
+}
+
+/// List all cached CVE records, ordered by CVSS v3 score descending.
+pub async fn list_cve_details(pool: &SqlitePool) -> Result<Vec<CveDetail>, sqlx::Error> {
+    let rows = sqlx::query(
+        "SELECT cve_id, description, cvss_v3_score, cvss_v3_severity, cvss_v2_score, \
+         cvss_v2_severity, published_at, references_json, fetched_at \
+         FROM cve_details ORDER BY cvss_v3_score DESC NULLS LAST, cve_id ASC"
+    )
+    .fetch_all(pool)
+    .await?;
+    Ok(rows.iter().map(cve_from_row).collect())
+}
+
+/// Return CVE IDs that exist in host vulnerabilities but have no cached detail.
+pub async fn get_unenriched_cve_ids(pool: &SqlitePool) -> Result<Vec<String>, sqlx::Error> {
+    // Collect all CVE IDs stored in host vulnerability blobs
+    let rows = sqlx::query("SELECT vulnerabilities FROM hosts")
+        .fetch_all(pool)
+        .await?;
+
+    let mut all_ids: std::collections::HashSet<String> = std::collections::HashSet::new();
+    for row in &rows {
+        let json: String = row.try_get("vulnerabilities").unwrap_or_default();
+        if let Ok(vulns) = serde_json::from_str::<Vec<serde_json::Value>>(&json) {
+            for v in vulns {
+                if let Some(id) = v.get("id").and_then(|x| x.as_str()) {
+                    all_ids.insert(id.to_string());
+                }
+            }
+        }
+    }
+
+    if all_ids.is_empty() {
+        return Ok(vec![]);
+    }
+
+    // Filter out IDs already cached
+    let cached: std::collections::HashSet<String> = sqlx::query("SELECT cve_id FROM cve_details")
+        .fetch_all(pool)
+        .await?
+        .iter()
+        .map(|r| r.get::<String, _>("cve_id"))
+        .collect();
+
+    Ok(all_ids.difference(&cached).cloned().collect())
 }

@@ -9,6 +9,7 @@ mod vulnerability;
 mod jobpriority;
 mod log;
 mod create_job_request;
+mod cve_detail;
 
 pub use job::Job;
 pub use host::Host;
@@ -21,3 +22,4 @@ pub use vulnerability::Vulnerability;
 pub use jobpriority::JobPriority;
 pub use log::Log;
 pub use create_job_request::CreateJobRequest;
+pub use cve_detail::CveDetail;

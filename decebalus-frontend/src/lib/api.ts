@@ -9,6 +9,12 @@ export interface Port {
   cpe: string | null;
 }
 
+export interface Vulnerability {
+  id: string;
+  severity: string;
+  description: string;
+}
+
 export interface Host {
   ip: string;
   hostname: string | null;
@@ -20,6 +26,7 @@ export interface Host {
   first_seen: string;
   ports: Port[];
   banners: string[];
+  vulnerabilities: Vulnerability[];
 }
 
 export interface Job {
@@ -33,12 +40,21 @@ export interface Job {
 }
 
 async function req<T>(path: string, init?: RequestInit): Promise<T> {
-  const r = await fetch(`${BASE}${path}`, init);
-  if (!r.ok) {
-    const body = await r.json().catch(() => ({ error: r.statusText }));
-    throw new Error(body.error ?? r.statusText);
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 20_000);
+  try {
+    const r = await fetch(`${BASE}${path}`, { ...init, signal: controller.signal });
+    if (!r.ok) {
+      const body = await r.json().catch(() => ({ error: r.statusText }));
+      throw new Error(body.error ?? r.statusText);
+    }
+    return r.json();
+  } catch (e: any) {
+    if (e.name === 'AbortError') throw new Error('Request timed out');
+    throw e;
+  } finally {
+    clearTimeout(timer);
   }
-  return r.json();
 }
 
 export interface Log {
@@ -89,3 +105,31 @@ export const saveConfig = (settings: Record<string, any>) =>
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ settings }),
   });
+
+export interface CveDetail {
+  cve_id:           string;
+  description:      string;
+  cvss_v3_score:    number | null;
+  cvss_v3_severity: string | null;
+  cvss_v2_score:    number | null;
+  cvss_v2_severity: string | null;
+  published_at:     string | null;
+  references:       string[];
+  fetched_at:       string;
+}
+
+export const listCves   = ()              => req<CveDetail[]>('/cve');
+export const getCve     = (id: string)    => req<CveDetail>(`/cve/${encodeURIComponent(id)}`);
+export const syncCves   = ()              => req<Job>('/cve/sync', { method: 'POST' });
+
+export interface ExportFile {
+  filename: string;
+  size: number;
+  modified_at: number | null;
+}
+
+export const getExports   = () => req<ExportFile[]>('/exports');
+export const triggerExport = () => createJob('export');
+/** Returns the URL to download a specific export file. */
+export const exportDownloadUrl = (filename: string) =>
+  `${BASE}/exports/${encodeURIComponent(filename)}`;

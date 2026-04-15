@@ -3,7 +3,7 @@ use std::time::Duration;
 use futures_util::StreamExt;
 use crate::state::AppState;
 use crate::db::repository;
-use crate::models::Service;
+use crate::models::{Service, Vulnerability};
 
 /// Intermediate type carrying per-port service info from nmap or banner fallback.
 struct ServiceInfo {
@@ -26,6 +26,7 @@ struct NmapScanResult {
     hostname:    Option<String>,    // PTR hostname from nmap
     scripts:     Vec<String>,       // NSE script outputs (port + host level)
     os_cpe:      Option<String>,    // OS CPE from osclass (e.g. "cpe:/o:linux:linux_kernel")
+    vulns:       Vec<Vulnerability>, // CVEs extracted from vulners NSE script
 }
 
 /// Extra nmap-derived data passed to update_host_scan_results for nmap-scan jobs.
@@ -33,6 +34,7 @@ struct NmapExtra {
     hostname: Option<String>,
     scripts:  Vec<String>,
     os_cpe:   Option<String>,
+    vulns:    Vec<Vulnerability>,
 }
 
 /// Port Scanner Service
@@ -136,6 +138,7 @@ impl PortScanner {
             hostname,
             scripts,
             os_cpe,
+            vulns,
         } = Self::run_full_nmap(ip, state, job_id).await?;
         let tcp_ports: Vec<u16> = tcp_services.iter().map(|s| s.port).collect();
 
@@ -164,8 +167,8 @@ impl PortScanner {
 
         let os_override = if os_name.is_some() { Some((os_name, os_version)) } else { None };
         let mac_override = mac_address.map(|mac| (mac, mac_vendor));
-        let nmap_extra = if hostname.is_some() || !scripts.is_empty() || os_cpe.is_some() {
-            Some(NmapExtra { hostname, scripts, os_cpe })
+        let nmap_extra = if hostname.is_some() || !scripts.is_empty() || os_cpe.is_some() || !vulns.is_empty() {
+            Some(NmapExtra { hostname, scripts, os_cpe, vulns })
         } else {
             None
         };
@@ -319,7 +322,7 @@ impl PortScanner {
     /// Shell out to nmap for service/version detection on already-confirmed open ports.
     async fn run_nmap(ip: &str, open_ports: &[u16], state: &Arc<AppState>, job_id: &str) -> Result<NmapScanResult, String> {
         if open_ports.is_empty() {
-            return Ok(NmapScanResult { services: vec![], os_name: None, os_version: None, mac_address: None, mac_vendor: None, hostname: None, scripts: vec![], os_cpe: None });
+            return Ok(NmapScanResult { services: vec![], os_name: None, os_version: None, mac_address: None, mac_vendor: None, hostname: None, scripts: vec![], os_cpe: None, vulns: vec![] });
         }
 
         let ports_arg = open_ports
@@ -415,6 +418,7 @@ impl PortScanner {
                 "--max-retries", "2",
                 "--host-timeout", "300s",
                 "-p", "1-65535",
+                "--script", "vulners",
                 "-oX", "-",
             ];
             if with_os {
@@ -456,8 +460,48 @@ impl PortScanner {
         Ok(Self::parse_nmap_xml(&xml))
     }
 
+    /// Map a CVSS v2/v3 score to a severity label.
+    fn cvss_to_severity(score: f32) -> String {
+        match score {
+            s if s >= 9.0 => "CRITICAL",
+            s if s >= 7.0 => "HIGH",
+            s if s >= 4.0 => "MEDIUM",
+            _              => "LOW",
+        }.to_string()
+    }
+
+    /// Extract CVE entries from the text output of the nmap `vulners` NSE script.
+    ///
+    /// The `output` attribute produced by vulners looks like:
+    /// ```
+    ///   cpe:/a:openbsd:openssh:8.2p1:
+    ///     CVE-2023-38408\t10.0\thttps://vulners.com/cve/CVE-2023-38408
+    ///     CVE-2021-36368\t5.3\thttps://vulners.com/cve/CVE-2021-36368
+    /// ```
+    fn parse_vulners_output(script_id: &str, output: &str) -> Vec<Vulnerability> {
+        let mut vulns = Vec::new();
+        for line in output.lines() {
+            let trimmed = line.trim();
+            if !trimmed.starts_with("CVE-") {
+                continue;
+            }
+            // Fields are tab-separated: CVE-ID \t CVSS \t URL
+            let mut parts = trimmed.splitn(3, '\t');
+            let id   = match parts.next() { Some(s) if !s.is_empty() => s.trim().to_string(), _ => continue };
+            let cvss: f32 = parts.next().and_then(|s| s.trim().parse().ok()).unwrap_or(0.0);
+            let url  = parts.next().map(|s| s.trim().to_string())
+                           .unwrap_or_else(|| format!("Detected by nmap script: {}", script_id));
+            vulns.push(Vulnerability {
+                id,
+                severity:    Self::cvss_to_severity(cvss),
+                description: url,
+            });
+        }
+        vulns
+    }
+
     /// Parse nmap's XML output (-oX -) and extract per-port service info, OS detection,
-    /// hostname, NSE script outputs, and CPE strings.
+    /// hostname, NSE script outputs, CPE strings, and CVE vulnerabilities.
     fn parse_nmap_xml(xml: &str) -> NmapScanResult {
         use quick_xml::{Reader, events::Event};
 
@@ -474,11 +518,12 @@ impl PortScanner {
         let mut cpe_buf          = String::new();
         let mut best_os_accuracy: u32 = 0;
         let mut best_os_name: Option<String> = None;
-        let mut mac_address: Option<String> = None;
-        let mut mac_vendor:  Option<String> = None;
-        let mut hostname:    Option<String> = None;
-        let mut scripts:     Vec<String>    = Vec::new();
-        let mut os_cpe:      Option<String> = None;
+        let mut mac_address: Option<String>    = None;
+        let mut mac_vendor:  Option<String>    = None;
+        let mut hostname:    Option<String>    = None;
+        let mut scripts:     Vec<String>       = Vec::new();
+        let mut os_cpe:      Option<String>    = None;
+        let mut vulns:       Vec<Vulnerability> = Vec::new();
 
         loop {
             match reader.read_event() {
@@ -536,6 +581,35 @@ impl PortScanner {
                         b"cpe" => {
                             collecting_cpe = true;
                             cpe_buf.clear();
+                        }
+                        // <script id="..." output="..."> — may have child <table> elements
+                        // The output attribute on the opening tag already has the text we need.
+                        b"script" => {
+                            let mut id     = String::new();
+                            let mut output = String::new();
+                            for attr in e.attributes().flatten() {
+                                if let Ok(val) = std::str::from_utf8(&attr.value) {
+                                    match attr.key.as_ref() {
+                                        b"id"     => id     = val.to_string(),
+                                        b"output" => output = val.to_string(),
+                                        _ => {}
+                                    }
+                                }
+                            }
+                            if !id.is_empty() && !output.is_empty() {
+                                if id == "vulners" {
+                                    let parsed = Self::parse_vulners_output(&id, &output);
+                                    for v in parsed {
+                                        if !vulns.iter().any(|e: &Vulnerability| e.id == v.id) {
+                                            vulns.push(v);
+                                        }
+                                    }
+                                }
+                                let entry = format!("[{}] {}", id, output.trim());
+                                if !scripts.contains(&entry) {
+                                    scripts.push(entry);
+                                }
+                            }
                         }
                         _ => {}
                     }
@@ -660,6 +734,15 @@ impl PortScanner {
                                 }
                             }
                             if !id.is_empty() && !output.is_empty() {
+                                // Extract CVEs from the vulners script output
+                                if id == "vulners" {
+                                    let parsed = Self::parse_vulners_output(&id, &output);
+                                    for v in parsed {
+                                        if !vulns.iter().any(|e: &Vulnerability| e.id == v.id) {
+                                            vulns.push(v);
+                                        }
+                                    }
+                                }
                                 let entry = format!("[{}] {}", id, output.trim());
                                 if !scripts.contains(&entry) {
                                     scripts.push(entry);
@@ -724,7 +807,7 @@ impl PortScanner {
             (None, None)
         };
 
-        NmapScanResult { services, os_name, os_version, mac_address, mac_vendor, hostname, scripts, os_cpe }
+        NmapScanResult { services, os_name, os_version, mac_address, mac_vendor, hostname, scripts, os_cpe, vulns }
     }
 
     /// Fallback when nmap is unavailable: grab raw banners and fingerprint heuristically.
@@ -868,7 +951,7 @@ impl PortScanner {
             }
         }
 
-        // NmapExtra — hostname, NSE scripts, OS CPE
+        // NmapExtra — hostname, NSE scripts, OS CPE, vulnerabilities
         if let Some(extra) = nmap_extra {
             // Hostname: only set if not already known
             if host.hostname.is_none() {
@@ -882,6 +965,30 @@ impl PortScanner {
             if let Some(cpe) = extra.os_cpe {
                 host.add_banner(format!("[OS CPE] {}", cpe));
             }
+            // Merge in newly discovered CVEs (deduplicate by CVE ID)
+            let vuln_count_before = host.vulnerabilities.len();
+            for vuln in extra.vulns {
+                if !host.vulnerabilities.iter().any(|v| v.id == vuln.id) {
+                    host.vulnerabilities.push(vuln);
+                }
+            }
+            let new_vulns = host.vulnerabilities.len() - vuln_count_before;
+            if new_vulns > 0 {
+                tracing::info!(
+                    "[nmap] {} — {} new CVE(s) found (total: {})",
+                    ip, new_vulns, host.vulnerabilities.len()
+                );
+            } else {
+                tracing::debug!("[nmap] {} — no new CVEs from vulners script", ip);
+            }
+            // Sort by severity (CRITICAL first) then by ID for stable ordering
+            host.vulnerabilities.sort_by(|a, b| {
+                fn sev_rank(s: &str) -> u8 {
+                    match s { "CRITICAL" => 3, "HIGH" => 2, "MEDIUM" => 1, _ => 0 }
+                }
+                sev_rank(&b.severity).cmp(&sev_rank(&a.severity))
+                    .then_with(|| a.id.cmp(&b.id))
+            });
         }
 
         host.update_last_seen();

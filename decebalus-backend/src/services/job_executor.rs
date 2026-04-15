@@ -4,7 +4,7 @@ use tokio::sync::OwnedSemaphorePermit;
 use tokio::time::{Duration, sleep};
 use crate::models::{Job, JobPriority};
 use crate::state::AppState;
-use crate::services::{scanner, port_scanner};
+use crate::services::{scanner, port_scanner, CveEnrichment};
 use crate::db::repository;
 
 
@@ -34,7 +34,8 @@ impl JobExecutor {
                         "discovery" => Self::run_discovery(&state, &job).await,
                         "port-scan" => Self::run_port_scan(&state, &job).await,
                         "nmap-scan" => Self::run_nmap_scan(&state, &job).await,
-                        "export" => Self::run_export(&state, &job).await,
+                        "export"    => Self::run_export(&state, &job).await,
+                        "cve-sync"  => Self::run_cve_sync(&state, &job).await,
                         _ => {
                             tracing::warn!("Unknown job type: {}", job.job_type);
                             Err(format!("Unknown job type: {}", job.job_type))
@@ -307,31 +308,84 @@ impl JobExecutor {
             "timestamp": chrono::Utc::now().to_rfc3339(),
         });
 
+        // Kick off background CVE enrichment for any newly discovered vulnerabilities.
+        // This runs independently — failure does not affect the job result.
+        let db_clone = state.db.clone();
+        tokio::spawn(async move {
+            CveEnrichment::enrich_all_unenriched(&db_clone, None).await;
+        });
+
         Ok(results.to_string())
     }
     
-    /// Export results to file
-    async fn run_export(state: &Arc<AppState>, _job: &Job) -> Result<String, String> {
-        tracing::info!("Running export");
-        
-        // Get all data
+    /// Export all hosts and jobs to a timestamped JSON file under data/exports/.
+    async fn run_export(state: &Arc<AppState>, job: &Job) -> Result<String, String> {
         let hosts = repository::list_hosts(&state.db).await
-                .map_err(|e| format!("Failed to list hosts: {}", e))?;
+            .map_err(|e| format!("Failed to list hosts: {}", e))?;
         let jobs = repository::list_jobs(&state.db).await
-                .map_err(|e| format!("Failed to list jobs: {}", e))?;
-        
+            .map_err(|e| format!("Failed to list jobs: {}", e))?;
+
+        let now = Utc::now();
+        let timestamp = now.format("%Y-%m-%dT%H-%M-%S").to_string();
+
+        let export_dir = std::env::var("EXPORT_DIR").unwrap_or_else(|_| "data/exports".to_string());
+        tokio::fs::create_dir_all(&export_dir).await
+            .map_err(|e| format!("Failed to create export directory '{}': {}", export_dir, e))?;
+
+        let file_path = format!("{}/export_{}.json", export_dir, timestamp);
+
         let export_data = serde_json::json!({
-            "export_date": chrono::Utc::now().to_rfc3339(),
-            "jobs": jobs,
-            "hosts": hosts,
+            "export_date": now.to_rfc3339(),
+            "job_id":      job.id,
+            "hosts_count": hosts.len(),
+            "jobs_count":  jobs.len(),
+            "hosts":       hosts,
+            "jobs":        jobs,
         });
-        
-        // TODO: Write to file
-        // std::fs::write("data/export.json", export_data.to_string())?;
-        
-        Ok(export_data.to_string())
+
+        let json_bytes = serde_json::to_vec_pretty(&export_data)
+            .map_err(|e| format!("Failed to serialise export data: {}", e))?;
+
+        tokio::fs::write(&file_path, &json_bytes).await
+            .map_err(|e| format!("Failed to write export file '{}': {}", file_path, e))?;
+
+        let msg = format!("Export written to {} ({} hosts, {} jobs)", file_path, hosts.len(), jobs.len());
+        tracing::info!("{}", msg);
+        let _ = repository::add_log(&state.db, "INFO", THIS_SERVICE, Some("run_export"), Some(&job.id), &msg).await;
+
+        let result = serde_json::json!({
+            "file_path":   file_path,
+            "export_date": now.to_rfc3339(),
+            "hosts_count": hosts.len(),
+            "jobs_count":  jobs.len(),
+        });
+        Ok(result.to_string())
     }
     
+    /// Run a dedicated CVE enrichment pass, linked to a job record for visibility.
+    async fn run_cve_sync(state: &Arc<AppState>, job: &Job) -> Result<String, String> {
+        let msg = format!("Starting CVE enrichment job {}", job.id);
+        tracing::info!("{}", msg);
+        let _ = repository::add_log(&state.db, "INFO", THIS_SERVICE, Some("run_cve_sync"), Some(&job.id), &msg).await;
+
+        CveEnrichment::enrich_all_unenriched(&state.db, Some(&job.id)).await;
+
+        // Count how many CVEs are now cached to build the result summary
+        let cached_count = repository::list_cve_details(&state.db)
+            .await
+            .map(|v| v.len())
+            .unwrap_or(0);
+
+        let result = serde_json::json!({
+            "job_id":       job.id,
+            "job_type":     "cve-sync",
+            "cached_total": cached_count,
+            "timestamp":    chrono::Utc::now().to_rfc3339(),
+        });
+
+        Ok(result.to_string())
+    }
+
     async fn update_job_status(state: &Arc<AppState>, job_id: &str, status: &str) {
         if let Err(e) = repository::update_job_status(&state.db, job_id, status).await {
             tracing::error!("Failed to update job status: {}", e);
@@ -345,11 +399,11 @@ impl JobExecutor {
     }
 
     pub async fn check_and_run_scheduled_jobs(state: Arc<AppState>) {
-        let check_interval = Duration::from_secs(30); // check every 60 seconds
-        tracing::info!("Scheduler started...");
+        let check_interval = Duration::from_secs(30);
+        tracing::info!("Scheduler started (interval: {}s)", check_interval.as_secs());
 
         loop {
-            // Fetch jobs that are scheduled but not yet started and due for execution
+            // 1. Promote any scheduled jobs whose run-time has arrived.
             match repository::get_scheduled_jobs_due(&state.db, Utc::now()).await {
                 Ok(jobs) if !jobs.is_empty() => {
                     tracing::info!("Found {} scheduled job(s) ready to run", jobs.len());
@@ -366,7 +420,6 @@ impl JobExecutor {
                             }
                         };
 
-                        // Spawn each job execution in the background
                         tokio::spawn(async move {
                             Self::execute_job(job, state_clone, permit).await;
                         });
@@ -380,7 +433,11 @@ impl JobExecutor {
                 }
             }
 
-            // Wait before checking again
+            // 2. Drain any queued jobs that couldn't start earlier because the
+            //    semaphore was full (e.g. submitted while all slots were taken,
+            //    or re-queued by resume_incomplete_jobs after a restart).
+            Self::run_queue(&state).await;
+
             sleep(check_interval).await;
         }
     }
