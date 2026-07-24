@@ -7,7 +7,7 @@
     { path: '/recon',    label: 'Recon'     },
     { path: '/logs',     label: 'Logs'      },
     { path: '/attacks',  label: 'Attacks'   },
-    { path: '/plugins',  label: 'Plugins'   },
+    { path: '/plugins',  label: 'Modules'   },
     { path: '/vulndb',   label: 'Vuln DB'   },
     { path: '/settings', label: 'Settings'  },
   ];

@@ -2,6 +2,7 @@ mod api;
 mod db;
 mod models;
 mod services;
+mod settings;
 mod state;
 
 use axum::{
@@ -9,7 +10,8 @@ use axum::{
     Router,
 };
 use std::{net::SocketAddr, sync::Arc};
-use tracing_subscriber;
+use tracing_subscriber::filter::LevelFilter;
+use tracing_subscriber::prelude::*;
 
 pub use state::AppState;
 
@@ -25,17 +27,40 @@ async fn shutdown_signal() {
 #[tokio::main]
 async fn main() {
     dotenvy::dotenv().ok();
-    
-    tracing_subscriber::fmt::init();
+
+    // Tracing with a reload handle so the Settings UI can change log level at runtime.
+    let initial_level = std::env::var("RUST_LOG")
+        .ok()
+        .or_else(|| std::env::var("LOG_LEVEL").ok())
+        .and_then(|s| s.parse::<LevelFilter>().ok())
+        .unwrap_or(LevelFilter::INFO);
+    let (level_filter, reload_handle) = tracing_subscriber::reload::Layer::new(initial_level);
+    tracing_subscriber::registry()
+        .with(level_filter)
+        .with(tracing_subscriber::fmt::layer())
+        .init();
+    // Let settings::set_log_level swap the filter live without this file's tracing
+    // types leaking into the settings module.
+    settings::register_log_setter(Box::new(move |level: &str| {
+        if let Ok(l) = level.parse::<LevelFilter>() {
+            let _ = reload_handle.reload(l);
+        }
+    }));
+
     //Connect to DB
     let database_url = std::env::var("DATABASE_URL")
         .unwrap_or_else(|_| "sqlite:data/decebalus.db".to_string());
 
     std::fs::create_dir_all("data").expect("Failed to create data directory");
-    
+
     let db_pool = db::init_pool(&database_url)
         .await
         .expect("Failed to initialize database");
+
+    // Resolve runtime settings from the config table (env/defaults as fallback) and
+    // apply the persisted log level.
+    settings::init(settings::Settings::load(&db_pool).await);
+    settings::set_log_level(&settings::current().log_level);
 
     let state = Arc::new(AppState::new(db_pool));
 
@@ -45,12 +70,8 @@ async fn main() {
         JobExecutor::check_and_run_scheduled_jobs(scheduler_state).await;
     });
 
-    // On startup check and cleanup logs older than X amount of days, in case of not set in .env, make it 30 days
-    let retention_days: i64 = std::env::var("LOG_RETENTION_DAYS")
-        .unwrap_or_else(|_| "30".to_string()) // Default to 30 days if not set
-        .parse()
-        .unwrap_or(30);
-
+    // On startup, clean up logs older than the configured retention window.
+    let retention_days = settings::current().log_retention_days;
     let _ = repository::cleanup_old_logs(&state.db, retention_days).await;
 
 
@@ -81,6 +102,8 @@ async fn main() {
         .route("/api/cve", get(api::cve::list_cves))
         .route("/api/cve/sync", post(api::cve::sync_cves))
         .route("/api/cve/{id}", get(api::cve::get_cve))
+        // Attack/exploit module registry
+        .route("/api/modules", get(api::modules::list_modules))
         // WebSocket route
         .route("/ws", get(api::websocket::ws_handler))
         .with_state(state);

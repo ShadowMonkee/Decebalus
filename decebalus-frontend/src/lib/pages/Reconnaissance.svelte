@@ -1,11 +1,23 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { wsMessages } from '../stores/websocketStore';
-  import { getHosts, getJobs, createJob, cancelJob, scheduleJob, getCve, type Host, type Job, type CveDetail } from '../api';
+  import { getHosts, getJobs, createJob, cancelJob, scheduleJob, getCve, getModules, type Host, type Job, type CveDetail, type ModuleMeta } from '../api';
   import { fmtDate } from '../utils';
 
   let hosts: Host[] = [];
   let jobs: Job[] = [];
+  let modules: ModuleMeta[] = [];
+
+  /** Attack modules relevant to a host, based on its open ports vs each module's trigger_ports. */
+  function suggestedAttacks(host: Host): { module: ModuleMeta; port: number }[] {
+    const openPorts = new Set(host.ports.filter(p => p.status === 'open').map(p => p.number));
+    const out: { module: ModuleMeta; port: number }[] = [];
+    for (const m of modules) {
+      const hit = m.trigger_ports.find(p => openPorts.has(p));
+      if (hit !== undefined) out.push({ module: m, port: hit });
+    }
+    return out;
+  }
   let target = 'self';
   let error = '';
   let success = '';
@@ -28,6 +40,7 @@
 
   onMount(async () => {
     await refresh();
+    try { modules = await getModules(); } catch { /* non-fatal: suggestions just won't show */ }
   });
 
   async function refresh() {
@@ -401,6 +414,20 @@
                       <span><strong>Status:</strong> {host.status}</span>
                     </div>
 
+                    {#if suggestedAttacks(host).length > 0}
+                      <div class="suggested-attacks">
+                        <strong>Suggested attacks</strong>
+                        <div class="suggest-list">
+                          {#each suggestedAttacks(host) as s}
+                            <span class="suggest-chip" title={s.module.description}>
+                              {s.module.name} <small>:{s.port}</small>
+                            </span>
+                          {/each}
+                        </div>
+                        <small class="suggest-hint">Based on open ports. Launch these from the Attacks page.</small>
+                      </div>
+                    {/if}
+
                     {#if host.ports.length > 0}
                       <table class="ports-table">
                         <thead>
@@ -462,6 +489,8 @@
                           </thead>
                           <tbody>
                             {#each host.vulnerabilities as vuln}
+                              {@const sev = vuln.detail?.cvss_v3_severity ?? vuln.detail?.cvss_v2_severity ?? vuln.severity}
+                              {@const cvss = vuln.detail?.cvss_v3_score ?? vuln.detail?.cvss_v2_score ?? null}
                               <tr
                                 class="vuln-row {expandedCveId === vuln.id ? 'expanded' : ''}"
                                 on:click={() => toggleCveDetail(vuln.id)}
@@ -469,13 +498,9 @@
                                 title="Click to {expandedCveId === vuln.id ? 'collapse' : 'expand'} details"
                               >
                                 <td><code class="cve-id">{vuln.id}</code></td>
-                                <td><span class="badge {severityBadge(vuln.severity)}">{vuln.severity}</span></td>
+                                <td><span class="badge {severityBadge(sev)}">{sev}</span></td>
                                 <td class="cvss-cell">
-                                  {#if expandedCveId === vuln.id && cveDetail}
-                                    {cveDetail.cvss_v3_score ?? cveDetail.cvss_v2_score ?? '—'}
-                                  {:else}
-                                    —
-                                  {/if}
+                                  {cvss ?? '—'}
                                 </td>
                                 <td class="vuln-desc">
                                   {#if expandedCveId === vuln.id}
@@ -612,6 +637,35 @@
     color: var(--color-ash-light);
     padding: 0.5rem 0;
     border-bottom: 1px solid var(--pico-muted-border-color);
+  }
+
+  .suggested-attacks {
+    padding: 0.5rem 0;
+  }
+
+  .suggest-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0.4rem 0;
+  }
+
+  .suggest-chip {
+    background: rgba(92, 58, 30, 0.2);
+    border: 1px solid var(--border-bronze-subtle, #5c3a1e);
+    color: var(--color-bronze-bright, #e5c07b);
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+  }
+
+  .suggest-chip small {
+    color: var(--color-ash);
+  }
+
+  .suggest-hint {
+    color: var(--color-ash);
+    font-size: 0.78rem;
   }
 
   .detail-meta span {

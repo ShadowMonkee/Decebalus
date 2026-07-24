@@ -13,6 +13,8 @@ export interface Vulnerability {
   id: string;
   severity: string;
   description: string;
+  /** Enriched NVD detail, merged in by the backend. Null until enrichment runs. */
+  detail?: CveDetail | null;
 }
 
 export interface Host {
@@ -141,3 +143,16 @@ export const triggerExport = () => createJob('export');
 /** Returns the URL to download a specific export file. */
 export const exportDownloadUrl = (filename: string) =>
   `${BASE}/exports/${encodeURIComponent(filename)}`;
+
+export interface ModuleMeta {
+  job_type:        string;
+  name:            string;
+  category:        string;
+  description:     string;
+  required_config: string[];
+  optional_config: string[];
+  default_port:    number | null;
+  trigger_ports:   number[];
+}
+
+export const getModules = () => req<ModuleMeta[]>('/modules');

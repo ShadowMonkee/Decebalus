@@ -50,7 +50,9 @@ else
         pkg-config \
         libssl-dev \
         sqlite3 \
-        nmap
+        nmap \
+        smbclient \
+        freerdp2-x11
     ok "System packages installed"
 fi
 
@@ -106,6 +108,9 @@ LOG_RETENTION_DAYS=30
 MAX_THREADS=5
 MAX_DISCOVER_THREADS=256
 MAX_SCAN_CONCURRENCY=500
+# Optional: an NVD API key speeds up CVE enrichment (~50 req/30s vs ~5 req/30s).
+# Request one free at https://nvd.nist.gov/developers/request-an-api-key
+# NVD_API_KEY=your-key-here
 EOF
     ok ".env created with defaults"
 fi
@@ -167,6 +172,12 @@ echo -e "${BOLD}${GREEN}╚═════════════════�
 echo ""
 echo -e "  ${BOLD}Start the backend:${NC}"
 echo -e "    cd decebalus-backend && cargo run"
+echo ""
+echo -e "  ${YELLOW}${BOLD}Note — network discovery needs raw sockets (ARP/ICMP).${NC}"
+echo -e "  Without them, discovery silently falls back to a limited TCP probe and misses hosts."
+echo -e "  Either run the backend with sudo, or grant the built binary the capability once:"
+echo -e "    cargo build --release"
+echo -e "    sudo setcap cap_net_raw+ep target/release/decebalus-backend"
 echo ""
 echo -e "  ${BOLD}Start the frontend (dev):${NC}"
 echo -e "    cd decebalus-frontend && npm run dev"

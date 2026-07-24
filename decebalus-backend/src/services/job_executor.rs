@@ -30,19 +30,22 @@ impl JobExecutor {
                     // Broadcast that job started
                     let _ = state.broadcaster.send(format!("job_running:{}", job.id));
 
-                    // Execute based on job type
+                    // Execute based on job type. Scan/maintenance jobs are handled
+                    // inline; attack/exploit jobs are dispatched through the module
+                    // registry so new modules are picked up without touching this match.
                     let result = match job.job_type.as_str() {
                         "discovery"  => Self::run_discovery(&state, &job).await,
                         "port-scan"  => Self::run_port_scan(&state, &job).await,
                         "nmap-scan"  => Self::run_nmap_scan(&state, &job).await,
                         "export"     => Self::run_export(&state, &job).await,
                         "cve-sync"   => Self::run_cve_sync(&state, &job).await,
-                        "ssh-brute"  => attacks::SshBruteForce::run(&job, &state).await,
-                        "ftp-brute"  => attacks::FtpBruteForce::run(&job, &state).await,
-                        "file-steal" => attacks::FileSteal::run(&job, &state).await,
-                        _ => {
-                            tracing::warn!("Unknown job type: {}", job.job_type);
-                            Err(format!("Unknown job type: {}", job.job_type))
+                        other => {
+                            if let Some(module) = attacks::module_for(other) {
+                                module.execute(&job, &state).await
+                            } else {
+                                tracing::warn!("Unknown job type: {}", other);
+                                Err(format!("Unknown job type: {}", other))
+                            }
                         }
                     };
 
@@ -134,11 +137,12 @@ impl JobExecutor {
     
     /// Run port scanning — either a single host (if job.config.target is set) or all hosts.
     async fn run_port_scan(state: &Arc<AppState>, job: &Job) -> Result<String, String> {
+        let concurrency = crate::settings::current().max_scan_concurrency;
         let hosts_to_scan: Vec<String> = match job.target() {
             Ok(ip) => {
                 let msg = format!(
                     "[port-scan] Job {} — mode: single host | target: {} | concurrency: {}",
-                    job.id, ip, state.max_scan_concurrency
+                    job.id, ip, concurrency
                 );
                 tracing::info!("{}", msg);
                 let _ = repository::add_log(&state.db, "INFO", "port_scanner", Some("run_port_scan"), Some(&job.id), &msg).await;
@@ -153,7 +157,7 @@ impl JobExecutor {
                     "[port-scan] Job {} — mode: all hosts | targets: [{}] | concurrency: {}",
                     job.id,
                     ips.join(", "),
-                    state.max_scan_concurrency
+                    concurrency
                 );
                 tracing::info!("{}", msg);
                 let _ = repository::add_log(&state.db, "INFO", "port_scanner", Some("run_port_scan"), Some(&job.id), &msg).await;

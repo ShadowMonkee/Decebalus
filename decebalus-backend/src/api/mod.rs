@@ -6,3 +6,4 @@ pub mod websocket;
 pub mod logs;
 pub mod exports;
 pub mod cve;
+pub mod modules;

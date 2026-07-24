@@ -3,7 +3,6 @@ use axum::{
     response::IntoResponse,
     Json,
 };
-use chrono::Utc;
 use std::sync::Arc;
 use axum::http::StatusCode;
 use axum::response::Response;
@@ -224,7 +223,7 @@ fn parse_job_from_request(payload: &CreateJobRequest) -> Result<Job, Response>  
         // No target = scan all discovered hosts
     }
 
-    if matches!(job_type.as_str(), "ssh-brute" | "ftp-brute") {
+    if matches!(job_type.as_str(), "ssh-brute" | "ftp-brute" | "smb-brute" | "rdp-brute") {
         let cfg = payload.config.as_ref()
             .and_then(|c| c.as_object())
             .ok_or_else(|| (StatusCode::BAD_REQUEST, Json(json!({ "error": "config object required" }))).into_response())?;
@@ -242,6 +241,7 @@ fn parse_job_from_request(payload: &CreateJobRequest) -> Result<Job, Response>  
         }
 
         job.config = payload.config.clone().unwrap();
+        apply_schedule(&mut job, payload);
         return Ok(job);
     }
 
@@ -261,6 +261,7 @@ fn parse_job_from_request(payload: &CreateJobRequest) -> Result<Job, Response>  
         })?;
 
         job.config = payload.config.clone().unwrap();
+        apply_schedule(&mut job, payload);
         return Ok(job);
     }
 
@@ -275,12 +276,18 @@ fn parse_job_from_request(payload: &CreateJobRequest) -> Result<Job, Response>  
             .into_response());
     }
 
-    if !payload.scheduled_at.is_none() {
-        job.scheduled_at = Some(payload.scheduled_at.unwrap_or(Utc::now().timestamp()));
-    }
-
     job.config = Value::Object(config);
+    apply_schedule(&mut job, payload);
     Ok(job)
+}
+
+/// Apply a requested `scheduled_at` timestamp to a job, if one was provided.
+/// Centralised so every job type (including the attack types that return early)
+/// honours scheduling consistently.
+fn apply_schedule(job: &mut Job, payload: &CreateJobRequest) {
+    if let Some(ts) = payload.scheduled_at {
+        job.scheduled_at = Some(ts);
+    }
 }
 
 async fn persist_job(

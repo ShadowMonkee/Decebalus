@@ -49,7 +49,7 @@ pub struct PortScanner;
 impl PortScanner {
     /// Public entry point. Returns the number of open ports found.
     pub async fn scan_host(ip: &str, state: &Arc<AppState>, job_id: &str) -> Result<usize, String> {
-        let concurrency = state.max_scan_concurrency;
+        let concurrency = crate::settings::current().max_scan_concurrency;
 
         let msg = format!(
             "[port-scan] Starting scan on {} | ports: 1-65535 | concurrency: {} | method: TCP connect + nmap -sV fallback",
@@ -249,12 +249,13 @@ impl PortScanner {
     /// Scan all 65 535 TCP ports concurrently, respecting `max_concurrent`.
     async fn tcp_scan_concurrent(ip: &str, max_concurrent: usize) -> Vec<u16> {
         let ip = ip.to_string();
+        let timeout_ms = crate::settings::current().port_scan_timeout_ms;
 
         let mut open_ports: Vec<u16> = futures_util::stream::iter(1u16..=65535)
             .map(|port| {
                 let ip = ip.clone();
                 async move {
-                    if Self::is_port_open(&ip, port).await { Some(port) } else { None }
+                    if Self::is_port_open(&ip, port, timeout_ms).await { Some(port) } else { None }
                 }
             })
             .buffer_unordered(max_concurrent)
@@ -266,11 +267,11 @@ impl PortScanner {
         open_ports
     }
 
-    async fn is_port_open(ip: &str, port: u16) -> bool {
+    async fn is_port_open(ip: &str, port: u16, timeout_ms: u64) -> bool {
         let addr = format!("{}:{}", ip, port);
         matches!(
             tokio::time::timeout(
-                Duration::from_millis(200),
+                Duration::from_millis(timeout_ms),
                 tokio::net::TcpStream::connect(&addr),
             )
             .await,
@@ -473,7 +474,7 @@ impl PortScanner {
     /// Extract CVE entries from the text output of the nmap `vulners` NSE script.
     ///
     /// The `output` attribute produced by vulners looks like:
-    /// ```
+    /// ```text
     ///   cpe:/a:openbsd:openssh:8.2p1:
     ///     CVE-2023-38408\t10.0\thttps://vulners.com/cve/CVE-2023-38408
     ///     CVE-2021-36368\t5.3\thttps://vulners.com/cve/CVE-2021-36368

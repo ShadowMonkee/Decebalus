@@ -26,8 +26,6 @@ async fn test_state() -> Arc<AppState> {
     let state = AppState {
         broadcaster: tx,
         db: db_pool,
-        max_threads: 5,
-        max_scan_concurrency: 500,
         semaphore: Arc::new(Semaphore::new(5)),
     };
 

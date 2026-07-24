@@ -7,35 +7,27 @@ use crate::db::DbPool;
 pub struct AppState {
     /// Broadcast channel for real-time events (WebSocket)
     pub broadcaster: broadcast::Sender<String>,
-    
+
     /// Database connection pool
     pub db: DbPool,
-    pub max_threads: usize,
-    pub max_scan_concurrency: usize,
+
+    /// Bounds the number of concurrently-running jobs (worker pool). Sized at
+    /// startup from settings; per-scan knobs are read live via [`crate::settings::current`].
     pub semaphore: Arc<Semaphore>,
 }
 
 impl AppState {
-    /// Create a new AppState
+    /// Create a new AppState. The worker-pool size is fixed here at startup from
+    /// the resolved settings; changing it requires a restart.
     pub fn new(db: DbPool) -> Self {
         let (tx, _rx) = broadcast::channel(100);
 
-        let max_threads = std::env::var("MAX_THREADS")
-            .ok()
-            .and_then(|s| s.parse::<usize>().ok())
-            .unwrap_or(5);
-
-        let max_scan_concurrency = std::env::var("MAX_SCAN_CONCURRENCY")
-            .ok()
-            .and_then(|s| s.parse::<usize>().ok())
-            .unwrap_or(500);
+        let s = crate::settings::current();
 
         Self {
             broadcaster: tx,
             db,
-            max_threads,
-            max_scan_concurrency,
-            semaphore: Arc::new(Semaphore::new(max_threads)),
+            semaphore: Arc::new(Semaphore::new(s.max_threads)),
         }
     }
 }

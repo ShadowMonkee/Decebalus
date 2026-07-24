@@ -5,8 +5,34 @@ use crate::db::repository;
 use crate::models::CveDetail;
 
 const NVD_API: &str = "https://services.nvd.nist.gov/rest/json/cves/2.0";
-/// Polite delay between NVD requests — stays well within the 5 req/s public limit.
-const NVD_RATE_MS: u64 = 250;
+/// NVD's public rate limits are per rolling 30-second window: ~5 requests without an
+/// API key, ~50 with one. We space requests a little slower than the hard limit to
+/// stay safe and avoid the 403/429 responses that previously emptied enrichment.
+const NVD_RATE_MS_NO_KEY: u64 = 6_000; // ~5 req / 30s
+const NVD_RATE_MS_WITH_KEY: u64 = 600; // ~50 req / 30s
+
+/// Optional NVD API key (env `NVD_API_KEY`). When set, requests carry the `apiKey`
+/// header and the faster cadence is used.
+fn nvd_api_key() -> Option<String> {
+    // Prefer the settings-resolved key (which already merges the env var); fall back
+    // to the raw env var in case settings were never initialized (e.g. some tests).
+    crate::settings::current()
+        .nvd_api_key
+        .or_else(|| {
+            std::env::var("NVD_API_KEY")
+                .ok()
+                .filter(|k| !k.trim().is_empty())
+        })
+}
+
+/// Delay between successive NVD requests, chosen by whether an API key is configured.
+fn nvd_rate_ms() -> u64 {
+    if nvd_api_key().is_some() {
+        NVD_RATE_MS_WITH_KEY
+    } else {
+        NVD_RATE_MS_NO_KEY
+    }
+}
 
 pub struct CveEnrichment;
 
@@ -74,7 +100,17 @@ impl CveEnrichment {
             return;
         }
 
-        let msg = format!("[cve] Starting enrichment — {} CVE(s) to fetch from NVD", ids.len());
+        let rate_ms = nvd_rate_ms();
+        let key_note = if nvd_api_key().is_some() {
+            "using NVD_API_KEY (fast cadence)"
+        } else {
+            "no NVD_API_KEY set (slow cadence ~1 req/6s; set NVD_API_KEY to speed up)"
+        };
+        let msg = format!(
+            "[cve] Starting enrichment — {} CVE(s) to fetch from NVD, {}",
+            ids.len(),
+            key_note
+        );
         tracing::info!("{}", msg);
         let _ = repository::add_log(pool, "INFO", "cve_enrichment", Some("enrich_all_unenriched"), job_id, &msg).await;
 
@@ -113,7 +149,7 @@ impl CveEnrichment {
             }
             // Rate-limit between requests
             if i + 1 < ids.len() {
-                sleep(Duration::from_millis(NVD_RATE_MS)).await;
+                sleep(Duration::from_millis(rate_ms)).await;
             }
         }
 
@@ -131,9 +167,13 @@ impl CveEnrichment {
             .build()
             .map_err(|e| format!("HTTP client error: {}", e))?;
 
-        let resp = client
-            .get(&url)
-            .header("Accept", "application/json")
+        let mut request = client.get(&url).header("Accept", "application/json");
+        // NVD grants a higher rate limit to requests carrying a valid API key.
+        if let Some(key) = nvd_api_key() {
+            request = request.header("apiKey", key);
+        }
+
+        let resp = request
             .send()
             .await
             .map_err(|e| format!("NVD request failed: {}", e))?;

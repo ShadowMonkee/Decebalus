@@ -41,9 +41,12 @@ impl NetworkScanner {
             Self::icmp_scan(&ips)
         );
 
-        // If neither layer-3 method worked, fall back to TCP-only
+        // If neither layer-3 method worked, fall back to TCP-only.
+        // This most often means the process lacks raw-socket privileges — TCP-only
+        // discovery only finds hosts with one of a fixed set of ports open, so it
+        // will miss quiet devices. Check the WARN logs from arp_scan/icmp_scan.
         if arp_results.is_empty() && icmp_results.is_empty() {
-            Self::progress(state, job_id, "ARP/ICMP unavailable, using TCP probe");
+            Self::progress(state, job_id, "ARP/ICMP returned nothing (missing raw-socket privileges? run with sudo or setcap cap_net_raw+ep) — falling back to limited TCP probe");
             let found = Self::tcp_discover(&ips, job_id, state).await;
             Self::mark_stale_hosts_down(state, &ips, &found).await;
             return Ok(found.len());
@@ -90,13 +93,69 @@ impl NetworkScanner {
         };
         total += tcp_found.len();
 
+        // Retry pass: ARP/ICMP replies drop intermittently, so before marking any
+        // previously-seen host Down, re-probe the missed ones via TCP to avoid flapping.
+        let mut all_found: HashSet<Ipv4Addr> = all_layer3.into_iter().chain(tcp_found).collect();
+        let recovered = Self::retry_missed_hosts(state, &ips, &all_found).await;
+        if !recovered.is_empty() {
+            Self::progress(state, job_id, &format!(
+                "Recovered {} host(s) via retry probe that ARP/ICMP missed", recovered.len()
+            ));
+            total += recovered.len();
+            all_found.extend(recovered);
+        }
+
         // Mark hosts in this network that weren't found in this scan as Down
-        let all_found: HashSet<Ipv4Addr> = all_layer3.into_iter().chain(tcp_found).collect();
         Self::mark_stale_hosts_down(state, &ips, &all_found).await;
 
         Self::progress(state, job_id, &format!("Discovery complete — {} hosts found", total));
         tracing::info!("Discovery complete. Found {} hosts", total);
         Ok(total)
+    }
+
+    /// Re-probe hosts that were previously seen (status Up) in this subnet but were
+    /// missed this scan. A quick TCP liveness probe prevents a live host from
+    /// flapping to Down when ARP/ICMP drop its replies. Returns the recovered IPs.
+    async fn retry_missed_hosts(
+        state: &Arc<AppState>,
+        scanned_ips: &[Ipv4Addr],
+        found: &HashSet<Ipv4Addr>,
+    ) -> HashSet<Ipv4Addr> {
+        let scanned_set: HashSet<Ipv4Addr> = scanned_ips.iter().cloned().collect();
+        let hosts = match repository::list_hosts(&state.db).await {
+            Ok(h) => h,
+            Err(_) => return HashSet::new(),
+        };
+
+        let candidates: Vec<Ipv4Addr> = hosts
+            .into_iter()
+            .filter_map(|h| {
+                if h.status != HostStatus::Up {
+                    return None;
+                }
+                let ip = h.ip.parse::<Ipv4Addr>().ok()?;
+                if scanned_set.contains(&ip) && !found.contains(&ip) {
+                    Some(ip)
+                } else {
+                    None
+                }
+            })
+            .collect();
+
+        let mut recovered = HashSet::new();
+        for ip in candidates {
+            let ip_str = ip.to_string();
+            if Self::is_host_alive(&ip_str).await {
+                if let Ok(Some(mut host)) = repository::get_host(&state.db, &ip_str).await {
+                    host.status = HostStatus::Up;
+                    host.update_last_seen();
+                    let _ = repository::upsert_host(&state.db, &host).await;
+                    let _ = state.broadcaster.send(format!("host_found:{}", ip_str));
+                }
+                recovered.insert(ip);
+            }
+        }
+        recovered
     }
 
     async fn arp_scan(targets: &[Ipv4Addr]) -> HashMap<Ipv4Addr, String> {
@@ -124,7 +183,19 @@ impl NetworkScanner {
 
         let (mut tx, mut rx) = match pnet_datalink::channel(&iface, config) {
             Ok(Channel::Ethernet(tx, rx)) => (tx, rx),
-            _ => return HashMap::new(),
+            Ok(_) => {
+                tracing::warn!("ARP scan: unexpected channel type on {}", iface.name);
+                return HashMap::new();
+            }
+            Err(e) => {
+                tracing::warn!(
+                    "ARP scan unavailable on {}: {}. Raw-socket access is required — \
+                     run the backend with sudo or grant it `setcap cap_net_raw+ep`. \
+                     Falling back to ICMP/TCP discovery.",
+                    iface.name, e
+                );
+                return HashMap::new();
+            }
         };
 
         let send_packet = |tx: &mut Box<dyn pnet_datalink::DataLinkSender>, target_ip: &Ipv4Addr| {
@@ -152,20 +223,33 @@ impl NetworkScanner {
             let _ = tx.send_to(&eth_buf, None);
         };
 
+        // Interleave sending and receiving so replies to the first probe pass are
+        // drained continuously instead of piling up in the NIC ring buffer while we
+        // finish transmitting — the previous send-all-then-listen ordering could
+        // silently drop replies on a busy /24 and miss hosts.
+        // Scale the listen window with the number of targets so large subnets get
+        // enough time to collect every reply (a fixed 3s window under-served /23+).
+        let start = std::time::Instant::now();
+        let listen_ms = (1_500 + targets.len() as u64 * 8).min(15_000);
+        let deadline = start + Duration::from_millis(listen_ms);
+        let second_pass_at = start + Duration::from_millis(500);
+        let mut second_pass_sent = false;
+        let mut results = HashMap::new();
+
         // First pass
         for target_ip in &targets {
             send_packet(&mut tx, target_ip);
         }
-        // Second pass after brief pause — recovers dropped broadcast packets
-        std::thread::sleep(Duration::from_millis(500));
-        for target_ip in &targets {
-            send_packet(&mut tx, target_ip);
-        }
-
-        let deadline = std::time::Instant::now() + Duration::from_secs(3);
-        let mut results = HashMap::new();
 
         while std::time::Instant::now() < deadline {
+            // Second pass after a brief pause — recovers dropped broadcast packets.
+            if !second_pass_sent && std::time::Instant::now() >= second_pass_at {
+                for target_ip in &targets {
+                    send_packet(&mut tx, target_ip);
+                }
+                second_pass_sent = true;
+            }
+
             match rx.next() {
                 Ok(packet) => {
                     if let Some(eth) = EthernetPacket::new(packet) {
@@ -182,7 +266,9 @@ impl NetworkScanner {
                     }
                 }
                 Err(e) if e.kind() == std::io::ErrorKind::TimedOut => {}
-                Err(_) => break,
+                // A transient read error (e.g. Interrupted) must not abort the whole
+                // receive loop — keep draining until the deadline.
+                Err(_) => continue,
             }
         }
 
@@ -210,7 +296,15 @@ impl NetworkScanner {
             TransportChannelType::Layer4(TransportProtocol::Ipv4(IpNextHeaderProtocols::Icmp)),
         ) {
             Ok(r) => r,
-            Err(_) => return HashSet::new(),
+            Err(e) => {
+                tracing::warn!(
+                    "ICMP scan unavailable: {}. Raw-socket access is required — \
+                     run the backend with sudo or grant it `setcap cap_net_raw+ep`. \
+                     Falling back to TCP discovery.",
+                    e
+                );
+                return HashSet::new();
+            }
         };
 
         let target_set: HashSet<Ipv4Addr> = targets.iter().cloned().collect();
@@ -227,20 +321,33 @@ impl NetworkScanner {
             let _ = tx.send_to(pkt, IpAddr::V4(*target));
         };
 
-        // Two send passes to recover dropped packets
-        for target in &targets {
-            send_echo(&mut tx, target);
-        }
-        std::thread::sleep(Duration::from_millis(200));
+        // Interleave sending and receiving (same rationale as the ARP path): drain
+        // echo replies continuously rather than sending both passes up front and
+        // risking dropped replies before the receive loop starts.
+        // Adaptive listen window, same rationale as the ARP path.
+        let start = std::time::Instant::now();
+        let listen_ms = (1_000 + targets.len() as u64 * 6).min(12_000);
+        let deadline = start + Duration::from_millis(listen_ms);
+        let second_pass_at = start + Duration::from_millis(200);
+        let mut second_pass_sent = false;
+
+        // First pass
         for target in &targets {
             send_echo(&mut tx, target);
         }
 
         let mut found = HashSet::new();
-        let deadline = std::time::Instant::now() + Duration::from_secs(2);
         let mut iter = icmp_packet_iter(&mut rx);
 
         while std::time::Instant::now() < deadline {
+            // Second pass after a brief pause — recovers dropped packets.
+            if !second_pass_sent && std::time::Instant::now() >= second_pass_at {
+                for target in &targets {
+                    send_echo(&mut tx, target);
+                }
+                second_pass_sent = true;
+            }
+
             match iter.next_with_timeout(Duration::from_millis(100)) {
                 Ok(Some((packet, addr))) => {
                     if packet.get_icmp_type() == IcmpTypes::EchoReply {
@@ -321,10 +428,7 @@ impl NetworkScanner {
     async fn tcp_discover(ips: &[Ipv4Addr], job_id: &str, state: &Arc<AppState>) -> HashSet<Ipv4Addr> {
         let found: Arc<tokio::sync::Mutex<HashSet<Ipv4Addr>>> =
             Arc::new(tokio::sync::Mutex::new(HashSet::new()));
-        let max_threads = std::env::var("MAX_DISCOVER_THREADS")
-            .ok()
-            .and_then(|s| s.parse::<usize>().ok())
-            .unwrap_or(256);
+        let max_threads = crate::settings::current().max_discover_threads;
         let sem = Arc::new(Semaphore::new(max_threads));
         let mut futures = FuturesUnordered::new();
 
@@ -476,47 +580,21 @@ impl NetworkScanner {
 
     // Returns true as soon as any probe port connects. Drops the remaining
     // futures immediately on first success rather than waiting for all timeouts.
+    // The probe port set and per-connection timeout are configurable via settings.
     async fn is_host_alive(ip: &str) -> bool {
-        const PORTS: &[u16] = &[
-            // Common services
-            80, 443, 8080, 8443,
-            22, 23, 21,
-            25, 587,
-            445, 139,
-            3389,
-            3306, 5432,
-            6379,
-            9100,       // Prometheus node exporter
-            1883, 8883, // MQTT
-            // Cameras / streaming
-            554, 8554,  // RTSP
-            // Routers / ISP management
-            7547,       // TR-069
-            // UPnP
-            49152, 52869,
-            // Home automation
-            8123,       // Home Assistant
-            // Misc embedded / NAS
-            9000, 5001,
-            // Industrial protocols
-            102,        // Siemens S7 / IEC 104
-            502,        // Modbus
-            4840,       // OPC-UA
-            623,        // IPMI / BMC
-        ];
+        let cfg = crate::settings::current();
+        let timeout = Duration::from_millis(cfg.host_alive_timeout_ms);
 
-        let mut futs: FuturesUnordered<_> = PORTS
+        let mut futs: FuturesUnordered<_> = cfg
+            .fallback_ports
             .iter()
             .map(|&port| {
                 let addr = format!("{}:{}", ip, port);
                 async move {
-                    tokio::time::timeout(
-                        Duration::from_millis(500),
-                        tokio::net::TcpStream::connect(&addr),
-                    )
-                    .await
-                    .map(|r| r.is_ok())
-                    .unwrap_or(false)
+                    tokio::time::timeout(timeout, tokio::net::TcpStream::connect(&addr))
+                        .await
+                        .map(|r| r.is_ok())
+                        .unwrap_or(false)
                 }
             })
             .collect();

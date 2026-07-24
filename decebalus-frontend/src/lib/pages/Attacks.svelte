@@ -3,7 +3,15 @@
   import { getHosts, getJobs, createAttackJob, cancelJob, type Host, type Job } from '../api';
   import { wsMessages } from '../stores/websocketStore';
 
-  type AttackType = 'ssh-brute' | 'ftp-brute' | 'file-steal';
+  type AttackType = 'ssh-brute' | 'ftp-brute' | 'smb-brute' | 'rdp-brute' | 'file-steal';
+
+  const DEFAULT_PORTS: Record<AttackType, number> = {
+    'ssh-brute': 22,
+    'ftp-brute': 21,
+    'smb-brute': 445,
+    'rdp-brute': 3389,
+    'file-steal': 22,
+  };
 
   let hosts: Host[] = [];
   let jobs: Job[] = [];
@@ -18,12 +26,16 @@
   let concurrency = '3';
   let usernames = '';
   let passwords = '';
+  let domain = '';
   let username = '';
   let password = '';
   let remotePath = '/etc/passwd';
 
+  $: isBrute = attackType !== 'file-steal';
+  $: usesDomain = attackType === 'smb-brute' || attackType === 'rdp-brute';
+
   $: upHosts = hosts.filter(h => h.status === 'Up');
-  $: attackJobs = jobs.filter(j => ['ssh-brute', 'ftp-brute', 'file-steal'].includes(j.job_type));
+  $: attackJobs = jobs.filter(j => ['ssh-brute', 'ftp-brute', 'smb-brute', 'rdp-brute', 'file-steal'].includes(j.job_type));
   $: runningAttacks = attackJobs.filter(j => j.status === 'running' || j.status === 'queued');
   $: doneAttacks = attackJobs.filter(j => j.status === 'completed' || j.status === 'failed' || j.status === 'cancelled');
 
@@ -37,14 +49,14 @@
 
     const config: Record<string, unknown> = { target };
 
-    if (attackType === 'ssh-brute' || attackType === 'ftp-brute') {
-      const portNum = port ? parseInt(port) : (attackType === 'ssh-brute' ? 22 : 21);
-      config.port = portNum;
+    if (isBrute) {
+      config.port = port ? parseInt(port) : DEFAULT_PORTS[attackType];
       config.concurrency = parseInt(concurrency) || 3;
       const userList = usernames.trim().split('\n').map(s => s.trim()).filter(Boolean);
       const passList = passwords.trim().split('\n').map(s => s.trim()).filter(Boolean);
       if (userList.length) config.usernames = userList;
       if (passList.length) config.passwords = passList;
+      if (usesDomain && domain.trim()) config.domain = domain.trim();
     } else {
       if (!username) { launchError = 'Username is required.'; return; }
       if (!password) { launchError = 'Password is required.'; return; }
@@ -116,6 +128,8 @@
       <div class="type-tabs">
         <button class:active={attackType === 'ssh-brute'} on:click={() => attackType = 'ssh-brute'}>SSH Brute</button>
         <button class:active={attackType === 'ftp-brute'} on:click={() => attackType = 'ftp-brute'}>FTP Brute</button>
+        <button class:active={attackType === 'smb-brute'} on:click={() => attackType = 'smb-brute'}>SMB Brute</button>
+        <button class:active={attackType === 'rdp-brute'} on:click={() => attackType = 'rdp-brute'}>RDP Brute</button>
         <button class:active={attackType === 'file-steal'} on:click={() => attackType = 'file-steal'}>File Steal</button>
       </div>
 
@@ -135,10 +149,16 @@
       <div class="form-group">
         <label for="port-input">Port <small>(leave blank for default)</small></label>
         <input id="port-input" type="number" bind:value={port}
-          placeholder={attackType === 'ftp-brute' ? '21' : '22'} />
+          placeholder={String(DEFAULT_PORTS[attackType])} />
       </div>
 
-      {#if attackType === 'ssh-brute' || attackType === 'ftp-brute'}
+      {#if isBrute}
+        {#if usesDomain}
+          <div class="form-group">
+            <label for="domain-input">Domain <small>(optional)</small></label>
+            <input id="domain-input" type="text" bind:value={domain} placeholder="WORKGROUP" />
+          </div>
+        {/if}
         <div class="form-group">
           <label for="concurrency-input">Concurrency</label>
           <input id="concurrency-input" type="number" bind:value={concurrency} min="1" max="20" />

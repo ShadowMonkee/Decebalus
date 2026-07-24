@@ -1,11 +1,10 @@
 use sqlx::{SqlitePool, sqlite::SqlitePoolOptions};
 use std::time::Duration;
 
-// Repositories
-pub mod repository;           // real DB implementation
-pub mod repository_trait;     // Repository trait
-pub mod db_repository;        // trait impl for real DB
-pub mod inmemory_repository;  // trait impl for in-memory testing
+// Data access — free functions over the SqlitePool. (A former `Repository` trait +
+// in-memory/DB impls were removed as dead code: nothing constructed them, and the
+// tests exercise a real in-memory SQLite pool directly.)
+pub mod repository;
 
 pub type DbPool = sqlx::SqlitePool; // <- must be pub
 
