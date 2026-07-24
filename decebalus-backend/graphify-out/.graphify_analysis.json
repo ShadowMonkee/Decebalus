@@ -1,0 +1,489 @@
+{
+  "communities": {
+    "0": [
+      "db_repository_add_log",
+      "db_repository_cleanup_old_logs",
+      "db_repository_create_job",
+      "db_repository_cve_from_row",
+      "db_repository_from_row",
+      "db_repository_get_config",
+      "db_repository_get_cve_detail",
+      "db_repository_get_display_status",
+      "db_repository_get_host",
+      "db_repository_get_job",
+      "db_repository_get_log",
+      "db_repository_get_logs",
+      "db_repository_get_logs_by_job_id",
+      "db_repository_get_queued_jobs",
+      "db_repository_get_running_jobs",
+      "db_repository_get_scheduled_jobs_due",
+      "db_repository_get_unenriched_cve_ids",
+      "db_repository_host_from_row",
+      "db_repository_list_hosts",
+      "db_repository_list_jobs",
+      "db_repository_update_config",
+      "db_repository_update_display_status",
+      "db_repository_update_job_results",
+      "db_repository_update_job_status",
+      "db_repository_upsert_cve_detail",
+      "db_repository_upsert_host",
+      "services_cve_enrichment_cveenrichment",
+      "services_cve_enrichment_cveenrichment_enrich_all_unenriched",
+      "services_cve_enrichment_cveenrichment_fetch_nvd",
+      "services_cve_enrichment_cveenrichment_get",
+      "services_cve_enrichment_cveenrichment_parse_nvd_response",
+      "src_db_repository_rs",
+      "src_services_cve_enrichment_rs"
+    ],
+    "1": [
+      "api_cve_get_cve",
+      "api_cve_list_cves",
+      "api_cve_sync_cves",
+      "db_mod_init_pool",
+      "db_repository_list_cve_details",
+      "services_job_executor_jobexecutor",
+      "services_job_executor_jobexecutor_check_and_run_scheduled_jobs",
+      "services_job_executor_jobexecutor_execute_job",
+      "services_job_executor_jobexecutor_resume_incomplete_jobs",
+      "services_job_executor_jobexecutor_run_cve_sync",
+      "services_job_executor_jobexecutor_run_discovery",
+      "services_job_executor_jobexecutor_run_export",
+      "services_job_executor_jobexecutor_run_nmap_scan",
+      "services_job_executor_jobexecutor_run_port_scan",
+      "services_job_executor_jobexecutor_run_queue",
+      "services_job_executor_jobexecutor_update_job_results",
+      "services_job_executor_jobexecutor_update_job_status",
+      "src_api_cve_rs",
+      "src_db_mod_rs",
+      "src_main_main",
+      "src_main_rs",
+      "src_main_shutdown_signal",
+      "src_services_job_executor_rs",
+      "tests_job_executor_tests_rs",
+      "tests_job_executor_tests_scenario_job_executor_runs_discovery_successfully",
+      "tests_job_executor_tests_scenario_resume_incomplete_jobs_requeues_and_runs",
+      "tests_job_executor_tests_scenario_run_queue_spawns_jobs",
+      "tests_job_executor_tests_test_state"
+    ],
+    "2": [
+      "services_port_scanner_nmapextra",
+      "services_port_scanner_nmapscanresult",
+      "services_port_scanner_portscanner",
+      "services_port_scanner_portscanner_banner_fallback",
+      "services_port_scanner_portscanner_clean_banner",
+      "services_port_scanner_portscanner_cvss_to_severity",
+      "services_port_scanner_portscanner_detect_os",
+      "services_port_scanner_portscanner_detect_services",
+      "services_port_scanner_portscanner_fingerprint_service",
+      "services_port_scanner_portscanner_full_nmap_scan",
+      "services_port_scanner_portscanner_grab_banner",
+      "services_port_scanner_portscanner_infer_protocol",
+      "services_port_scanner_portscanner_is_port_open",
+      "services_port_scanner_portscanner_parse_220_banner",
+      "services_port_scanner_portscanner_parse_http_banner",
+      "services_port_scanner_portscanner_parse_nmap_xml",
+      "services_port_scanner_portscanner_parse_ssh_banner",
+      "services_port_scanner_portscanner_parse_vulners_output",
+      "services_port_scanner_portscanner_run_full_nmap",
+      "services_port_scanner_portscanner_run_nmap",
+      "services_port_scanner_portscanner_run_nmap_cmd",
+      "services_port_scanner_portscanner_run_udp_scan",
+      "services_port_scanner_portscanner_scan_host",
+      "services_port_scanner_portscanner_ssl_service_name",
+      "services_port_scanner_portscanner_tcp_scan_concurrent",
+      "services_port_scanner_portscanner_update_host_scan_results",
+      "services_port_scanner_serviceinfo",
+      "src_services_port_scanner_rs"
+    ],
+    "3": [
+      "db_inmemory_repository_inmemoryrepository",
+      "db_inmemory_repository_inmemoryrepository_add_log",
+      "db_inmemory_repository_inmemoryrepository_cleanup_old_logs",
+      "db_inmemory_repository_inmemoryrepository_create_job",
+      "db_inmemory_repository_inmemoryrepository_get_config",
+      "db_inmemory_repository_inmemoryrepository_get_display_status",
+      "db_inmemory_repository_inmemoryrepository_get_host",
+      "db_inmemory_repository_inmemoryrepository_get_job",
+      "db_inmemory_repository_inmemoryrepository_get_log",
+      "db_inmemory_repository_inmemoryrepository_get_logs",
+      "db_inmemory_repository_inmemoryrepository_get_logs_by_job_id",
+      "db_inmemory_repository_inmemoryrepository_get_queued_jobs",
+      "db_inmemory_repository_inmemoryrepository_get_running_jobs",
+      "db_inmemory_repository_inmemoryrepository_get_scheduled_jobs_due",
+      "db_inmemory_repository_inmemoryrepository_list_hosts",
+      "db_inmemory_repository_inmemoryrepository_list_jobs",
+      "db_inmemory_repository_inmemoryrepository_new",
+      "db_inmemory_repository_inmemoryrepository_update_config",
+      "db_inmemory_repository_inmemoryrepository_update_display_status",
+      "db_inmemory_repository_inmemoryrepository_update_job_results",
+      "db_inmemory_repository_inmemoryrepository_update_job_status",
+      "db_inmemory_repository_inmemoryrepository_upsert_host",
+      "src_db_inmemory_repository_rs"
+    ],
+    "4": [
+      "db_db_repository_dbrepository",
+      "db_db_repository_dbrepository_add_log",
+      "db_db_repository_dbrepository_cleanup_old_logs",
+      "db_db_repository_dbrepository_create_job",
+      "db_db_repository_dbrepository_get_config",
+      "db_db_repository_dbrepository_get_display_status",
+      "db_db_repository_dbrepository_get_host",
+      "db_db_repository_dbrepository_get_job",
+      "db_db_repository_dbrepository_get_log",
+      "db_db_repository_dbrepository_get_logs",
+      "db_db_repository_dbrepository_get_logs_by_job_id",
+      "db_db_repository_dbrepository_get_queued_jobs",
+      "db_db_repository_dbrepository_get_running_jobs",
+      "db_db_repository_dbrepository_get_scheduled_jobs_due",
+      "db_db_repository_dbrepository_list_hosts",
+      "db_db_repository_dbrepository_list_jobs",
+      "db_db_repository_dbrepository_new",
+      "db_db_repository_dbrepository_update_config",
+      "db_db_repository_dbrepository_update_display_status",
+      "db_db_repository_dbrepository_update_job_results",
+      "db_db_repository_dbrepository_update_job_status",
+      "db_db_repository_dbrepository_upsert_host",
+      "src_db_db_repository_rs"
+    ],
+    "5": [
+      "models_host_add_banner_adds_only_once",
+      "models_host_add_port_adds_new_port",
+      "models_host_add_port_sorts_ports",
+      "models_host_add_port_updates_existing_port",
+      "models_host_default_first_seen",
+      "models_host_default_uses_correct_ip",
+      "models_host_host",
+      "models_host_host_add_banner",
+      "models_host_host_add_port",
+      "models_host_host_default",
+      "models_host_host_new",
+      "models_host_host_new_initializes_correctly",
+      "models_host_host_update_last_seen",
+      "models_host_update_last_seen_changes_timestamp",
+      "src_models_host_rs"
+    ],
+    "6": [
+      "models_job_job",
+      "models_job_job_is_cancelled",
+      "models_job_job_is_completed",
+      "models_job_job_is_queued",
+      "models_job_job_is_running",
+      "models_job_job_is_scheduled",
+      "models_job_job_new",
+      "models_job_job_target",
+      "models_job_new_initializes_correctly",
+      "models_job_results_can_be_stored",
+      "models_job_status_checks_work",
+      "models_job_uuid_is_unique",
+      "src_models_job_rs"
+    ],
+    "7": [
+      "models_config_config",
+      "models_config_config_default",
+      "models_config_config_get",
+      "models_config_config_new",
+      "models_config_config_set",
+      "models_config_test_default_config_is_empty",
+      "models_config_test_get_missing_key_returns_none",
+      "models_config_test_new_config_is_empty",
+      "models_config_test_set_and_get_value",
+      "models_config_test_set_overwrites_old_value",
+      "models_config_test_setting_multiple_values",
+      "src_models_config_rs"
+    ],
+    "8": [
+      "services_scanner_networkscanner",
+      "services_scanner_networkscanner_arp_scan",
+      "services_scanner_networkscanner_arp_scan_blocking",
+      "services_scanner_networkscanner_detect_local_interface_info",
+      "services_scanner_networkscanner_detect_local_network",
+      "services_scanner_networkscanner_discover_hosts",
+      "services_scanner_networkscanner_is_host_alive",
+      "services_scanner_networkscanner_log_and_broadcast",
+      "services_scanner_networkscanner_resolve_hostname",
+      "services_scanner_networkscanner_save_arp_results",
+      "services_scanner_networkscanner_tcp_discover",
+      "src_services_scanner_rs"
+    ],
+    "9": [
+      "models_display_default_matches_new",
+      "models_display_displaystatus",
+      "models_display_displaystatus_default",
+      "models_display_displaystatus_new",
+      "models_display_displaystatus_update",
+      "models_display_new_initializes_correctly",
+      "models_display_update_changes_status_and_timestamp",
+      "models_display_update_multiple_times",
+      "src_models_display_rs"
+    ],
+    "10": [
+      "api_jobs_cancel_job",
+      "api_jobs_create_job",
+      "api_jobs_get_job",
+      "api_jobs_list_jobs",
+      "api_jobs_parse_job_from_request",
+      "api_jobs_persist_job",
+      "api_jobs_schedule_job",
+      "api_jobs_validate_cidr",
+      "src_api_jobs_rs"
+    ],
+    "11": [
+      "models_log_log",
+      "models_log_log_can_serialize_and_deserialize",
+      "models_log_log_new",
+      "models_log_new_initializes_correctly",
+      "models_log_optional_fields_can_be_none",
+      "src_models_log_rs"
+    ],
+    "12": [
+      "api_exports_download_export",
+      "api_exports_export_dir",
+      "api_exports_list_exports",
+      "src_api_exports_rs"
+    ],
+    "13": [
+      "src_state_appstate",
+      "src_state_appstate_new",
+      "src_state_rs"
+    ],
+    "14": [
+      "models_status_hoststatus",
+      "models_status_hoststatus_fmt",
+      "src_models_status_rs"
+    ],
+    "15": [
+      "models_create_job_request_createjobrequest",
+      "models_create_job_request_default_job_type",
+      "src_models_create_job_request_rs"
+    ],
+    "16": [
+      "api_hosts_get_host",
+      "api_hosts_list_hosts",
+      "src_api_hosts_rs"
+    ],
+    "17": [
+      "api_display_get_display_status",
+      "api_display_update_display",
+      "src_api_display_rs"
+    ],
+    "18": [
+      "api_config_get_config",
+      "api_config_update_config",
+      "src_api_config_rs"
+    ],
+    "19": [
+      "api_websocket_handle_socket",
+      "api_websocket_ws_handler",
+      "src_api_websocket_rs"
+    ],
+    "20": [
+      "api_logs_get_all_logs",
+      "api_logs_get_logs_by_job_id",
+      "src_api_logs_rs"
+    ],
+    "21": [
+      "attacks_ssh_brute_sshbruteforce",
+      "attacks_ssh_brute_sshbruteforce_attack",
+      "src_services_attacks_ssh_brute_rs"
+    ],
+    "22": [
+      "attacks_ftp_brute_ftpbruteforce",
+      "attacks_ftp_brute_ftpbruteforce_attack",
+      "src_services_attacks_ftp_brute_rs"
+    ],
+    "23": [
+      "attacks_file_steal_filesteal",
+      "attacks_file_steal_filesteal_steal_via_ssh",
+      "src_services_attacks_file_steal_rs"
+    ],
+    "24": [
+      "models_cve_detail_cvedetail",
+      "src_models_cve_detail_rs"
+    ],
+    "25": [
+      "models_port_port",
+      "src_models_port_rs"
+    ],
+    "26": [
+      "models_service_service",
+      "src_models_service_rs"
+    ],
+    "27": [
+      "models_jobpriority_jobpriority",
+      "src_models_jobpriority_rs"
+    ],
+    "28": [
+      "models_vulnerability_vulnerability",
+      "src_models_vulnerability_rs"
+    ],
+    "29": [
+      "db_repository_trait_repository",
+      "src_db_repository_trait_rs"
+    ],
+    "30": [
+      "src_lib_rs"
+    ],
+    "31": [
+      "src_models_mod_rs"
+    ],
+    "32": [
+      "src_api_mod_rs"
+    ],
+    "33": [
+      "src_services_mod_rs"
+    ],
+    "34": [
+      "src_services_attacks_mod_rs"
+    ]
+  },
+  "cohesion": {
+    "0": 0.09,
+    "1": 0.12,
+    "2": 0.14,
+    "3": 0.09,
+    "4": 0.09,
+    "5": 0.26,
+    "6": 0.21,
+    "7": 0.32,
+    "8": 0.33,
+    "9": 0.44,
+    "10": 0.39,
+    "11": 0.53,
+    "12": 0.67,
+    "13": 0.67,
+    "14": 0.67,
+    "15": 0.67,
+    "16": 0.67,
+    "17": 0.67,
+    "18": 1.0,
+    "19": 1.0,
+    "20": 0.67,
+    "21": 0.67,
+    "22": 0.67,
+    "23": 0.67,
+    "24": 1.0,
+    "25": 1.0,
+    "26": 1.0,
+    "27": 1.0,
+    "28": 1.0,
+    "29": 1.0,
+    "30": 1.0,
+    "31": 1.0,
+    "32": 1.0,
+    "33": 1.0,
+    "34": 1.0
+  },
+  "gods": [
+    {
+      "id": "services_port_scanner_portscanner",
+      "label": "PortScanner",
+      "degree": 24
+    },
+    {
+      "id": "db_inmemory_repository_inmemoryrepository",
+      "label": "InMemoryRepository",
+      "degree": 22
+    },
+    {
+      "id": "db_db_repository_dbrepository",
+      "label": "DbRepository",
+      "degree": 22
+    },
+    {
+      "id": "services_job_executor_jobexecutor",
+      "label": "JobExecutor",
+      "degree": 12
+    },
+    {
+      "id": "services_scanner_networkscanner",
+      "label": "NetworkScanner",
+      "degree": 11
+    },
+    {
+      "id": "models_job_job",
+      "label": "Job",
+      "degree": 8
+    },
+    {
+      "id": "models_host_host",
+      "label": "Host",
+      "degree": 6
+    },
+    {
+      "id": "src_main_main",
+      "label": "main()",
+      "degree": 5
+    },
+    {
+      "id": "models_config_config",
+      "label": "Config",
+      "degree": 5
+    },
+    {
+      "id": "db_repository_from_row",
+      "label": "from_row()",
+      "degree": 5
+    }
+  ],
+  "surprises": [
+    {
+      "source": "main()",
+      "target": "init_pool()",
+      "source_files": [
+        "src/main.rs",
+        "src/db/mod.rs"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source; peripheral node `init_pool()` unexpectedly reaches hub `main()`"
+    },
+    {
+      "source": "list_cves()",
+      "target": "list_cve_details()",
+      "source_files": [
+        "src/api/cve.rs",
+        "src/db/repository.rs"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `list_cve_details()` connect `Community 1` to `Community 0`?",
+      "why": "High betweenness centrality (0.038) - this node is a cross-community bridge."
+    },
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `CveDetail`, `Port`, `Service` to the rest of the system?",
+      "why": "10 weakly-connected nodes found - possible documentation gaps or missing edges."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 0` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.09 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 1` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.12 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 2` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.14 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 3` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.09 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 4` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.09 - nodes in this community are weakly interconnected."
+    }
+  ]
+}

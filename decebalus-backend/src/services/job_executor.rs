@@ -5,6 +5,7 @@ use tokio::time::{Duration, sleep};
 use crate::models::{Job, JobPriority};
 use crate::state::AppState;
 use crate::services::{scanner, port_scanner, CveEnrichment};
+use crate::services::attacks;
 use crate::db::repository;
 
 
@@ -31,11 +32,14 @@ impl JobExecutor {
 
                     // Execute based on job type
                     let result = match job.job_type.as_str() {
-                        "discovery" => Self::run_discovery(&state, &job).await,
-                        "port-scan" => Self::run_port_scan(&state, &job).await,
-                        "nmap-scan" => Self::run_nmap_scan(&state, &job).await,
-                        "export"    => Self::run_export(&state, &job).await,
-                        "cve-sync"  => Self::run_cve_sync(&state, &job).await,
+                        "discovery"  => Self::run_discovery(&state, &job).await,
+                        "port-scan"  => Self::run_port_scan(&state, &job).await,
+                        "nmap-scan"  => Self::run_nmap_scan(&state, &job).await,
+                        "export"     => Self::run_export(&state, &job).await,
+                        "cve-sync"   => Self::run_cve_sync(&state, &job).await,
+                        "ssh-brute"  => attacks::SshBruteForce::run(&job, &state).await,
+                        "ftp-brute"  => attacks::FtpBruteForce::run(&job, &state).await,
+                        "file-steal" => attacks::FileSteal::run(&job, &state).await,
                         _ => {
                             tracing::warn!("Unknown job type: {}", job.job_type);
                             Err(format!("Unknown job type: {}", job.job_type))
@@ -115,7 +119,7 @@ impl JobExecutor {
         tracing::info!("Running network discovery for job {}", job.id);
         let target = job.target()?;
 
-        let hosts_found = scanner::NetworkScanner::discover_hosts(&target, state).await?;
+        let hosts_found = scanner::NetworkScanner::discover_hosts(&target, &job.id, state).await?;
 
         let results = serde_json::json!({
             "job_id": job.id,

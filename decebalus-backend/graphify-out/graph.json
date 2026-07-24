@@ -1,0 +1,6065 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "label": "job_executor_tests.rs",
+      "file_type": "code",
+      "source_file": "tests/job_executor_tests.rs",
+      "source_location": "L1",
+      "id": "tests_job_executor_tests_rs",
+      "community": 1,
+      "norm_label": "job_executor_tests.rs"
+    },
+    {
+      "label": "test_state()",
+      "file_type": "code",
+      "source_file": "tests/job_executor_tests.rs",
+      "source_location": "L12",
+      "id": "tests_job_executor_tests_test_state",
+      "community": 1,
+      "norm_label": "test_state()"
+    },
+    {
+      "label": "scenario_job_executor_runs_discovery_successfully()",
+      "file_type": "code",
+      "source_file": "tests/job_executor_tests.rs",
+      "source_location": "L38",
+      "id": "tests_job_executor_tests_scenario_job_executor_runs_discovery_successfully",
+      "community": 1,
+      "norm_label": "scenario_job_executor_runs_discovery_successfully()"
+    },
+    {
+      "label": "scenario_run_queue_spawns_jobs()",
+      "file_type": "code",
+      "source_file": "tests/job_executor_tests.rs",
+      "source_location": "L58",
+      "id": "tests_job_executor_tests_scenario_run_queue_spawns_jobs",
+      "community": 1,
+      "norm_label": "scenario_run_queue_spawns_jobs()"
+    },
+    {
+      "label": "scenario_resume_incomplete_jobs_requeues_and_runs()",
+      "file_type": "code",
+      "source_file": "tests/job_executor_tests.rs",
+      "source_location": "L87",
+      "id": "tests_job_executor_tests_scenario_resume_incomplete_jobs_requeues_and_runs",
+      "community": 1,
+      "norm_label": "scenario_resume_incomplete_jobs_requeues_and_runs()"
+    },
+    {
+      "label": "lib.rs",
+      "file_type": "code",
+      "source_file": "src/lib.rs",
+      "source_location": "L1",
+      "id": "src_lib_rs",
+      "community": 30,
+      "norm_label": "lib.rs"
+    },
+    {
+      "label": "state.rs",
+      "file_type": "code",
+      "source_file": "src/state.rs",
+      "source_location": "L1",
+      "id": "src_state_rs",
+      "community": 13,
+      "norm_label": "state.rs"
+    },
+    {
+      "label": "AppState",
+      "file_type": "code",
+      "source_file": "src/state.rs",
+      "source_location": "L7",
+      "id": "src_state_appstate",
+      "community": 13,
+      "norm_label": "appstate"
+    },
+    {
+      "label": ".new()",
+      "file_type": "code",
+      "source_file": "src/state.rs",
+      "source_location": "L20",
+      "id": "src_state_appstate_new",
+      "community": 13,
+      "norm_label": ".new()"
+    },
+    {
+      "label": "main.rs",
+      "file_type": "code",
+      "source_file": "src/main.rs",
+      "source_location": "L1",
+      "id": "src_main_rs",
+      "community": 1,
+      "norm_label": "main.rs"
+    },
+    {
+      "label": "shutdown_signal()",
+      "file_type": "code",
+      "source_file": "src/main.rs",
+      "source_location": "L18",
+      "id": "src_main_shutdown_signal",
+      "community": 1,
+      "norm_label": "shutdown_signal()"
+    },
+    {
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "src/main.rs",
+      "source_location": "L26",
+      "id": "src_main_main",
+      "community": 1,
+      "norm_label": "main()"
+    },
+    {
+      "label": "cve_detail.rs",
+      "file_type": "code",
+      "source_file": "src/models/cve_detail.rs",
+      "source_location": "L1",
+      "id": "src_models_cve_detail_rs",
+      "community": 24,
+      "norm_label": "cve_detail.rs"
+    },
+    {
+      "label": "CveDetail",
+      "file_type": "code",
+      "source_file": "src/models/cve_detail.rs",
+      "source_location": "L5",
+      "id": "models_cve_detail_cvedetail",
+      "community": 24,
+      "norm_label": "cvedetail"
+    },
+    {
+      "label": "display.rs",
+      "file_type": "code",
+      "source_file": "src/models/display.rs",
+      "source_location": "L1",
+      "id": "src_models_display_rs",
+      "community": 9,
+      "norm_label": "display.rs"
+    },
+    {
+      "label": "DisplayStatus",
+      "file_type": "code",
+      "source_file": "src/models/display.rs",
+      "source_location": "L4",
+      "id": "models_display_displaystatus",
+      "community": 9,
+      "norm_label": "displaystatus"
+    },
+    {
+      "label": ".new()",
+      "file_type": "code",
+      "source_file": "src/models/display.rs",
+      "source_location": "L10",
+      "id": "models_display_displaystatus_new",
+      "community": 9,
+      "norm_label": ".new()"
+    },
+    {
+      "label": ".update()",
+      "file_type": "code",
+      "source_file": "src/models/display.rs",
+      "source_location": "L17",
+      "id": "models_display_displaystatus_update",
+      "community": 9,
+      "norm_label": ".update()"
+    },
+    {
+      "label": ".default()",
+      "file_type": "code",
+      "source_file": "src/models/display.rs",
+      "source_location": "L24",
+      "id": "models_display_displaystatus_default",
+      "community": 9,
+      "norm_label": ".default()"
+    },
+    {
+      "label": "new_initializes_correctly()",
+      "file_type": "code",
+      "source_file": "src/models/display.rs",
+      "source_location": "L35",
+      "id": "models_display_new_initializes_correctly",
+      "community": 9,
+      "norm_label": "new_initializes_correctly()"
+    },
+    {
+      "label": "update_changes_status_and_timestamp()",
+      "file_type": "code",
+      "source_file": "src/models/display.rs",
+      "source_location": "L43",
+      "id": "models_display_update_changes_status_and_timestamp",
+      "community": 9,
+      "norm_label": "update_changes_status_and_timestamp()"
+    },
+    {
+      "label": "update_multiple_times()",
+      "file_type": "code",
+      "source_file": "src/models/display.rs",
+      "source_location": "L58",
+      "id": "models_display_update_multiple_times",
+      "community": 9,
+      "norm_label": "update_multiple_times()"
+    },
+    {
+      "label": "default_matches_new()",
+      "file_type": "code",
+      "source_file": "src/models/display.rs",
+      "source_location": "L74",
+      "id": "models_display_default_matches_new",
+      "community": 9,
+      "norm_label": "default_matches_new()"
+    },
+    {
+      "label": "job.rs",
+      "file_type": "code",
+      "source_file": "src/models/job.rs",
+      "source_location": "L1",
+      "id": "src_models_job_rs",
+      "community": 6,
+      "norm_label": "job.rs"
+    },
+    {
+      "label": "Job",
+      "file_type": "code",
+      "source_file": "src/models/job.rs",
+      "source_location": "L8",
+      "id": "models_job_job",
+      "community": 6,
+      "norm_label": "job"
+    },
+    {
+      "label": ".new()",
+      "file_type": "code",
+      "source_file": "src/models/job.rs",
+      "source_location": "L20",
+      "id": "models_job_job_new",
+      "community": 6,
+      "norm_label": ".new()"
+    },
+    {
+      "label": ".is_running()",
+      "file_type": "code",
+      "source_file": "src/models/job.rs",
+      "source_location": "L33",
+      "id": "models_job_job_is_running",
+      "community": 6,
+      "norm_label": ".is_running()"
+    },
+    {
+      "label": ".is_completed()",
+      "file_type": "code",
+      "source_file": "src/models/job.rs",
+      "source_location": "L37",
+      "id": "models_job_job_is_completed",
+      "community": 6,
+      "norm_label": ".is_completed()"
+    },
+    {
+      "label": ".is_cancelled()",
+      "file_type": "code",
+      "source_file": "src/models/job.rs",
+      "source_location": "L41",
+      "id": "models_job_job_is_cancelled",
+      "community": 6,
+      "norm_label": ".is_cancelled()"
+    },
+    {
+      "label": ".is_queued()",
+      "file_type": "code",
+      "source_file": "src/models/job.rs",
+      "source_location": "L45",
+      "id": "models_job_job_is_queued",
+      "community": 6,
+      "norm_label": ".is_queued()"
+    },
+    {
+      "label": ".is_scheduled()",
+      "file_type": "code",
+      "source_file": "src/models/job.rs",
+      "source_location": "L49",
+      "id": "models_job_job_is_scheduled",
+      "community": 6,
+      "norm_label": ".is_scheduled()"
+    },
+    {
+      "label": ".target()",
+      "file_type": "code",
+      "source_file": "src/models/job.rs",
+      "source_location": "L53",
+      "id": "models_job_job_target",
+      "community": 6,
+      "norm_label": ".target()"
+    },
+    {
+      "label": "new_initializes_correctly()",
+      "file_type": "code",
+      "source_file": "src/models/job.rs",
+      "source_location": "L68",
+      "id": "models_job_new_initializes_correctly",
+      "community": 6,
+      "norm_label": "new_initializes_correctly()"
+    },
+    {
+      "label": "uuid_is_unique()",
+      "file_type": "code",
+      "source_file": "src/models/job.rs",
+      "source_location": "L83",
+      "id": "models_job_uuid_is_unique",
+      "community": 6,
+      "norm_label": "uuid_is_unique()"
+    },
+    {
+      "label": "status_checks_work()",
+      "file_type": "code",
+      "source_file": "src/models/job.rs",
+      "source_location": "L91",
+      "id": "models_job_status_checks_work",
+      "community": 6,
+      "norm_label": "status_checks_work()"
+    },
+    {
+      "label": "results_can_be_stored()",
+      "file_type": "code",
+      "source_file": "src/models/job.rs",
+      "source_location": "L119",
+      "id": "models_job_results_can_be_stored",
+      "community": 6,
+      "norm_label": "results_can_be_stored()"
+    },
+    {
+      "label": "host.rs",
+      "file_type": "code",
+      "source_file": "src/models/host.rs",
+      "source_location": "L1",
+      "id": "src_models_host_rs",
+      "community": 5,
+      "norm_label": "host.rs"
+    },
+    {
+      "label": "Host",
+      "file_type": "code",
+      "source_file": "src/models/host.rs",
+      "source_location": "L6",
+      "id": "models_host_host",
+      "community": 5,
+      "norm_label": "host"
+    },
+    {
+      "label": "default_first_seen()",
+      "file_type": "code",
+      "source_file": "src/models/host.rs",
+      "source_location": "L23",
+      "id": "models_host_default_first_seen",
+      "community": 5,
+      "norm_label": "default_first_seen()"
+    },
+    {
+      "label": ".new()",
+      "file_type": "code",
+      "source_file": "src/models/host.rs",
+      "source_location": "L28",
+      "id": "models_host_host_new",
+      "community": 5,
+      "norm_label": ".new()"
+    },
+    {
+      "label": ".add_port()",
+      "file_type": "code",
+      "source_file": "src/models/host.rs",
+      "source_location": "L48",
+      "id": "models_host_host_add_port",
+      "community": 5,
+      "norm_label": ".add_port()"
+    },
+    {
+      "label": ".add_banner()",
+      "file_type": "code",
+      "source_file": "src/models/host.rs",
+      "source_location": "L86",
+      "id": "models_host_host_add_banner",
+      "community": 5,
+      "norm_label": ".add_banner()"
+    },
+    {
+      "label": ".update_last_seen()",
+      "file_type": "code",
+      "source_file": "src/models/host.rs",
+      "source_location": "L92",
+      "id": "models_host_host_update_last_seen",
+      "community": 5,
+      "norm_label": ".update_last_seen()"
+    },
+    {
+      "label": ".default()",
+      "file_type": "code",
+      "source_file": "src/models/host.rs",
+      "source_location": "L98",
+      "id": "models_host_host_default",
+      "community": 5,
+      "norm_label": ".default()"
+    },
+    {
+      "label": "host_new_initializes_correctly()",
+      "file_type": "code",
+      "source_file": "src/models/host.rs",
+      "source_location": "L110",
+      "id": "models_host_host_new_initializes_correctly",
+      "community": 5,
+      "norm_label": "host_new_initializes_correctly()"
+    },
+    {
+      "label": "add_port_adds_new_port()",
+      "file_type": "code",
+      "source_file": "src/models/host.rs",
+      "source_location": "L126",
+      "id": "models_host_add_port_adds_new_port",
+      "community": 5,
+      "norm_label": "add_port_adds_new_port()"
+    },
+    {
+      "label": "add_port_updates_existing_port()",
+      "file_type": "code",
+      "source_file": "src/models/host.rs",
+      "source_location": "L139",
+      "id": "models_host_add_port_updates_existing_port",
+      "community": 5,
+      "norm_label": "add_port_updates_existing_port()"
+    },
+    {
+      "label": "add_port_sorts_ports()",
+      "file_type": "code",
+      "source_file": "src/models/host.rs",
+      "source_location": "L150",
+      "id": "models_host_add_port_sorts_ports",
+      "community": 5,
+      "norm_label": "add_port_sorts_ports()"
+    },
+    {
+      "label": "add_banner_adds_only_once()",
+      "file_type": "code",
+      "source_file": "src/models/host.rs",
+      "source_location": "L162",
+      "id": "models_host_add_banner_adds_only_once",
+      "community": 5,
+      "norm_label": "add_banner_adds_only_once()"
+    },
+    {
+      "label": "update_last_seen_changes_timestamp()",
+      "file_type": "code",
+      "source_file": "src/models/host.rs",
+      "source_location": "L173",
+      "id": "models_host_update_last_seen_changes_timestamp",
+      "community": 5,
+      "norm_label": "update_last_seen_changes_timestamp()"
+    },
+    {
+      "label": "default_uses_correct_ip()",
+      "file_type": "code",
+      "source_file": "src/models/host.rs",
+      "source_location": "L185",
+      "id": "models_host_default_uses_correct_ip",
+      "community": 5,
+      "norm_label": "default_uses_correct_ip()"
+    },
+    {
+      "label": "config.rs",
+      "file_type": "code",
+      "source_file": "src/models/config.rs",
+      "source_location": "L1",
+      "id": "src_models_config_rs",
+      "community": 7,
+      "norm_label": "config.rs"
+    },
+    {
+      "label": "Config",
+      "file_type": "code",
+      "source_file": "src/models/config.rs",
+      "source_location": "L4",
+      "id": "models_config_config",
+      "community": 7,
+      "norm_label": "config"
+    },
+    {
+      "label": ".new()",
+      "file_type": "code",
+      "source_file": "src/models/config.rs",
+      "source_location": "L9",
+      "id": "models_config_config_new",
+      "community": 7,
+      "norm_label": ".new()"
+    },
+    {
+      "label": ".get()",
+      "file_type": "code",
+      "source_file": "src/models/config.rs",
+      "source_location": "L15",
+      "id": "models_config_config_get",
+      "community": 7,
+      "norm_label": ".get()"
+    },
+    {
+      "label": ".set()",
+      "file_type": "code",
+      "source_file": "src/models/config.rs",
+      "source_location": "L19",
+      "id": "models_config_config_set",
+      "community": 7,
+      "norm_label": ".set()"
+    },
+    {
+      "label": ".default()",
+      "file_type": "code",
+      "source_file": "src/models/config.rs",
+      "source_location": "L27",
+      "id": "models_config_config_default",
+      "community": 7,
+      "norm_label": ".default()"
+    },
+    {
+      "label": "test_new_config_is_empty()",
+      "file_type": "code",
+      "source_file": "src/models/config.rs",
+      "source_location": "L39",
+      "id": "models_config_test_new_config_is_empty",
+      "community": 7,
+      "norm_label": "test_new_config_is_empty()"
+    },
+    {
+      "label": "test_default_config_is_empty()",
+      "file_type": "code",
+      "source_file": "src/models/config.rs",
+      "source_location": "L45",
+      "id": "models_config_test_default_config_is_empty",
+      "community": 7,
+      "norm_label": "test_default_config_is_empty()"
+    },
+    {
+      "label": "test_set_and_get_value()",
+      "file_type": "code",
+      "source_file": "src/models/config.rs",
+      "source_location": "L51",
+      "id": "models_config_test_set_and_get_value",
+      "community": 7,
+      "norm_label": "test_set_and_get_value()"
+    },
+    {
+      "label": "test_get_missing_key_returns_none()",
+      "file_type": "code",
+      "source_file": "src/models/config.rs",
+      "source_location": "L62",
+      "id": "models_config_test_get_missing_key_returns_none",
+      "community": 7,
+      "norm_label": "test_get_missing_key_returns_none()"
+    },
+    {
+      "label": "test_setting_multiple_values()",
+      "file_type": "code",
+      "source_file": "src/models/config.rs",
+      "source_location": "L68",
+      "id": "models_config_test_setting_multiple_values",
+      "community": 7,
+      "norm_label": "test_setting_multiple_values()"
+    },
+    {
+      "label": "test_set_overwrites_old_value()",
+      "file_type": "code",
+      "source_file": "src/models/config.rs",
+      "source_location": "L80",
+      "id": "models_config_test_set_overwrites_old_value",
+      "community": 7,
+      "norm_label": "test_set_overwrites_old_value()"
+    },
+    {
+      "label": "log.rs",
+      "file_type": "code",
+      "source_file": "src/models/log.rs",
+      "source_location": "L1",
+      "id": "src_models_log_rs",
+      "community": 11,
+      "norm_label": "log.rs"
+    },
+    {
+      "label": "Log",
+      "file_type": "code",
+      "source_file": "src/models/log.rs",
+      "source_location": "L4",
+      "id": "models_log_log",
+      "community": 11,
+      "norm_label": "log"
+    },
+    {
+      "label": ".new()",
+      "file_type": "code",
+      "source_file": "src/models/log.rs",
+      "source_location": "L15",
+      "id": "models_log_log_new",
+      "community": 11,
+      "norm_label": ".new()"
+    },
+    {
+      "label": "new_initializes_correctly()",
+      "file_type": "code",
+      "source_file": "src/models/log.rs",
+      "source_location": "L34",
+      "id": "models_log_new_initializes_correctly",
+      "community": 11,
+      "norm_label": "new_initializes_correctly()"
+    },
+    {
+      "label": "optional_fields_can_be_none()",
+      "file_type": "code",
+      "source_file": "src/models/log.rs",
+      "source_location": "L55",
+      "id": "models_log_optional_fields_can_be_none",
+      "community": 11,
+      "norm_label": "optional_fields_can_be_none()"
+    },
+    {
+      "label": "log_can_serialize_and_deserialize()",
+      "file_type": "code",
+      "source_file": "src/models/log.rs",
+      "source_location": "L71",
+      "id": "models_log_log_can_serialize_and_deserialize",
+      "community": 11,
+      "norm_label": "log_can_serialize_and_deserialize()"
+    },
+    {
+      "label": "port.rs",
+      "file_type": "code",
+      "source_file": "src/models/port.rs",
+      "source_location": "L1",
+      "id": "src_models_port_rs",
+      "community": 25,
+      "norm_label": "port.rs"
+    },
+    {
+      "label": "Port",
+      "file_type": "code",
+      "source_file": "src/models/port.rs",
+      "source_location": "L4",
+      "id": "models_port_port",
+      "community": 25,
+      "norm_label": "port"
+    },
+    {
+      "label": "service.rs",
+      "file_type": "code",
+      "source_file": "src/models/service.rs",
+      "source_location": "L1",
+      "id": "src_models_service_rs",
+      "community": 26,
+      "norm_label": "service.rs"
+    },
+    {
+      "label": "Service",
+      "file_type": "code",
+      "source_file": "src/models/service.rs",
+      "source_location": "L4",
+      "id": "models_service_service",
+      "community": 26,
+      "norm_label": "service"
+    },
+    {
+      "label": "mod.rs",
+      "file_type": "code",
+      "source_file": "src/models/mod.rs",
+      "source_location": "L1",
+      "id": "src_models_mod_rs",
+      "community": 31,
+      "norm_label": "mod.rs"
+    },
+    {
+      "label": "jobpriority.rs",
+      "file_type": "code",
+      "source_file": "src/models/jobpriority.rs",
+      "source_location": "L1",
+      "id": "src_models_jobpriority_rs",
+      "community": 27,
+      "norm_label": "jobpriority.rs"
+    },
+    {
+      "label": "JobPriority",
+      "file_type": "code",
+      "source_file": "src/models/jobpriority.rs",
+      "source_location": "L4",
+      "id": "models_jobpriority_jobpriority",
+      "community": 27,
+      "norm_label": "jobpriority"
+    },
+    {
+      "label": "status.rs",
+      "file_type": "code",
+      "source_file": "src/models/status.rs",
+      "source_location": "L1",
+      "id": "src_models_status_rs",
+      "community": 14,
+      "norm_label": "status.rs"
+    },
+    {
+      "label": "HostStatus",
+      "file_type": "code",
+      "source_file": "src/models/status.rs",
+      "source_location": "L4",
+      "id": "models_status_hoststatus",
+      "community": 14,
+      "norm_label": "hoststatus"
+    },
+    {
+      "label": ".fmt()",
+      "file_type": "code",
+      "source_file": "src/models/status.rs",
+      "source_location": "L11",
+      "id": "models_status_hoststatus_fmt",
+      "community": 14,
+      "norm_label": ".fmt()"
+    },
+    {
+      "label": "vulnerability.rs",
+      "file_type": "code",
+      "source_file": "src/models/vulnerability.rs",
+      "source_location": "L1",
+      "id": "src_models_vulnerability_rs",
+      "community": 28,
+      "norm_label": "vulnerability.rs"
+    },
+    {
+      "label": "Vulnerability",
+      "file_type": "code",
+      "source_file": "src/models/vulnerability.rs",
+      "source_location": "L4",
+      "id": "models_vulnerability_vulnerability",
+      "community": 28,
+      "norm_label": "vulnerability"
+    },
+    {
+      "label": "create_job_request.rs",
+      "file_type": "code",
+      "source_file": "src/models/create_job_request.rs",
+      "source_location": "L1",
+      "id": "src_models_create_job_request_rs",
+      "community": 15,
+      "norm_label": "create_job_request.rs"
+    },
+    {
+      "label": "CreateJobRequest",
+      "file_type": "code",
+      "source_file": "src/models/create_job_request.rs",
+      "source_location": "L4",
+      "id": "models_create_job_request_createjobrequest",
+      "community": 15,
+      "norm_label": "createjobrequest"
+    },
+    {
+      "label": "default_job_type()",
+      "file_type": "code",
+      "source_file": "src/models/create_job_request.rs",
+      "source_location": "L13",
+      "id": "models_create_job_request_default_job_type",
+      "community": 15,
+      "norm_label": "default_job_type()"
+    },
+    {
+      "label": "inmemory_repository.rs",
+      "file_type": "code",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L1",
+      "id": "src_db_inmemory_repository_rs",
+      "community": 3,
+      "norm_label": "inmemory_repository.rs"
+    },
+    {
+      "label": "InMemoryRepository",
+      "file_type": "code",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L10",
+      "id": "db_inmemory_repository_inmemoryrepository",
+      "community": 3,
+      "norm_label": "inmemoryrepository"
+    },
+    {
+      "label": ".new()",
+      "file_type": "code",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L19",
+      "id": "db_inmemory_repository_inmemoryrepository_new",
+      "community": 3,
+      "norm_label": ".new()"
+    },
+    {
+      "label": ".create_job()",
+      "file_type": "code",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L36",
+      "id": "db_inmemory_repository_inmemoryrepository_create_job",
+      "community": 3,
+      "norm_label": ".create_job()"
+    },
+    {
+      "label": ".get_job()",
+      "file_type": "code",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L42",
+      "id": "db_inmemory_repository_inmemoryrepository_get_job",
+      "community": 3,
+      "norm_label": ".get_job()"
+    },
+    {
+      "label": ".list_jobs()",
+      "file_type": "code",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L47",
+      "id": "db_inmemory_repository_inmemoryrepository_list_jobs",
+      "community": 3,
+      "norm_label": ".list_jobs()"
+    },
+    {
+      "label": ".update_job_status()",
+      "file_type": "code",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L52",
+      "id": "db_inmemory_repository_inmemoryrepository_update_job_status",
+      "community": 3,
+      "norm_label": ".update_job_status()"
+    },
+    {
+      "label": ".get_running_jobs()",
+      "file_type": "code",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L62",
+      "id": "db_inmemory_repository_inmemoryrepository_get_running_jobs",
+      "community": 3,
+      "norm_label": ".get_running_jobs()"
+    },
+    {
+      "label": ".get_queued_jobs()",
+      "file_type": "code",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L67",
+      "id": "db_inmemory_repository_inmemoryrepository_get_queued_jobs",
+      "community": 3,
+      "norm_label": ".get_queued_jobs()"
+    },
+    {
+      "label": ".get_scheduled_jobs_due()",
+      "file_type": "code",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L72",
+      "id": "db_inmemory_repository_inmemoryrepository_get_scheduled_jobs_due",
+      "community": 3,
+      "norm_label": ".get_scheduled_jobs_due()"
+    },
+    {
+      "label": ".update_job_results()",
+      "file_type": "code",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L83",
+      "id": "db_inmemory_repository_inmemoryrepository_update_job_results",
+      "community": 3,
+      "norm_label": ".update_job_results()"
+    },
+    {
+      "label": ".upsert_host()",
+      "file_type": "code",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L94",
+      "id": "db_inmemory_repository_inmemoryrepository_upsert_host",
+      "community": 3,
+      "norm_label": ".upsert_host()"
+    },
+    {
+      "label": ".get_host()",
+      "file_type": "code",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L104",
+      "id": "db_inmemory_repository_inmemoryrepository_get_host",
+      "community": 3,
+      "norm_label": ".get_host()"
+    },
+    {
+      "label": ".list_hosts()",
+      "file_type": "code",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L109",
+      "id": "db_inmemory_repository_inmemoryrepository_list_hosts",
+      "community": 3,
+      "norm_label": ".list_hosts()"
+    },
+    {
+      "label": ".get_config()",
+      "file_type": "code",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L115",
+      "id": "db_inmemory_repository_inmemoryrepository_get_config",
+      "community": 3,
+      "norm_label": ".get_config()"
+    },
+    {
+      "label": ".update_config()",
+      "file_type": "code",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L120",
+      "id": "db_inmemory_repository_inmemoryrepository_update_config",
+      "community": 3,
+      "norm_label": ".update_config()"
+    },
+    {
+      "label": ".get_display_status()",
+      "file_type": "code",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L127",
+      "id": "db_inmemory_repository_inmemoryrepository_get_display_status",
+      "community": 3,
+      "norm_label": ".get_display_status()"
+    },
+    {
+      "label": ".update_display_status()",
+      "file_type": "code",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L132",
+      "id": "db_inmemory_repository_inmemoryrepository_update_display_status",
+      "community": 3,
+      "norm_label": ".update_display_status()"
+    },
+    {
+      "label": ".add_log()",
+      "file_type": "code",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L139",
+      "id": "db_inmemory_repository_inmemoryrepository_add_log",
+      "community": 3,
+      "norm_label": ".add_log()"
+    },
+    {
+      "label": ".get_logs()",
+      "file_type": "code",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L160",
+      "id": "db_inmemory_repository_inmemoryrepository_get_logs",
+      "community": 3,
+      "norm_label": ".get_logs()"
+    },
+    {
+      "label": ".get_log()",
+      "file_type": "code",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L165",
+      "id": "db_inmemory_repository_inmemoryrepository_get_log",
+      "community": 3,
+      "norm_label": ".get_log()"
+    },
+    {
+      "label": ".get_logs_by_job_id()",
+      "file_type": "code",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L170",
+      "id": "db_inmemory_repository_inmemoryrepository_get_logs_by_job_id",
+      "community": 3,
+      "norm_label": ".get_logs_by_job_id()"
+    },
+    {
+      "label": ".cleanup_old_logs()",
+      "file_type": "code",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L177",
+      "id": "db_inmemory_repository_inmemoryrepository_cleanup_old_logs",
+      "community": 3,
+      "norm_label": ".cleanup_old_logs()"
+    },
+    {
+      "label": "db_repository.rs",
+      "file_type": "code",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L1",
+      "id": "src_db_db_repository_rs",
+      "community": 4,
+      "norm_label": "db_repository.rs"
+    },
+    {
+      "label": "DbRepository",
+      "file_type": "code",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L11",
+      "id": "db_db_repository_dbrepository",
+      "community": 4,
+      "norm_label": "dbrepository"
+    },
+    {
+      "label": ".new()",
+      "file_type": "code",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L16",
+      "id": "db_db_repository_dbrepository_new",
+      "community": 4,
+      "norm_label": ".new()"
+    },
+    {
+      "label": ".create_job()",
+      "file_type": "code",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L24",
+      "id": "db_db_repository_dbrepository_create_job",
+      "community": 4,
+      "norm_label": ".create_job()"
+    },
+    {
+      "label": ".get_job()",
+      "file_type": "code",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L28",
+      "id": "db_db_repository_dbrepository_get_job",
+      "community": 4,
+      "norm_label": ".get_job()"
+    },
+    {
+      "label": ".list_jobs()",
+      "file_type": "code",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L32",
+      "id": "db_db_repository_dbrepository_list_jobs",
+      "community": 4,
+      "norm_label": ".list_jobs()"
+    },
+    {
+      "label": ".update_job_status()",
+      "file_type": "code",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L36",
+      "id": "db_db_repository_dbrepository_update_job_status",
+      "community": 4,
+      "norm_label": ".update_job_status()"
+    },
+    {
+      "label": ".get_running_jobs()",
+      "file_type": "code",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L40",
+      "id": "db_db_repository_dbrepository_get_running_jobs",
+      "community": 4,
+      "norm_label": ".get_running_jobs()"
+    },
+    {
+      "label": ".get_queued_jobs()",
+      "file_type": "code",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L44",
+      "id": "db_db_repository_dbrepository_get_queued_jobs",
+      "community": 4,
+      "norm_label": ".get_queued_jobs()"
+    },
+    {
+      "label": ".get_scheduled_jobs_due()",
+      "file_type": "code",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L48",
+      "id": "db_db_repository_dbrepository_get_scheduled_jobs_due",
+      "community": 4,
+      "norm_label": ".get_scheduled_jobs_due()"
+    },
+    {
+      "label": ".update_job_results()",
+      "file_type": "code",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L52",
+      "id": "db_db_repository_dbrepository_update_job_results",
+      "community": 4,
+      "norm_label": ".update_job_results()"
+    },
+    {
+      "label": ".upsert_host()",
+      "file_type": "code",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L57",
+      "id": "db_db_repository_dbrepository_upsert_host",
+      "community": 4,
+      "norm_label": ".upsert_host()"
+    },
+    {
+      "label": ".get_host()",
+      "file_type": "code",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L61",
+      "id": "db_db_repository_dbrepository_get_host",
+      "community": 4,
+      "norm_label": ".get_host()"
+    },
+    {
+      "label": ".list_hosts()",
+      "file_type": "code",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L65",
+      "id": "db_db_repository_dbrepository_list_hosts",
+      "community": 4,
+      "norm_label": ".list_hosts()"
+    },
+    {
+      "label": ".get_config()",
+      "file_type": "code",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L70",
+      "id": "db_db_repository_dbrepository_get_config",
+      "community": 4,
+      "norm_label": ".get_config()"
+    },
+    {
+      "label": ".update_config()",
+      "file_type": "code",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L74",
+      "id": "db_db_repository_dbrepository_update_config",
+      "community": 4,
+      "norm_label": ".update_config()"
+    },
+    {
+      "label": ".get_display_status()",
+      "file_type": "code",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L79",
+      "id": "db_db_repository_dbrepository_get_display_status",
+      "community": 4,
+      "norm_label": ".get_display_status()"
+    },
+    {
+      "label": ".update_display_status()",
+      "file_type": "code",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L83",
+      "id": "db_db_repository_dbrepository_update_display_status",
+      "community": 4,
+      "norm_label": ".update_display_status()"
+    },
+    {
+      "label": ".add_log()",
+      "file_type": "code",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L88",
+      "id": "db_db_repository_dbrepository_add_log",
+      "community": 4,
+      "norm_label": ".add_log()"
+    },
+    {
+      "label": ".get_logs()",
+      "file_type": "code",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L99",
+      "id": "db_db_repository_dbrepository_get_logs",
+      "community": 4,
+      "norm_label": ".get_logs()"
+    },
+    {
+      "label": ".get_log()",
+      "file_type": "code",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L103",
+      "id": "db_db_repository_dbrepository_get_log",
+      "community": 4,
+      "norm_label": ".get_log()"
+    },
+    {
+      "label": ".get_logs_by_job_id()",
+      "file_type": "code",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L107",
+      "id": "db_db_repository_dbrepository_get_logs_by_job_id",
+      "community": 4,
+      "norm_label": ".get_logs_by_job_id()"
+    },
+    {
+      "label": ".cleanup_old_logs()",
+      "file_type": "code",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L111",
+      "id": "db_db_repository_dbrepository_cleanup_old_logs",
+      "community": 4,
+      "norm_label": ".cleanup_old_logs()"
+    },
+    {
+      "label": "mod.rs",
+      "file_type": "code",
+      "source_file": "src/db/mod.rs",
+      "source_location": "L1",
+      "id": "src_db_mod_rs",
+      "community": 1,
+      "norm_label": "mod.rs"
+    },
+    {
+      "label": "init_pool()",
+      "file_type": "code",
+      "source_file": "src/db/mod.rs",
+      "source_location": "L13",
+      "id": "db_mod_init_pool",
+      "community": 1,
+      "norm_label": "init_pool()"
+    },
+    {
+      "label": "repository_trait.rs",
+      "file_type": "code",
+      "source_file": "src/db/repository_trait.rs",
+      "source_location": "L1",
+      "id": "src_db_repository_trait_rs",
+      "community": 29,
+      "norm_label": "repository_trait.rs"
+    },
+    {
+      "label": "Repository",
+      "file_type": "code",
+      "source_file": "src/db/repository_trait.rs",
+      "source_location": "L6",
+      "id": "db_repository_trait_repository",
+      "community": 29,
+      "norm_label": "repository"
+    },
+    {
+      "label": "repository.rs",
+      "file_type": "code",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L1",
+      "id": "src_db_repository_rs",
+      "community": 0,
+      "norm_label": "repository.rs"
+    },
+    {
+      "label": "create_job()",
+      "file_type": "code",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L8",
+      "id": "db_repository_create_job",
+      "community": 0,
+      "norm_label": "create_job()"
+    },
+    {
+      "label": "get_job()",
+      "file_type": "code",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L33",
+      "id": "db_repository_get_job",
+      "community": 0,
+      "norm_label": "get_job()"
+    },
+    {
+      "label": "list_jobs()",
+      "file_type": "code",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L45",
+      "id": "db_repository_list_jobs",
+      "community": 0,
+      "norm_label": "list_jobs()"
+    },
+    {
+      "label": "update_job_status()",
+      "file_type": "code",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L78",
+      "id": "db_repository_update_job_status",
+      "community": 0,
+      "norm_label": "update_job_status()"
+    },
+    {
+      "label": "get_running_jobs()",
+      "file_type": "code",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L94",
+      "id": "db_repository_get_running_jobs",
+      "community": 0,
+      "norm_label": "get_running_jobs()"
+    },
+    {
+      "label": "get_queued_jobs()",
+      "file_type": "code",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L102",
+      "id": "db_repository_get_queued_jobs",
+      "community": 0,
+      "norm_label": "get_queued_jobs()"
+    },
+    {
+      "label": "get_scheduled_jobs_due()",
+      "file_type": "code",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L110",
+      "id": "db_repository_get_scheduled_jobs_due",
+      "community": 0,
+      "norm_label": "get_scheduled_jobs_due()"
+    },
+    {
+      "label": "update_job_results()",
+      "file_type": "code",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L127",
+      "id": "db_repository_update_job_results",
+      "community": 0,
+      "norm_label": "update_job_results()"
+    },
+    {
+      "label": "from_row()",
+      "file_type": "code",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L143",
+      "id": "db_repository_from_row",
+      "community": 0,
+      "norm_label": "from_row()"
+    },
+    {
+      "label": "upsert_host()",
+      "file_type": "code",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L169",
+      "id": "db_repository_upsert_host",
+      "community": 0,
+      "norm_label": "upsert_host()"
+    },
+    {
+      "label": "get_host()",
+      "file_type": "code",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L218",
+      "id": "db_repository_get_host",
+      "community": 0,
+      "norm_label": "get_host()"
+    },
+    {
+      "label": "list_hosts()",
+      "file_type": "code",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L230",
+      "id": "db_repository_list_hosts",
+      "community": 0,
+      "norm_label": "list_hosts()"
+    },
+    {
+      "label": "host_from_row()",
+      "file_type": "code",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L244",
+      "id": "db_repository_host_from_row",
+      "community": 0,
+      "norm_label": "host_from_row()"
+    },
+    {
+      "label": "get_config()",
+      "file_type": "code",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L291",
+      "id": "db_repository_get_config",
+      "community": 0,
+      "norm_label": "get_config()"
+    },
+    {
+      "label": "update_config()",
+      "file_type": "code",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L313",
+      "id": "db_repository_update_config",
+      "community": 0,
+      "norm_label": "update_config()"
+    },
+    {
+      "label": "get_display_status()",
+      "file_type": "code",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L338",
+      "id": "db_repository_get_display_status",
+      "community": 0,
+      "norm_label": "get_display_status()"
+    },
+    {
+      "label": "update_display_status()",
+      "file_type": "code",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L352",
+      "id": "db_repository_update_display_status",
+      "community": 0,
+      "norm_label": "update_display_status()"
+    },
+    {
+      "label": "add_log()",
+      "file_type": "code",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L370",
+      "id": "db_repository_add_log",
+      "community": 0,
+      "norm_label": "add_log()"
+    },
+    {
+      "label": "get_logs()",
+      "file_type": "code",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L396",
+      "id": "db_repository_get_logs",
+      "community": 0,
+      "norm_label": "get_logs()"
+    },
+    {
+      "label": "get_log()",
+      "file_type": "code",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L422",
+      "id": "db_repository_get_log",
+      "community": 0,
+      "norm_label": "get_log()"
+    },
+    {
+      "label": "get_logs_by_job_id()",
+      "file_type": "code",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L441",
+      "id": "db_repository_get_logs_by_job_id",
+      "community": 0,
+      "norm_label": "get_logs_by_job_id()"
+    },
+    {
+      "label": "cleanup_old_logs()",
+      "file_type": "code",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L465",
+      "id": "db_repository_cleanup_old_logs",
+      "community": 0,
+      "norm_label": "cleanup_old_logs()"
+    },
+    {
+      "label": "cve_from_row()",
+      "file_type": "code",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L483",
+      "id": "db_repository_cve_from_row",
+      "community": 0,
+      "norm_label": "cve_from_row()"
+    },
+    {
+      "label": "get_cve_detail()",
+      "file_type": "code",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L500",
+      "id": "db_repository_get_cve_detail",
+      "community": 0,
+      "norm_label": "get_cve_detail()"
+    },
+    {
+      "label": "upsert_cve_detail()",
+      "file_type": "code",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L513",
+      "id": "db_repository_upsert_cve_detail",
+      "community": 0,
+      "norm_label": "upsert_cve_detail()"
+    },
+    {
+      "label": "list_cve_details()",
+      "file_type": "code",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L545",
+      "id": "db_repository_list_cve_details",
+      "community": 1,
+      "norm_label": "list_cve_details()"
+    },
+    {
+      "label": "get_unenriched_cve_ids()",
+      "file_type": "code",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L557",
+      "id": "db_repository_get_unenriched_cve_ids",
+      "community": 0,
+      "norm_label": "get_unenriched_cve_ids()"
+    },
+    {
+      "label": "hosts.rs",
+      "file_type": "code",
+      "source_file": "src/api/hosts.rs",
+      "source_location": "L1",
+      "id": "src_api_hosts_rs",
+      "community": 16,
+      "norm_label": "hosts.rs"
+    },
+    {
+      "label": "list_hosts()",
+      "file_type": "code",
+      "source_file": "src/api/hosts.rs",
+      "source_location": "L12",
+      "id": "api_hosts_list_hosts",
+      "community": 16,
+      "norm_label": "list_hosts()"
+    },
+    {
+      "label": "get_host()",
+      "file_type": "code",
+      "source_file": "src/api/hosts.rs",
+      "source_location": "L26",
+      "id": "api_hosts_get_host",
+      "community": 16,
+      "norm_label": "get_host()"
+    },
+    {
+      "label": "display.rs",
+      "file_type": "code",
+      "source_file": "src/api/display.rs",
+      "source_location": "L1",
+      "id": "src_api_display_rs",
+      "community": 17,
+      "norm_label": "display.rs"
+    },
+    {
+      "label": "get_display_status()",
+      "file_type": "code",
+      "source_file": "src/api/display.rs",
+      "source_location": "L16",
+      "id": "api_display_get_display_status",
+      "community": 17,
+      "norm_label": "get_display_status()"
+    },
+    {
+      "label": "update_display()",
+      "file_type": "code",
+      "source_file": "src/api/display.rs",
+      "source_location": "L29",
+      "id": "api_display_update_display",
+      "community": 17,
+      "norm_label": "update_display()"
+    },
+    {
+      "label": "config.rs",
+      "file_type": "code",
+      "source_file": "src/api/config.rs",
+      "source_location": "L1",
+      "id": "src_api_config_rs",
+      "community": 18,
+      "norm_label": "config.rs"
+    },
+    {
+      "label": "get_config()",
+      "file_type": "code",
+      "source_file": "src/api/config.rs",
+      "source_location": "L15",
+      "id": "api_config_get_config",
+      "community": 18,
+      "norm_label": "get_config()"
+    },
+    {
+      "label": "update_config()",
+      "file_type": "code",
+      "source_file": "src/api/config.rs",
+      "source_location": "L35",
+      "id": "api_config_update_config",
+      "community": 18,
+      "norm_label": "update_config()"
+    },
+    {
+      "label": "exports.rs",
+      "file_type": "code",
+      "source_file": "src/api/exports.rs",
+      "source_location": "L1",
+      "id": "src_api_exports_rs",
+      "community": 12,
+      "norm_label": "exports.rs"
+    },
+    {
+      "label": "export_dir()",
+      "file_type": "code",
+      "source_file": "src/api/exports.rs",
+      "source_location": "L11",
+      "id": "api_exports_export_dir",
+      "community": 12,
+      "norm_label": "export_dir()"
+    },
+    {
+      "label": "list_exports()",
+      "file_type": "code",
+      "source_file": "src/api/exports.rs",
+      "source_location": "L16",
+      "id": "api_exports_list_exports",
+      "community": 12,
+      "norm_label": "list_exports()"
+    },
+    {
+      "label": "download_export()",
+      "file_type": "code",
+      "source_file": "src/api/exports.rs",
+      "source_location": "L61",
+      "id": "api_exports_download_export",
+      "community": 12,
+      "norm_label": "download_export()"
+    },
+    {
+      "label": "cve.rs",
+      "file_type": "code",
+      "source_file": "src/api/cve.rs",
+      "source_location": "L1",
+      "id": "src_api_cve_rs",
+      "community": 1,
+      "norm_label": "cve.rs"
+    },
+    {
+      "label": "list_cves()",
+      "file_type": "code",
+      "source_file": "src/api/cve.rs",
+      "source_location": "L15",
+      "id": "api_cve_list_cves",
+      "community": 1,
+      "norm_label": "list_cves()"
+    },
+    {
+      "label": "get_cve()",
+      "file_type": "code",
+      "source_file": "src/api/cve.rs",
+      "source_location": "L26",
+      "id": "api_cve_get_cve",
+      "community": 1,
+      "norm_label": "get_cve()"
+    },
+    {
+      "label": "sync_cves()",
+      "file_type": "code",
+      "source_file": "src/api/cve.rs",
+      "source_location": "L51",
+      "id": "api_cve_sync_cves",
+      "community": 1,
+      "norm_label": "sync_cves()"
+    },
+    {
+      "label": "mod.rs",
+      "file_type": "code",
+      "source_file": "src/api/mod.rs",
+      "source_location": "L1",
+      "id": "src_api_mod_rs",
+      "community": 32,
+      "norm_label": "mod.rs"
+    },
+    {
+      "label": "websocket.rs",
+      "file_type": "code",
+      "source_file": "src/api/websocket.rs",
+      "source_location": "L1",
+      "id": "src_api_websocket_rs",
+      "community": 19,
+      "norm_label": "websocket.rs"
+    },
+    {
+      "label": "ws_handler()",
+      "file_type": "code",
+      "source_file": "src/api/websocket.rs",
+      "source_location": "L12",
+      "id": "api_websocket_ws_handler",
+      "community": 19,
+      "norm_label": "ws_handler()"
+    },
+    {
+      "label": "handle_socket()",
+      "file_type": "code",
+      "source_file": "src/api/websocket.rs",
+      "source_location": "L21",
+      "id": "api_websocket_handle_socket",
+      "community": 19,
+      "norm_label": "handle_socket()"
+    },
+    {
+      "label": "jobs.rs",
+      "file_type": "code",
+      "source_file": "src/api/jobs.rs",
+      "source_location": "L1",
+      "id": "src_api_jobs_rs",
+      "community": 10,
+      "norm_label": "jobs.rs"
+    },
+    {
+      "label": "create_job()",
+      "file_type": "code",
+      "source_file": "src/api/jobs.rs",
+      "source_location": "L18",
+      "id": "api_jobs_create_job",
+      "community": 10,
+      "norm_label": "create_job()"
+    },
+    {
+      "label": "schedule_job()",
+      "file_type": "code",
+      "source_file": "src/api/jobs.rs",
+      "source_location": "L50",
+      "id": "api_jobs_schedule_job",
+      "community": 10,
+      "norm_label": "schedule_job()"
+    },
+    {
+      "label": "list_jobs()",
+      "file_type": "code",
+      "source_file": "src/api/jobs.rs",
+      "source_location": "L81",
+      "id": "api_jobs_list_jobs",
+      "community": 10,
+      "norm_label": "list_jobs()"
+    },
+    {
+      "label": "get_job()",
+      "file_type": "code",
+      "source_file": "src/api/jobs.rs",
+      "source_location": "L95",
+      "id": "api_jobs_get_job",
+      "community": 10,
+      "norm_label": "get_job()"
+    },
+    {
+      "label": "cancel_job()",
+      "file_type": "code",
+      "source_file": "src/api/jobs.rs",
+      "source_location": "L116",
+      "id": "api_jobs_cancel_job",
+      "community": 10,
+      "norm_label": "cancel_job()"
+    },
+    {
+      "label": "parse_job_from_request()",
+      "file_type": "code",
+      "source_file": "src/api/jobs.rs",
+      "source_location": "L168",
+      "id": "api_jobs_parse_job_from_request",
+      "community": 10,
+      "norm_label": "parse_job_from_request()"
+    },
+    {
+      "label": "persist_job()",
+      "file_type": "code",
+      "source_file": "src/api/jobs.rs",
+      "source_location": "L246",
+      "id": "api_jobs_persist_job",
+      "community": 10,
+      "norm_label": "persist_job()"
+    },
+    {
+      "label": "validate_cidr()",
+      "file_type": "code",
+      "source_file": "src/api/jobs.rs",
+      "source_location": "L265",
+      "id": "api_jobs_validate_cidr",
+      "community": 10,
+      "norm_label": "validate_cidr()"
+    },
+    {
+      "label": "logs.rs",
+      "file_type": "code",
+      "source_file": "src/api/logs.rs",
+      "source_location": "L1",
+      "id": "src_api_logs_rs",
+      "community": 20,
+      "norm_label": "logs.rs"
+    },
+    {
+      "label": "get_all_logs()",
+      "file_type": "code",
+      "source_file": "src/api/logs.rs",
+      "source_location": "L11",
+      "id": "api_logs_get_all_logs",
+      "community": 20,
+      "norm_label": "get_all_logs()"
+    },
+    {
+      "label": "get_logs_by_job_id()",
+      "file_type": "code",
+      "source_file": "src/api/logs.rs",
+      "source_location": "L24",
+      "id": "api_logs_get_logs_by_job_id",
+      "community": 20,
+      "norm_label": "get_logs_by_job_id()"
+    },
+    {
+      "label": "job_executor.rs",
+      "file_type": "code",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L1",
+      "id": "src_services_job_executor_rs",
+      "community": 1,
+      "norm_label": "job_executor.rs"
+    },
+    {
+      "label": "JobExecutor",
+      "file_type": "code",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L13",
+      "id": "services_job_executor_jobexecutor",
+      "community": 1,
+      "norm_label": "jobexecutor"
+    },
+    {
+      "label": ".execute_job()",
+      "file_type": "code",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L19",
+      "id": "services_job_executor_jobexecutor_execute_job",
+      "community": 1,
+      "norm_label": ".execute_job()"
+    },
+    {
+      "label": ".run_queue()",
+      "file_type": "code",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L72",
+      "id": "services_job_executor_jobexecutor_run_queue",
+      "community": 1,
+      "norm_label": ".run_queue()"
+    },
+    {
+      "label": ".run_discovery()",
+      "file_type": "code",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L114",
+      "id": "services_job_executor_jobexecutor_run_discovery",
+      "community": 1,
+      "norm_label": ".run_discovery()"
+    },
+    {
+      "label": ".run_port_scan()",
+      "file_type": "code",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L132",
+      "id": "services_job_executor_jobexecutor_run_port_scan",
+      "community": 1,
+      "norm_label": ".run_port_scan()"
+    },
+    {
+      "label": ".resume_incomplete_jobs()",
+      "file_type": "code",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L188",
+      "id": "services_job_executor_jobexecutor_resume_incomplete_jobs",
+      "community": 1,
+      "norm_label": ".resume_incomplete_jobs()"
+    },
+    {
+      "label": ".run_nmap_scan()",
+      "file_type": "code",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L265",
+      "id": "services_job_executor_jobexecutor_run_nmap_scan",
+      "community": 1,
+      "norm_label": ".run_nmap_scan()"
+    },
+    {
+      "label": ".run_export()",
+      "file_type": "code",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L322",
+      "id": "services_job_executor_jobexecutor_run_export",
+      "community": 1,
+      "norm_label": ".run_export()"
+    },
+    {
+      "label": ".run_cve_sync()",
+      "file_type": "code",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L366",
+      "id": "services_job_executor_jobexecutor_run_cve_sync",
+      "community": 1,
+      "norm_label": ".run_cve_sync()"
+    },
+    {
+      "label": ".update_job_status()",
+      "file_type": "code",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L389",
+      "id": "services_job_executor_jobexecutor_update_job_status",
+      "community": 1,
+      "norm_label": ".update_job_status()"
+    },
+    {
+      "label": ".update_job_results()",
+      "file_type": "code",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L395",
+      "id": "services_job_executor_jobexecutor_update_job_results",
+      "community": 1,
+      "norm_label": ".update_job_results()"
+    },
+    {
+      "label": ".check_and_run_scheduled_jobs()",
+      "file_type": "code",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L401",
+      "id": "services_job_executor_jobexecutor_check_and_run_scheduled_jobs",
+      "community": 1,
+      "norm_label": ".check_and_run_scheduled_jobs()"
+    },
+    {
+      "label": "scanner.rs",
+      "file_type": "code",
+      "source_file": "src/services/scanner.rs",
+      "source_location": "L1",
+      "id": "src_services_scanner_rs",
+      "community": 8,
+      "norm_label": "scanner.rs"
+    },
+    {
+      "label": "NetworkScanner",
+      "file_type": "code",
+      "source_file": "src/services/scanner.rs",
+      "source_location": "L19",
+      "id": "services_scanner_networkscanner",
+      "community": 8,
+      "norm_label": "networkscanner"
+    },
+    {
+      "label": ".discover_hosts()",
+      "file_type": "code",
+      "source_file": "src/services/scanner.rs",
+      "source_location": "L23",
+      "id": "services_scanner_networkscanner_discover_hosts",
+      "community": 8,
+      "norm_label": ".discover_hosts()"
+    },
+    {
+      "label": ".arp_scan()",
+      "file_type": "code",
+      "source_file": "src/services/scanner.rs",
+      "source_location": "L73",
+      "id": "services_scanner_networkscanner_arp_scan",
+      "community": 8,
+      "norm_label": ".arp_scan()"
+    },
+    {
+      "label": ".arp_scan_blocking()",
+      "file_type": "code",
+      "source_file": "src/services/scanner.rs",
+      "source_location": "L86",
+      "id": "services_scanner_networkscanner_arp_scan_blocking",
+      "community": 8,
+      "norm_label": ".arp_scan_blocking()"
+    },
+    {
+      "label": ".save_arp_results()",
+      "file_type": "code",
+      "source_file": "src/services/scanner.rs",
+      "source_location": "L167",
+      "id": "services_scanner_networkscanner_save_arp_results",
+      "community": 8,
+      "norm_label": ".save_arp_results()"
+    },
+    {
+      "label": ".tcp_discover()",
+      "file_type": "code",
+      "source_file": "src/services/scanner.rs",
+      "source_location": "L197",
+      "id": "services_scanner_networkscanner_tcp_discover",
+      "community": 8,
+      "norm_label": ".tcp_discover()"
+    },
+    {
+      "label": ".resolve_hostname()",
+      "file_type": "code",
+      "source_file": "src/services/scanner.rs",
+      "source_location": "L241",
+      "id": "services_scanner_networkscanner_resolve_hostname",
+      "community": 8,
+      "norm_label": ".resolve_hostname()"
+    },
+    {
+      "label": ".detect_local_interface_info()",
+      "file_type": "code",
+      "source_file": "src/services/scanner.rs",
+      "source_location": "L255",
+      "id": "services_scanner_networkscanner_detect_local_interface_info",
+      "community": 8,
+      "norm_label": ".detect_local_interface_info()"
+    },
+    {
+      "label": ".detect_local_network()",
+      "file_type": "code",
+      "source_file": "src/services/scanner.rs",
+      "source_location": "L284",
+      "id": "services_scanner_networkscanner_detect_local_network",
+      "community": 8,
+      "norm_label": ".detect_local_network()"
+    },
+    {
+      "label": ".is_host_alive()",
+      "file_type": "code",
+      "source_file": "src/services/scanner.rs",
+      "source_location": "L290",
+      "id": "services_scanner_networkscanner_is_host_alive",
+      "community": 8,
+      "norm_label": ".is_host_alive()"
+    },
+    {
+      "label": ".log_and_broadcast()",
+      "file_type": "code",
+      "source_file": "src/services/scanner.rs",
+      "source_location": "L327",
+      "id": "services_scanner_networkscanner_log_and_broadcast",
+      "community": 8,
+      "norm_label": ".log_and_broadcast()"
+    },
+    {
+      "label": "cve_enrichment.rs",
+      "file_type": "code",
+      "source_file": "src/services/cve_enrichment.rs",
+      "source_location": "L1",
+      "id": "src_services_cve_enrichment_rs",
+      "community": 0,
+      "norm_label": "cve_enrichment.rs"
+    },
+    {
+      "label": "CveEnrichment",
+      "file_type": "code",
+      "source_file": "src/services/cve_enrichment.rs",
+      "source_location": "L11",
+      "id": "services_cve_enrichment_cveenrichment",
+      "community": 0,
+      "norm_label": "cveenrichment"
+    },
+    {
+      "label": ".get()",
+      "file_type": "code",
+      "source_file": "src/services/cve_enrichment.rs",
+      "source_location": "L18",
+      "id": "services_cve_enrichment_cveenrichment_get",
+      "community": 0,
+      "norm_label": ".get()"
+    },
+    {
+      "label": ".enrich_all_unenriched()",
+      "file_type": "code",
+      "source_file": "src/services/cve_enrichment.rs",
+      "source_location": "L42",
+      "id": "services_cve_enrichment_cveenrichment_enrich_all_unenriched",
+      "community": 0,
+      "norm_label": ".enrich_all_unenriched()"
+    },
+    {
+      "label": ".fetch_nvd()",
+      "file_type": "code",
+      "source_file": "src/services/cve_enrichment.rs",
+      "source_location": "L126",
+      "id": "services_cve_enrichment_cveenrichment_fetch_nvd",
+      "community": 0,
+      "norm_label": ".fetch_nvd()"
+    },
+    {
+      "label": ".parse_nvd_response()",
+      "file_type": "code",
+      "source_file": "src/services/cve_enrichment.rs",
+      "source_location": "L158",
+      "id": "services_cve_enrichment_cveenrichment_parse_nvd_response",
+      "community": 0,
+      "norm_label": ".parse_nvd_response()"
+    },
+    {
+      "label": "mod.rs",
+      "file_type": "code",
+      "source_file": "src/services/mod.rs",
+      "source_location": "L1",
+      "id": "src_services_mod_rs",
+      "community": 33,
+      "norm_label": "mod.rs"
+    },
+    {
+      "label": "port_scanner.rs",
+      "file_type": "code",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L1",
+      "id": "src_services_port_scanner_rs",
+      "community": 2,
+      "norm_label": "port_scanner.rs"
+    },
+    {
+      "label": "ServiceInfo",
+      "file_type": "code",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L9",
+      "id": "services_port_scanner_serviceinfo",
+      "community": 2,
+      "norm_label": "serviceinfo"
+    },
+    {
+      "label": "NmapScanResult",
+      "file_type": "code",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L20",
+      "id": "services_port_scanner_nmapscanresult",
+      "community": 2,
+      "norm_label": "nmapscanresult"
+    },
+    {
+      "label": "NmapExtra",
+      "file_type": "code",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L33",
+      "id": "services_port_scanner_nmapextra",
+      "community": 2,
+      "norm_label": "nmapextra"
+    },
+    {
+      "label": "PortScanner",
+      "file_type": "code",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L47",
+      "id": "services_port_scanner_portscanner",
+      "community": 2,
+      "norm_label": "portscanner"
+    },
+    {
+      "label": ".scan_host()",
+      "file_type": "code",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L51",
+      "id": "services_port_scanner_portscanner_scan_host",
+      "community": 2,
+      "norm_label": ".scan_host()"
+    },
+    {
+      "label": ".full_nmap_scan()",
+      "file_type": "code",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L125",
+      "id": "services_port_scanner_portscanner_full_nmap_scan",
+      "community": 2,
+      "norm_label": ".full_nmap_scan()"
+    },
+    {
+      "label": ".run_udp_scan()",
+      "file_type": "code",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L190",
+      "id": "services_port_scanner_portscanner_run_udp_scan",
+      "community": 2,
+      "norm_label": ".run_udp_scan()"
+    },
+    {
+      "label": ".tcp_scan_concurrent()",
+      "file_type": "code",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L250",
+      "id": "services_port_scanner_portscanner_tcp_scan_concurrent",
+      "community": 2,
+      "norm_label": ".tcp_scan_concurrent()"
+    },
+    {
+      "label": ".is_port_open()",
+      "file_type": "code",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L269",
+      "id": "services_port_scanner_portscanner_is_port_open",
+      "community": 2,
+      "norm_label": ".is_port_open()"
+    },
+    {
+      "label": ".detect_services()",
+      "file_type": "code",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L283",
+      "id": "services_port_scanner_portscanner_detect_services",
+      "community": 2,
+      "norm_label": ".detect_services()"
+    },
+    {
+      "label": ".run_nmap()",
+      "file_type": "code",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L323",
+      "id": "services_port_scanner_portscanner_run_nmap",
+      "community": 2,
+      "norm_label": ".run_nmap()"
+    },
+    {
+      "label": ".run_full_nmap()",
+      "file_type": "code",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L369",
+      "id": "services_port_scanner_portscanner_run_full_nmap",
+      "community": 2,
+      "norm_label": ".run_full_nmap()"
+    },
+    {
+      "label": ".run_nmap_cmd()",
+      "file_type": "code",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L399",
+      "id": "services_port_scanner_portscanner_run_nmap_cmd",
+      "community": 2,
+      "norm_label": ".run_nmap_cmd()"
+    },
+    {
+      "label": ".cvss_to_severity()",
+      "file_type": "code",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L464",
+      "id": "services_port_scanner_portscanner_cvss_to_severity",
+      "community": 2,
+      "norm_label": ".cvss_to_severity()"
+    },
+    {
+      "label": ".parse_vulners_output()",
+      "file_type": "code",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L481",
+      "id": "services_port_scanner_portscanner_parse_vulners_output",
+      "community": 2,
+      "norm_label": ".parse_vulners_output()"
+    },
+    {
+      "label": ".parse_nmap_xml()",
+      "file_type": "code",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L505",
+      "id": "services_port_scanner_portscanner_parse_nmap_xml",
+      "community": 2,
+      "norm_label": ".parse_nmap_xml()"
+    },
+    {
+      "label": ".banner_fallback()",
+      "file_type": "code",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L814",
+      "id": "services_port_scanner_portscanner_banner_fallback",
+      "community": 2,
+      "norm_label": ".banner_fallback()"
+    },
+    {
+      "label": ".ssl_service_name()",
+      "file_type": "code",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L838",
+      "id": "services_port_scanner_portscanner_ssl_service_name",
+      "community": 2,
+      "norm_label": ".ssl_service_name()"
+    },
+    {
+      "label": ".update_host_scan_results()",
+      "file_type": "code",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L853",
+      "id": "services_port_scanner_portscanner_update_host_scan_results",
+      "community": 2,
+      "norm_label": ".update_host_scan_results()"
+    },
+    {
+      "label": ".fingerprint_service()",
+      "file_type": "code",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L1003",
+      "id": "services_port_scanner_portscanner_fingerprint_service",
+      "community": 2,
+      "norm_label": ".fingerprint_service()"
+    },
+    {
+      "label": ".parse_ssh_banner()",
+      "file_type": "code",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L1028",
+      "id": "services_port_scanner_portscanner_parse_ssh_banner",
+      "community": 2,
+      "norm_label": ".parse_ssh_banner()"
+    },
+    {
+      "label": ".parse_http_banner()",
+      "file_type": "code",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L1042",
+      "id": "services_port_scanner_portscanner_parse_http_banner",
+      "community": 2,
+      "norm_label": ".parse_http_banner()"
+    },
+    {
+      "label": ".parse_220_banner()",
+      "file_type": "code",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L1058",
+      "id": "services_port_scanner_portscanner_parse_220_banner",
+      "community": 2,
+      "norm_label": ".parse_220_banner()"
+    },
+    {
+      "label": ".detect_os()",
+      "file_type": "code",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L1079",
+      "id": "services_port_scanner_portscanner_detect_os",
+      "community": 2,
+      "norm_label": ".detect_os()"
+    },
+    {
+      "label": ".infer_protocol()",
+      "file_type": "code",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L1136",
+      "id": "services_port_scanner_portscanner_infer_protocol",
+      "community": 2,
+      "norm_label": ".infer_protocol()"
+    },
+    {
+      "label": ".clean_banner()",
+      "file_type": "code",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L1160",
+      "id": "services_port_scanner_portscanner_clean_banner",
+      "community": 2,
+      "norm_label": ".clean_banner()"
+    },
+    {
+      "label": ".grab_banner()",
+      "file_type": "code",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L1177",
+      "id": "services_port_scanner_portscanner_grab_banner",
+      "community": 2,
+      "norm_label": ".grab_banner()"
+    },
+    {
+      "label": "ssh_brute.rs",
+      "file_type": "code",
+      "source_file": "src/services/attacks/ssh_brute.rs",
+      "source_location": "L1",
+      "id": "src_services_attacks_ssh_brute_rs",
+      "community": 21,
+      "norm_label": "ssh_brute.rs"
+    },
+    {
+      "label": "SshBruteForce",
+      "file_type": "code",
+      "source_file": "src/services/attacks/ssh_brute.rs",
+      "source_location": "L11",
+      "id": "attacks_ssh_brute_sshbruteforce",
+      "community": 21,
+      "norm_label": "sshbruteforce"
+    },
+    {
+      "label": ".attack()",
+      "file_type": "code",
+      "source_file": "src/services/attacks/ssh_brute.rs",
+      "source_location": "L14",
+      "id": "attacks_ssh_brute_sshbruteforce_attack",
+      "community": 21,
+      "norm_label": ".attack()"
+    },
+    {
+      "label": "ftp_brute.rs",
+      "file_type": "code",
+      "source_file": "src/services/attacks/ftp_brute.rs",
+      "source_location": "L1",
+      "id": "src_services_attacks_ftp_brute_rs",
+      "community": 22,
+      "norm_label": "ftp_brute.rs"
+    },
+    {
+      "label": "FtpBruteForce",
+      "file_type": "code",
+      "source_file": "src/services/attacks/ftp_brute.rs",
+      "source_location": "L3",
+      "id": "attacks_ftp_brute_ftpbruteforce",
+      "community": 22,
+      "norm_label": "ftpbruteforce"
+    },
+    {
+      "label": ".attack()",
+      "file_type": "code",
+      "source_file": "src/services/attacks/ftp_brute.rs",
+      "source_location": "L6",
+      "id": "attacks_ftp_brute_ftpbruteforce_attack",
+      "community": 22,
+      "norm_label": ".attack()"
+    },
+    {
+      "label": "mod.rs",
+      "file_type": "code",
+      "source_file": "src/services/attacks/mod.rs",
+      "source_location": "L1",
+      "id": "src_services_attacks_mod_rs",
+      "community": 34,
+      "norm_label": "mod.rs"
+    },
+    {
+      "label": "file_steal.rs",
+      "file_type": "code",
+      "source_file": "src/services/attacks/file_steal.rs",
+      "source_location": "L1",
+      "id": "src_services_attacks_file_steal_rs",
+      "community": 23,
+      "norm_label": "file_steal.rs"
+    },
+    {
+      "label": "FileSteal",
+      "file_type": "code",
+      "source_file": "src/services/attacks/file_steal.rs",
+      "source_location": "L3",
+      "id": "attacks_file_steal_filesteal",
+      "community": 23,
+      "norm_label": "filesteal"
+    },
+    {
+      "label": ".steal_via_ssh()",
+      "file_type": "code",
+      "source_file": "src/services/attacks/file_steal.rs",
+      "source_location": "L6",
+      "id": "attacks_file_steal_filesteal_steal_via_ssh",
+      "community": 23,
+      "norm_label": ".steal_via_ssh()"
+    }
+  ],
+  "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/job_executor_tests.rs",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "tests_job_executor_tests_rs",
+      "target": "tests_job_executor_tests_test_state",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/job_executor_tests.rs",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "tests_job_executor_tests_rs",
+      "target": "tests_job_executor_tests_scenario_job_executor_runs_discovery_successfully",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/job_executor_tests.rs",
+      "source_location": "L58",
+      "weight": 1.0,
+      "source": "tests_job_executor_tests_rs",
+      "target": "tests_job_executor_tests_scenario_run_queue_spawns_jobs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/job_executor_tests.rs",
+      "source_location": "L87",
+      "weight": 1.0,
+      "source": "tests_job_executor_tests_rs",
+      "target": "tests_job_executor_tests_scenario_resume_incomplete_jobs_requeues_and_runs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/job_executor_tests.rs",
+      "source_location": "L39",
+      "weight": 1.0,
+      "source": "tests_job_executor_tests_scenario_job_executor_runs_discovery_successfully",
+      "target": "tests_job_executor_tests_test_state",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/job_executor_tests.rs",
+      "source_location": "L59",
+      "weight": 1.0,
+      "source": "tests_job_executor_tests_scenario_run_queue_spawns_jobs",
+      "target": "tests_job_executor_tests_test_state",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/job_executor_tests.rs",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "tests_job_executor_tests_scenario_resume_incomplete_jobs_requeues_and_runs",
+      "target": "tests_job_executor_tests_test_state",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/job_executor_tests.rs",
+      "source_location": "L48",
+      "weight": 1.0,
+      "source": "tests_job_executor_tests_scenario_job_executor_runs_discovery_successfully",
+      "target": "services_job_executor_jobexecutor_execute_job"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/job_executor_tests.rs",
+      "source_location": "L74",
+      "weight": 1.0,
+      "source": "tests_job_executor_tests_scenario_run_queue_spawns_jobs",
+      "target": "services_job_executor_jobexecutor_run_queue"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/job_executor_tests.rs",
+      "source_location": "L97",
+      "weight": 1.0,
+      "source": "tests_job_executor_tests_scenario_resume_incomplete_jobs_requeues_and_runs",
+      "target": "services_job_executor_jobexecutor_resume_incomplete_jobs"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/state.rs",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "src_state_rs",
+      "target": "src_state_appstate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/state.rs",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "src_state_appstate",
+      "target": "src_state_appstate_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.rs",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "src_main_rs",
+      "target": "src_main_shutdown_signal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.rs",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "src_main_rs",
+      "target": "src_main_main",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.rs",
+      "source_location": "L97",
+      "weight": 1.0,
+      "source": "src_main_main",
+      "target": "src_main_shutdown_signal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/main.rs",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "src_main_main",
+      "target": "db_mod_init_pool"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/main.rs",
+      "source_location": "L45",
+      "weight": 1.0,
+      "source": "src_main_main",
+      "target": "services_job_executor_jobexecutor_check_and_run_scheduled_jobs"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/main.rs",
+      "source_location": "L58",
+      "weight": 1.0,
+      "source": "src_main_main",
+      "target": "services_job_executor_jobexecutor_resume_incomplete_jobs"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/cve_detail.rs",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "src_models_cve_detail_rs",
+      "target": "models_cve_detail_cvedetail",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/display.rs",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "src_models_display_rs",
+      "target": "models_display_displaystatus",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/display.rs",
+      "source_location": "L35",
+      "weight": 1.0,
+      "source": "src_models_display_rs",
+      "target": "models_display_new_initializes_correctly",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/display.rs",
+      "source_location": "L43",
+      "weight": 1.0,
+      "source": "src_models_display_rs",
+      "target": "models_display_update_changes_status_and_timestamp",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/display.rs",
+      "source_location": "L58",
+      "weight": 1.0,
+      "source": "src_models_display_rs",
+      "target": "models_display_update_multiple_times",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/display.rs",
+      "source_location": "L74",
+      "weight": 1.0,
+      "source": "src_models_display_rs",
+      "target": "models_display_default_matches_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/display.rs",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "models_display_displaystatus",
+      "target": "models_display_displaystatus_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/display.rs",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "models_display_displaystatus",
+      "target": "models_display_displaystatus_update",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/display.rs",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "models_display_displaystatus",
+      "target": "models_display_displaystatus_default",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/display.rs",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "models_display_displaystatus_default",
+      "target": "models_display_displaystatus_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/display.rs",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "models_display_new_initializes_correctly",
+      "target": "models_display_displaystatus_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/display.rs",
+      "source_location": "L44",
+      "weight": 1.0,
+      "source": "models_display_update_changes_status_and_timestamp",
+      "target": "models_display_displaystatus_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/display.rs",
+      "source_location": "L59",
+      "weight": 1.0,
+      "source": "models_display_update_multiple_times",
+      "target": "models_display_displaystatus_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/display.rs",
+      "source_location": "L75",
+      "weight": 1.0,
+      "source": "models_display_default_matches_new",
+      "target": "models_display_displaystatus_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/display.rs",
+      "source_location": "L48",
+      "weight": 1.0,
+      "source": "models_display_update_changes_status_and_timestamp",
+      "target": "models_display_displaystatus_update",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/display.rs",
+      "source_location": "L61",
+      "weight": 1.0,
+      "source": "models_display_update_multiple_times",
+      "target": "models_display_displaystatus_update",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/display.rs",
+      "source_location": "L76",
+      "weight": 1.0,
+      "source": "models_display_default_matches_new",
+      "target": "models_display_displaystatus_default",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/job.rs",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "src_models_job_rs",
+      "target": "models_job_job",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/job.rs",
+      "source_location": "L68",
+      "weight": 1.0,
+      "source": "src_models_job_rs",
+      "target": "models_job_new_initializes_correctly",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/job.rs",
+      "source_location": "L83",
+      "weight": 1.0,
+      "source": "src_models_job_rs",
+      "target": "models_job_uuid_is_unique",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/job.rs",
+      "source_location": "L91",
+      "weight": 1.0,
+      "source": "src_models_job_rs",
+      "target": "models_job_status_checks_work",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/job.rs",
+      "source_location": "L119",
+      "weight": 1.0,
+      "source": "src_models_job_rs",
+      "target": "models_job_results_can_be_stored",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/job.rs",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "models_job_job",
+      "target": "models_job_job_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/job.rs",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "models_job_job",
+      "target": "models_job_job_is_running",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/job.rs",
+      "source_location": "L37",
+      "weight": 1.0,
+      "source": "models_job_job",
+      "target": "models_job_job_is_completed",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/job.rs",
+      "source_location": "L41",
+      "weight": 1.0,
+      "source": "models_job_job",
+      "target": "models_job_job_is_cancelled",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/job.rs",
+      "source_location": "L45",
+      "weight": 1.0,
+      "source": "models_job_job",
+      "target": "models_job_job_is_queued",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/job.rs",
+      "source_location": "L49",
+      "weight": 1.0,
+      "source": "models_job_job",
+      "target": "models_job_job_is_scheduled",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/job.rs",
+      "source_location": "L53",
+      "weight": 1.0,
+      "source": "models_job_job",
+      "target": "models_job_job_target",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/job.rs",
+      "source_location": "L69",
+      "weight": 1.0,
+      "source": "models_job_new_initializes_correctly",
+      "target": "models_job_job_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/job.rs",
+      "source_location": "L84",
+      "weight": 1.0,
+      "source": "models_job_uuid_is_unique",
+      "target": "models_job_job_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/job.rs",
+      "source_location": "L92",
+      "weight": 1.0,
+      "source": "models_job_status_checks_work",
+      "target": "models_job_job_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/job.rs",
+      "source_location": "L120",
+      "weight": 1.0,
+      "source": "models_job_results_can_be_stored",
+      "target": "models_job_job_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/host.rs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "src_models_host_rs",
+      "target": "models_host_host",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/host.rs",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "src_models_host_rs",
+      "target": "models_host_default_first_seen",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/host.rs",
+      "source_location": "L110",
+      "weight": 1.0,
+      "source": "src_models_host_rs",
+      "target": "models_host_host_new_initializes_correctly",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/host.rs",
+      "source_location": "L126",
+      "weight": 1.0,
+      "source": "src_models_host_rs",
+      "target": "models_host_add_port_adds_new_port",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/host.rs",
+      "source_location": "L139",
+      "weight": 1.0,
+      "source": "src_models_host_rs",
+      "target": "models_host_add_port_updates_existing_port",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/host.rs",
+      "source_location": "L150",
+      "weight": 1.0,
+      "source": "src_models_host_rs",
+      "target": "models_host_add_port_sorts_ports",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/host.rs",
+      "source_location": "L162",
+      "weight": 1.0,
+      "source": "src_models_host_rs",
+      "target": "models_host_add_banner_adds_only_once",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/host.rs",
+      "source_location": "L173",
+      "weight": 1.0,
+      "source": "src_models_host_rs",
+      "target": "models_host_update_last_seen_changes_timestamp",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/host.rs",
+      "source_location": "L185",
+      "weight": 1.0,
+      "source": "src_models_host_rs",
+      "target": "models_host_default_uses_correct_ip",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/host.rs",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "models_host_host",
+      "target": "models_host_host_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/host.rs",
+      "source_location": "L48",
+      "weight": 1.0,
+      "source": "models_host_host",
+      "target": "models_host_host_add_port",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/host.rs",
+      "source_location": "L86",
+      "weight": 1.0,
+      "source": "models_host_host",
+      "target": "models_host_host_add_banner",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/host.rs",
+      "source_location": "L92",
+      "weight": 1.0,
+      "source": "models_host_host",
+      "target": "models_host_host_update_last_seen",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/host.rs",
+      "source_location": "L98",
+      "weight": 1.0,
+      "source": "models_host_host",
+      "target": "models_host_host_default",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/host.rs",
+      "source_location": "L99",
+      "weight": 1.0,
+      "source": "models_host_host_default",
+      "target": "models_host_host_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/host.rs",
+      "source_location": "L111",
+      "weight": 1.0,
+      "source": "models_host_host_new_initializes_correctly",
+      "target": "models_host_host_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/host.rs",
+      "source_location": "L127",
+      "weight": 1.0,
+      "source": "models_host_add_port_adds_new_port",
+      "target": "models_host_host_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/host.rs",
+      "source_location": "L140",
+      "weight": 1.0,
+      "source": "models_host_add_port_updates_existing_port",
+      "target": "models_host_host_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/host.rs",
+      "source_location": "L151",
+      "weight": 1.0,
+      "source": "models_host_add_port_sorts_ports",
+      "target": "models_host_host_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/host.rs",
+      "source_location": "L163",
+      "weight": 1.0,
+      "source": "models_host_add_banner_adds_only_once",
+      "target": "models_host_host_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/host.rs",
+      "source_location": "L174",
+      "weight": 1.0,
+      "source": "models_host_update_last_seen_changes_timestamp",
+      "target": "models_host_host_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/host.rs",
+      "source_location": "L129",
+      "weight": 1.0,
+      "source": "models_host_add_port_adds_new_port",
+      "target": "models_host_host_add_port",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/host.rs",
+      "source_location": "L142",
+      "weight": 1.0,
+      "source": "models_host_add_port_updates_existing_port",
+      "target": "models_host_host_add_port",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/host.rs",
+      "source_location": "L153",
+      "weight": 1.0,
+      "source": "models_host_add_port_sorts_ports",
+      "target": "models_host_host_add_port",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/host.rs",
+      "source_location": "L165",
+      "weight": 1.0,
+      "source": "models_host_add_banner_adds_only_once",
+      "target": "models_host_host_add_banner",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/host.rs",
+      "source_location": "L179",
+      "weight": 1.0,
+      "source": "models_host_update_last_seen_changes_timestamp",
+      "target": "models_host_host_update_last_seen",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/host.rs",
+      "source_location": "L186",
+      "weight": 1.0,
+      "source": "models_host_default_uses_correct_ip",
+      "target": "models_host_host_default",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/config.rs",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "src_models_config_rs",
+      "target": "models_config_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/config.rs",
+      "source_location": "L39",
+      "weight": 1.0,
+      "source": "src_models_config_rs",
+      "target": "models_config_test_new_config_is_empty",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/config.rs",
+      "source_location": "L45",
+      "weight": 1.0,
+      "source": "src_models_config_rs",
+      "target": "models_config_test_default_config_is_empty",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/config.rs",
+      "source_location": "L51",
+      "weight": 1.0,
+      "source": "src_models_config_rs",
+      "target": "models_config_test_set_and_get_value",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/config.rs",
+      "source_location": "L62",
+      "weight": 1.0,
+      "source": "src_models_config_rs",
+      "target": "models_config_test_get_missing_key_returns_none",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/config.rs",
+      "source_location": "L68",
+      "weight": 1.0,
+      "source": "src_models_config_rs",
+      "target": "models_config_test_setting_multiple_values",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/config.rs",
+      "source_location": "L80",
+      "weight": 1.0,
+      "source": "src_models_config_rs",
+      "target": "models_config_test_set_overwrites_old_value",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/config.rs",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "models_config_config",
+      "target": "models_config_config_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/config.rs",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "models_config_config",
+      "target": "models_config_config_get",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/config.rs",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "models_config_config",
+      "target": "models_config_config_set",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/config.rs",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "models_config_config",
+      "target": "models_config_config_default",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/config.rs",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "models_config_config_default",
+      "target": "models_config_config_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/config.rs",
+      "source_location": "L40",
+      "weight": 1.0,
+      "source": "models_config_test_new_config_is_empty",
+      "target": "models_config_config_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/config.rs",
+      "source_location": "L52",
+      "weight": 1.0,
+      "source": "models_config_test_set_and_get_value",
+      "target": "models_config_config_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/config.rs",
+      "source_location": "L63",
+      "weight": 1.0,
+      "source": "models_config_test_get_missing_key_returns_none",
+      "target": "models_config_config_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/config.rs",
+      "source_location": "L69",
+      "weight": 1.0,
+      "source": "models_config_test_setting_multiple_values",
+      "target": "models_config_config_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/config.rs",
+      "source_location": "L81",
+      "weight": 1.0,
+      "source": "models_config_test_set_overwrites_old_value",
+      "target": "models_config_config_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/config.rs",
+      "source_location": "L53",
+      "weight": 1.0,
+      "source": "models_config_test_set_and_get_value",
+      "target": "models_config_config_set",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/config.rs",
+      "source_location": "L70",
+      "weight": 1.0,
+      "source": "models_config_test_setting_multiple_values",
+      "target": "models_config_config_set",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/config.rs",
+      "source_location": "L82",
+      "weight": 1.0,
+      "source": "models_config_test_set_overwrites_old_value",
+      "target": "models_config_config_set",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/config.rs",
+      "source_location": "L46",
+      "weight": 1.0,
+      "source": "models_config_test_default_config_is_empty",
+      "target": "models_config_config_default",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/log.rs",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "src_models_log_rs",
+      "target": "models_log_log",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/log.rs",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "src_models_log_rs",
+      "target": "models_log_new_initializes_correctly",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/log.rs",
+      "source_location": "L55",
+      "weight": 1.0,
+      "source": "src_models_log_rs",
+      "target": "models_log_optional_fields_can_be_none",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/log.rs",
+      "source_location": "L71",
+      "weight": 1.0,
+      "source": "src_models_log_rs",
+      "target": "models_log_log_can_serialize_and_deserialize",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/log.rs",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "models_log_log",
+      "target": "models_log_log_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/log.rs",
+      "source_location": "L35",
+      "weight": 1.0,
+      "source": "models_log_new_initializes_correctly",
+      "target": "models_log_log_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/log.rs",
+      "source_location": "L56",
+      "weight": 1.0,
+      "source": "models_log_optional_fields_can_be_none",
+      "target": "models_log_log_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/log.rs",
+      "source_location": "L72",
+      "weight": 1.0,
+      "source": "models_log_log_can_serialize_and_deserialize",
+      "target": "models_log_log_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/port.rs",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "src_models_port_rs",
+      "target": "models_port_port",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/service.rs",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "src_models_service_rs",
+      "target": "models_service_service",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/jobpriority.rs",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "src_models_jobpriority_rs",
+      "target": "models_jobpriority_jobpriority",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/status.rs",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "src_models_status_rs",
+      "target": "models_status_hoststatus",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/status.rs",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "models_status_hoststatus",
+      "target": "models_status_hoststatus_fmt",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/vulnerability.rs",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "src_models_vulnerability_rs",
+      "target": "models_vulnerability_vulnerability",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/create_job_request.rs",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "src_models_create_job_request_rs",
+      "target": "models_create_job_request_createjobrequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/models/create_job_request.rs",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "src_models_create_job_request_rs",
+      "target": "models_create_job_request_default_job_type",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "src_db_inmemory_repository_rs",
+      "target": "db_inmemory_repository_inmemoryrepository",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "db_inmemory_repository_inmemoryrepository",
+      "target": "db_inmemory_repository_inmemoryrepository_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "db_inmemory_repository_inmemoryrepository",
+      "target": "db_inmemory_repository_inmemoryrepository_create_job",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L42",
+      "weight": 1.0,
+      "source": "db_inmemory_repository_inmemoryrepository",
+      "target": "db_inmemory_repository_inmemoryrepository_get_job",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L47",
+      "weight": 1.0,
+      "source": "db_inmemory_repository_inmemoryrepository",
+      "target": "db_inmemory_repository_inmemoryrepository_list_jobs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L52",
+      "weight": 1.0,
+      "source": "db_inmemory_repository_inmemoryrepository",
+      "target": "db_inmemory_repository_inmemoryrepository_update_job_status",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L62",
+      "weight": 1.0,
+      "source": "db_inmemory_repository_inmemoryrepository",
+      "target": "db_inmemory_repository_inmemoryrepository_get_running_jobs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L67",
+      "weight": 1.0,
+      "source": "db_inmemory_repository_inmemoryrepository",
+      "target": "db_inmemory_repository_inmemoryrepository_get_queued_jobs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L72",
+      "weight": 1.0,
+      "source": "db_inmemory_repository_inmemoryrepository",
+      "target": "db_inmemory_repository_inmemoryrepository_get_scheduled_jobs_due",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L83",
+      "weight": 1.0,
+      "source": "db_inmemory_repository_inmemoryrepository",
+      "target": "db_inmemory_repository_inmemoryrepository_update_job_results",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L94",
+      "weight": 1.0,
+      "source": "db_inmemory_repository_inmemoryrepository",
+      "target": "db_inmemory_repository_inmemoryrepository_upsert_host",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L104",
+      "weight": 1.0,
+      "source": "db_inmemory_repository_inmemoryrepository",
+      "target": "db_inmemory_repository_inmemoryrepository_get_host",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L109",
+      "weight": 1.0,
+      "source": "db_inmemory_repository_inmemoryrepository",
+      "target": "db_inmemory_repository_inmemoryrepository_list_hosts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L115",
+      "weight": 1.0,
+      "source": "db_inmemory_repository_inmemoryrepository",
+      "target": "db_inmemory_repository_inmemoryrepository_get_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L120",
+      "weight": 1.0,
+      "source": "db_inmemory_repository_inmemoryrepository",
+      "target": "db_inmemory_repository_inmemoryrepository_update_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L127",
+      "weight": 1.0,
+      "source": "db_inmemory_repository_inmemoryrepository",
+      "target": "db_inmemory_repository_inmemoryrepository_get_display_status",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L132",
+      "weight": 1.0,
+      "source": "db_inmemory_repository_inmemoryrepository",
+      "target": "db_inmemory_repository_inmemoryrepository_update_display_status",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L139",
+      "weight": 1.0,
+      "source": "db_inmemory_repository_inmemoryrepository",
+      "target": "db_inmemory_repository_inmemoryrepository_add_log",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L160",
+      "weight": 1.0,
+      "source": "db_inmemory_repository_inmemoryrepository",
+      "target": "db_inmemory_repository_inmemoryrepository_get_logs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L165",
+      "weight": 1.0,
+      "source": "db_inmemory_repository_inmemoryrepository",
+      "target": "db_inmemory_repository_inmemoryrepository_get_log",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L170",
+      "weight": 1.0,
+      "source": "db_inmemory_repository_inmemoryrepository",
+      "target": "db_inmemory_repository_inmemoryrepository_get_logs_by_job_id",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/inmemory_repository.rs",
+      "source_location": "L177",
+      "weight": 1.0,
+      "source": "db_inmemory_repository_inmemoryrepository",
+      "target": "db_inmemory_repository_inmemoryrepository_cleanup_old_logs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "src_db_db_repository_rs",
+      "target": "db_db_repository_dbrepository",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "db_db_repository_dbrepository",
+      "target": "db_db_repository_dbrepository_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "db_db_repository_dbrepository",
+      "target": "db_db_repository_dbrepository_create_job",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "db_db_repository_dbrepository",
+      "target": "db_db_repository_dbrepository_get_job",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "db_db_repository_dbrepository",
+      "target": "db_db_repository_dbrepository_list_jobs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "db_db_repository_dbrepository",
+      "target": "db_db_repository_dbrepository_update_job_status",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L40",
+      "weight": 1.0,
+      "source": "db_db_repository_dbrepository",
+      "target": "db_db_repository_dbrepository_get_running_jobs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L44",
+      "weight": 1.0,
+      "source": "db_db_repository_dbrepository",
+      "target": "db_db_repository_dbrepository_get_queued_jobs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L48",
+      "weight": 1.0,
+      "source": "db_db_repository_dbrepository",
+      "target": "db_db_repository_dbrepository_get_scheduled_jobs_due",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L52",
+      "weight": 1.0,
+      "source": "db_db_repository_dbrepository",
+      "target": "db_db_repository_dbrepository_update_job_results",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L57",
+      "weight": 1.0,
+      "source": "db_db_repository_dbrepository",
+      "target": "db_db_repository_dbrepository_upsert_host",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L61",
+      "weight": 1.0,
+      "source": "db_db_repository_dbrepository",
+      "target": "db_db_repository_dbrepository_get_host",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L65",
+      "weight": 1.0,
+      "source": "db_db_repository_dbrepository",
+      "target": "db_db_repository_dbrepository_list_hosts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L70",
+      "weight": 1.0,
+      "source": "db_db_repository_dbrepository",
+      "target": "db_db_repository_dbrepository_get_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L74",
+      "weight": 1.0,
+      "source": "db_db_repository_dbrepository",
+      "target": "db_db_repository_dbrepository_update_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L79",
+      "weight": 1.0,
+      "source": "db_db_repository_dbrepository",
+      "target": "db_db_repository_dbrepository_get_display_status",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L83",
+      "weight": 1.0,
+      "source": "db_db_repository_dbrepository",
+      "target": "db_db_repository_dbrepository_update_display_status",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "db_db_repository_dbrepository",
+      "target": "db_db_repository_dbrepository_add_log",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L99",
+      "weight": 1.0,
+      "source": "db_db_repository_dbrepository",
+      "target": "db_db_repository_dbrepository_get_logs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L103",
+      "weight": 1.0,
+      "source": "db_db_repository_dbrepository",
+      "target": "db_db_repository_dbrepository_get_log",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L107",
+      "weight": 1.0,
+      "source": "db_db_repository_dbrepository",
+      "target": "db_db_repository_dbrepository_get_logs_by_job_id",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/db_repository.rs",
+      "source_location": "L111",
+      "weight": 1.0,
+      "source": "db_db_repository_dbrepository",
+      "target": "db_db_repository_dbrepository_cleanup_old_logs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/mod.rs",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "src_db_mod_rs",
+      "target": "db_mod_init_pool",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/repository_trait.rs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "src_db_repository_trait_rs",
+      "target": "db_repository_trait_repository",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "src_db_repository_rs",
+      "target": "db_repository_create_job",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "src_db_repository_rs",
+      "target": "db_repository_get_job",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L45",
+      "weight": 1.0,
+      "source": "src_db_repository_rs",
+      "target": "db_repository_list_jobs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L78",
+      "weight": 1.0,
+      "source": "src_db_repository_rs",
+      "target": "db_repository_update_job_status",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L94",
+      "weight": 1.0,
+      "source": "src_db_repository_rs",
+      "target": "db_repository_get_running_jobs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L102",
+      "weight": 1.0,
+      "source": "src_db_repository_rs",
+      "target": "db_repository_get_queued_jobs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L110",
+      "weight": 1.0,
+      "source": "src_db_repository_rs",
+      "target": "db_repository_get_scheduled_jobs_due",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L127",
+      "weight": 1.0,
+      "source": "src_db_repository_rs",
+      "target": "db_repository_update_job_results",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L143",
+      "weight": 1.0,
+      "source": "src_db_repository_rs",
+      "target": "db_repository_from_row",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L169",
+      "weight": 1.0,
+      "source": "src_db_repository_rs",
+      "target": "db_repository_upsert_host",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L218",
+      "weight": 1.0,
+      "source": "src_db_repository_rs",
+      "target": "db_repository_get_host",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L230",
+      "weight": 1.0,
+      "source": "src_db_repository_rs",
+      "target": "db_repository_list_hosts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L244",
+      "weight": 1.0,
+      "source": "src_db_repository_rs",
+      "target": "db_repository_host_from_row",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L291",
+      "weight": 1.0,
+      "source": "src_db_repository_rs",
+      "target": "db_repository_get_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L313",
+      "weight": 1.0,
+      "source": "src_db_repository_rs",
+      "target": "db_repository_update_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L338",
+      "weight": 1.0,
+      "source": "src_db_repository_rs",
+      "target": "db_repository_get_display_status",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L352",
+      "weight": 1.0,
+      "source": "src_db_repository_rs",
+      "target": "db_repository_update_display_status",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L370",
+      "weight": 1.0,
+      "source": "src_db_repository_rs",
+      "target": "db_repository_add_log",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L396",
+      "weight": 1.0,
+      "source": "src_db_repository_rs",
+      "target": "db_repository_get_logs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L422",
+      "weight": 1.0,
+      "source": "src_db_repository_rs",
+      "target": "db_repository_get_log",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L441",
+      "weight": 1.0,
+      "source": "src_db_repository_rs",
+      "target": "db_repository_get_logs_by_job_id",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L465",
+      "weight": 1.0,
+      "source": "src_db_repository_rs",
+      "target": "db_repository_cleanup_old_logs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L483",
+      "weight": 1.0,
+      "source": "src_db_repository_rs",
+      "target": "db_repository_cve_from_row",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L500",
+      "weight": 1.0,
+      "source": "src_db_repository_rs",
+      "target": "db_repository_get_cve_detail",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L513",
+      "weight": 1.0,
+      "source": "src_db_repository_rs",
+      "target": "db_repository_upsert_cve_detail",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L545",
+      "weight": 1.0,
+      "source": "src_db_repository_rs",
+      "target": "db_repository_list_cve_details",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L557",
+      "weight": 1.0,
+      "source": "src_db_repository_rs",
+      "target": "db_repository_get_unenriched_cve_ids",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L41",
+      "weight": 1.0,
+      "source": "db_repository_get_job",
+      "target": "db_repository_from_row",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L99",
+      "weight": 1.0,
+      "source": "db_repository_get_running_jobs",
+      "target": "db_repository_from_row",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L107",
+      "weight": 1.0,
+      "source": "db_repository_get_queued_jobs",
+      "target": "db_repository_from_row",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L123",
+      "weight": 1.0,
+      "source": "db_repository_get_scheduled_jobs_due",
+      "target": "db_repository_from_row",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L226",
+      "weight": 1.0,
+      "source": "db_repository_get_host",
+      "target": "db_repository_host_from_row",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/db/repository.rs",
+      "source_location": "L241",
+      "weight": 1.0,
+      "source": "db_repository_list_hosts",
+      "target": "db_repository_host_from_row",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/services/cve_enrichment.rs",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "services_cve_enrichment_cveenrichment_get",
+      "target": "db_repository_get_cve_detail"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/services/cve_enrichment.rs",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "services_cve_enrichment_cveenrichment_get",
+      "target": "db_repository_upsert_cve_detail"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/services/cve_enrichment.rs",
+      "source_location": "L91",
+      "weight": 1.0,
+      "source": "services_cve_enrichment_cveenrichment_enrich_all_unenriched",
+      "target": "db_repository_upsert_cve_detail"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/api/cve.rs",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "api_cve_list_cves",
+      "target": "db_repository_list_cve_details"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L374",
+      "weight": 1.0,
+      "source": "services_job_executor_jobexecutor_run_cve_sync",
+      "target": "db_repository_list_cve_details"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/services/cve_enrichment.rs",
+      "source_location": "L43",
+      "weight": 1.0,
+      "source": "services_cve_enrichment_cveenrichment_enrich_all_unenriched",
+      "target": "db_repository_get_unenriched_cve_ids"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/hosts.rs",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "src_api_hosts_rs",
+      "target": "api_hosts_list_hosts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/hosts.rs",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "src_api_hosts_rs",
+      "target": "api_hosts_get_host",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/display.rs",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "src_api_display_rs",
+      "target": "api_display_get_display_status",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/display.rs",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "src_api_display_rs",
+      "target": "api_display_update_display",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/config.rs",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "src_api_config_rs",
+      "target": "api_config_get_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/config.rs",
+      "source_location": "L35",
+      "weight": 1.0,
+      "source": "src_api_config_rs",
+      "target": "api_config_update_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/config.rs",
+      "source_location": "L39",
+      "weight": 1.0,
+      "source": "api_config_update_config",
+      "target": "api_config_get_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/exports.rs",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "src_api_exports_rs",
+      "target": "api_exports_export_dir",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/exports.rs",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "src_api_exports_rs",
+      "target": "api_exports_list_exports",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/exports.rs",
+      "source_location": "L61",
+      "weight": 1.0,
+      "source": "src_api_exports_rs",
+      "target": "api_exports_download_export",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/exports.rs",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "api_exports_list_exports",
+      "target": "api_exports_export_dir",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/cve.rs",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "src_api_cve_rs",
+      "target": "api_cve_list_cves",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/cve.rs",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "src_api_cve_rs",
+      "target": "api_cve_get_cve",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/cve.rs",
+      "source_location": "L51",
+      "weight": 1.0,
+      "source": "src_api_cve_rs",
+      "target": "api_cve_sync_cves",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/api/cve.rs",
+      "source_location": "L67",
+      "weight": 1.0,
+      "source": "api_cve_sync_cves",
+      "target": "services_job_executor_jobexecutor_run_queue"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/websocket.rs",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "src_api_websocket_rs",
+      "target": "api_websocket_ws_handler",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/websocket.rs",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "src_api_websocket_rs",
+      "target": "api_websocket_handle_socket",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/websocket.rs",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "api_websocket_ws_handler",
+      "target": "api_websocket_handle_socket",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/jobs.rs",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "src_api_jobs_rs",
+      "target": "api_jobs_create_job",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/jobs.rs",
+      "source_location": "L50",
+      "weight": 1.0,
+      "source": "src_api_jobs_rs",
+      "target": "api_jobs_schedule_job",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/jobs.rs",
+      "source_location": "L81",
+      "weight": 1.0,
+      "source": "src_api_jobs_rs",
+      "target": "api_jobs_list_jobs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/jobs.rs",
+      "source_location": "L95",
+      "weight": 1.0,
+      "source": "src_api_jobs_rs",
+      "target": "api_jobs_get_job",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/jobs.rs",
+      "source_location": "L116",
+      "weight": 1.0,
+      "source": "src_api_jobs_rs",
+      "target": "api_jobs_cancel_job",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/jobs.rs",
+      "source_location": "L168",
+      "weight": 1.0,
+      "source": "src_api_jobs_rs",
+      "target": "api_jobs_parse_job_from_request",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/jobs.rs",
+      "source_location": "L246",
+      "weight": 1.0,
+      "source": "src_api_jobs_rs",
+      "target": "api_jobs_persist_job",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/jobs.rs",
+      "source_location": "L265",
+      "weight": 1.0,
+      "source": "src_api_jobs_rs",
+      "target": "api_jobs_validate_cidr",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/jobs.rs",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "api_jobs_create_job",
+      "target": "api_jobs_parse_job_from_request",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/jobs.rs",
+      "source_location": "L250",
+      "weight": 1.0,
+      "source": "api_jobs_persist_job",
+      "target": "api_jobs_create_job",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/api/jobs.rs",
+      "source_location": "L44",
+      "weight": 1.0,
+      "source": "api_jobs_create_job",
+      "target": "services_job_executor_jobexecutor_run_queue"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/jobs.rs",
+      "source_location": "L62",
+      "weight": 1.0,
+      "source": "api_jobs_schedule_job",
+      "target": "api_jobs_parse_job_from_request",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/jobs.rs",
+      "source_location": "L68",
+      "weight": 1.0,
+      "source": "api_jobs_schedule_job",
+      "target": "api_jobs_persist_job",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/jobs.rs",
+      "source_location": "L121",
+      "weight": 1.0,
+      "source": "api_jobs_cancel_job",
+      "target": "api_jobs_get_job",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/jobs.rs",
+      "source_location": "L187",
+      "weight": 1.0,
+      "source": "api_jobs_parse_job_from_request",
+      "target": "api_jobs_validate_cidr",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/logs.rs",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "src_api_logs_rs",
+      "target": "api_logs_get_all_logs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/api/logs.rs",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "src_api_logs_rs",
+      "target": "api_logs_get_logs_by_job_id",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "src_services_job_executor_rs",
+      "target": "services_job_executor_jobexecutor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "services_job_executor_jobexecutor",
+      "target": "services_job_executor_jobexecutor_execute_job",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L72",
+      "weight": 1.0,
+      "source": "services_job_executor_jobexecutor",
+      "target": "services_job_executor_jobexecutor_run_queue",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L114",
+      "weight": 1.0,
+      "source": "services_job_executor_jobexecutor",
+      "target": "services_job_executor_jobexecutor_run_discovery",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L132",
+      "weight": 1.0,
+      "source": "services_job_executor_jobexecutor",
+      "target": "services_job_executor_jobexecutor_run_port_scan",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L188",
+      "weight": 1.0,
+      "source": "services_job_executor_jobexecutor",
+      "target": "services_job_executor_jobexecutor_resume_incomplete_jobs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L265",
+      "weight": 1.0,
+      "source": "services_job_executor_jobexecutor",
+      "target": "services_job_executor_jobexecutor_run_nmap_scan",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L322",
+      "weight": 1.0,
+      "source": "services_job_executor_jobexecutor",
+      "target": "services_job_executor_jobexecutor_run_export",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L366",
+      "weight": 1.0,
+      "source": "services_job_executor_jobexecutor",
+      "target": "services_job_executor_jobexecutor_run_cve_sync",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L389",
+      "weight": 1.0,
+      "source": "services_job_executor_jobexecutor",
+      "target": "services_job_executor_jobexecutor_update_job_status",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L395",
+      "weight": 1.0,
+      "source": "services_job_executor_jobexecutor",
+      "target": "services_job_executor_jobexecutor_update_job_results",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L401",
+      "weight": 1.0,
+      "source": "services_job_executor_jobexecutor",
+      "target": "services_job_executor_jobexecutor_check_and_run_scheduled_jobs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "services_job_executor_jobexecutor_execute_job",
+      "target": "services_job_executor_jobexecutor_update_job_status",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "services_job_executor_jobexecutor_execute_job",
+      "target": "services_job_executor_jobexecutor_run_discovery",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L35",
+      "weight": 1.0,
+      "source": "services_job_executor_jobexecutor_execute_job",
+      "target": "services_job_executor_jobexecutor_run_port_scan",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "services_job_executor_jobexecutor_execute_job",
+      "target": "services_job_executor_jobexecutor_run_nmap_scan",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L37",
+      "weight": 1.0,
+      "source": "services_job_executor_jobexecutor_execute_job",
+      "target": "services_job_executor_jobexecutor_run_export",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "services_job_executor_jobexecutor_execute_job",
+      "target": "services_job_executor_jobexecutor_run_cve_sync",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L49",
+      "weight": 1.0,
+      "source": "services_job_executor_jobexecutor_execute_job",
+      "target": "services_job_executor_jobexecutor_update_job_results",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L109",
+      "weight": 1.0,
+      "source": "services_job_executor_jobexecutor_run_queue",
+      "target": "services_job_executor_jobexecutor_execute_job",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L241",
+      "weight": 1.0,
+      "source": "services_job_executor_jobexecutor_resume_incomplete_jobs",
+      "target": "services_job_executor_jobexecutor_execute_job",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L424",
+      "weight": 1.0,
+      "source": "services_job_executor_jobexecutor_check_and_run_scheduled_jobs",
+      "target": "services_job_executor_jobexecutor_execute_job",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L439",
+      "weight": 1.0,
+      "source": "services_job_executor_jobexecutor_check_and_run_scheduled_jobs",
+      "target": "services_job_executor_jobexecutor_run_queue",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L118",
+      "weight": 1.0,
+      "source": "services_job_executor_jobexecutor_run_discovery",
+      "target": "services_scanner_networkscanner_discover_hosts"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L167",
+      "weight": 1.0,
+      "source": "services_job_executor_jobexecutor_run_port_scan",
+      "target": "services_port_scanner_portscanner_scan_host"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L226",
+      "weight": 1.0,
+      "source": "services_job_executor_jobexecutor_resume_incomplete_jobs",
+      "target": "services_job_executor_jobexecutor_update_job_status",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L299",
+      "weight": 1.0,
+      "source": "services_job_executor_jobexecutor_run_nmap_scan",
+      "target": "services_port_scanner_portscanner_full_nmap_scan"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L315",
+      "weight": 1.0,
+      "source": "services_job_executor_jobexecutor_run_nmap_scan",
+      "target": "services_cve_enrichment_cveenrichment_enrich_all_unenriched"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/services/job_executor.rs",
+      "source_location": "L371",
+      "weight": 1.0,
+      "source": "services_job_executor_jobexecutor_run_cve_sync",
+      "target": "services_cve_enrichment_cveenrichment_enrich_all_unenriched"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/scanner.rs",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "src_services_scanner_rs",
+      "target": "services_scanner_networkscanner",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/scanner.rs",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "services_scanner_networkscanner",
+      "target": "services_scanner_networkscanner_discover_hosts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/scanner.rs",
+      "source_location": "L73",
+      "weight": 1.0,
+      "source": "services_scanner_networkscanner",
+      "target": "services_scanner_networkscanner_arp_scan",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/scanner.rs",
+      "source_location": "L86",
+      "weight": 1.0,
+      "source": "services_scanner_networkscanner",
+      "target": "services_scanner_networkscanner_arp_scan_blocking",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/scanner.rs",
+      "source_location": "L167",
+      "weight": 1.0,
+      "source": "services_scanner_networkscanner",
+      "target": "services_scanner_networkscanner_save_arp_results",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/scanner.rs",
+      "source_location": "L197",
+      "weight": 1.0,
+      "source": "services_scanner_networkscanner",
+      "target": "services_scanner_networkscanner_tcp_discover",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/scanner.rs",
+      "source_location": "L241",
+      "weight": 1.0,
+      "source": "services_scanner_networkscanner",
+      "target": "services_scanner_networkscanner_resolve_hostname",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/scanner.rs",
+      "source_location": "L255",
+      "weight": 1.0,
+      "source": "services_scanner_networkscanner",
+      "target": "services_scanner_networkscanner_detect_local_interface_info",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/scanner.rs",
+      "source_location": "L284",
+      "weight": 1.0,
+      "source": "services_scanner_networkscanner",
+      "target": "services_scanner_networkscanner_detect_local_network",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/scanner.rs",
+      "source_location": "L290",
+      "weight": 1.0,
+      "source": "services_scanner_networkscanner",
+      "target": "services_scanner_networkscanner_is_host_alive",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/scanner.rs",
+      "source_location": "L327",
+      "weight": 1.0,
+      "source": "services_scanner_networkscanner",
+      "target": "services_scanner_networkscanner_log_and_broadcast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/scanner.rs",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "services_scanner_networkscanner_discover_hosts",
+      "target": "services_scanner_networkscanner_detect_local_network",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/scanner.rs",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "services_scanner_networkscanner_discover_hosts",
+      "target": "services_scanner_networkscanner_log_and_broadcast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/scanner.rs",
+      "source_location": "L41",
+      "weight": 1.0,
+      "source": "services_scanner_networkscanner_discover_hosts",
+      "target": "services_scanner_networkscanner_arp_scan",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/scanner.rs",
+      "source_location": "L46",
+      "weight": 1.0,
+      "source": "services_scanner_networkscanner_discover_hosts",
+      "target": "services_scanner_networkscanner_tcp_discover",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/scanner.rs",
+      "source_location": "L50",
+      "weight": 1.0,
+      "source": "services_scanner_networkscanner_discover_hosts",
+      "target": "services_scanner_networkscanner_save_arp_results",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/scanner.rs",
+      "source_location": "L74",
+      "weight": 1.0,
+      "source": "services_scanner_networkscanner_arp_scan",
+      "target": "services_scanner_networkscanner_detect_local_interface_info",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/scanner.rs",
+      "source_location": "L80",
+      "weight": 1.0,
+      "source": "services_scanner_networkscanner_arp_scan",
+      "target": "services_scanner_networkscanner_arp_scan_blocking",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/scanner.rs",
+      "source_location": "L174",
+      "weight": 1.0,
+      "source": "services_scanner_networkscanner_save_arp_results",
+      "target": "services_scanner_networkscanner_resolve_hostname",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/scanner.rs",
+      "source_location": "L214",
+      "weight": 1.0,
+      "source": "services_scanner_networkscanner_tcp_discover",
+      "target": "services_scanner_networkscanner_is_host_alive",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/scanner.rs",
+      "source_location": "L215",
+      "weight": 1.0,
+      "source": "services_scanner_networkscanner_tcp_discover",
+      "target": "services_scanner_networkscanner_resolve_hostname",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/scanner.rs",
+      "source_location": "L285",
+      "weight": 1.0,
+      "source": "services_scanner_networkscanner_detect_local_network",
+      "target": "services_scanner_networkscanner_detect_local_interface_info",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/cve_enrichment.rs",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "src_services_cve_enrichment_rs",
+      "target": "services_cve_enrichment_cveenrichment",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/cve_enrichment.rs",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "services_cve_enrichment_cveenrichment",
+      "target": "services_cve_enrichment_cveenrichment_get",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/cve_enrichment.rs",
+      "source_location": "L42",
+      "weight": 1.0,
+      "source": "services_cve_enrichment_cveenrichment",
+      "target": "services_cve_enrichment_cveenrichment_enrich_all_unenriched",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/cve_enrichment.rs",
+      "source_location": "L126",
+      "weight": 1.0,
+      "source": "services_cve_enrichment_cveenrichment",
+      "target": "services_cve_enrichment_cveenrichment_fetch_nvd",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/cve_enrichment.rs",
+      "source_location": "L158",
+      "weight": 1.0,
+      "source": "services_cve_enrichment_cveenrichment",
+      "target": "services_cve_enrichment_cveenrichment_parse_nvd_response",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/cve_enrichment.rs",
+      "source_location": "L134",
+      "weight": 1.0,
+      "source": "services_cve_enrichment_cveenrichment_fetch_nvd",
+      "target": "services_cve_enrichment_cveenrichment_get",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/cve_enrichment.rs",
+      "source_location": "L159",
+      "weight": 1.0,
+      "source": "services_cve_enrichment_cveenrichment_parse_nvd_response",
+      "target": "services_cve_enrichment_cveenrichment_get",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/cve_enrichment.rs",
+      "source_location": "L89",
+      "weight": 1.0,
+      "source": "services_cve_enrichment_cveenrichment_enrich_all_unenriched",
+      "target": "services_cve_enrichment_cveenrichment_fetch_nvd",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/cve_enrichment.rs",
+      "source_location": "L153",
+      "weight": 1.0,
+      "source": "services_cve_enrichment_cveenrichment_fetch_nvd",
+      "target": "services_cve_enrichment_cveenrichment_parse_nvd_response",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "src_services_port_scanner_rs",
+      "target": "services_port_scanner_serviceinfo",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "src_services_port_scanner_rs",
+      "target": "services_port_scanner_nmapscanresult",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "src_services_port_scanner_rs",
+      "target": "services_port_scanner_nmapextra",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L47",
+      "weight": 1.0,
+      "source": "src_services_port_scanner_rs",
+      "target": "services_port_scanner_portscanner",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L51",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner",
+      "target": "services_port_scanner_portscanner_scan_host",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L125",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner",
+      "target": "services_port_scanner_portscanner_full_nmap_scan",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L190",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner",
+      "target": "services_port_scanner_portscanner_run_udp_scan",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L250",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner",
+      "target": "services_port_scanner_portscanner_tcp_scan_concurrent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L269",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner",
+      "target": "services_port_scanner_portscanner_is_port_open",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L283",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner",
+      "target": "services_port_scanner_portscanner_detect_services",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L323",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner",
+      "target": "services_port_scanner_portscanner_run_nmap",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L369",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner",
+      "target": "services_port_scanner_portscanner_run_full_nmap",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L399",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner",
+      "target": "services_port_scanner_portscanner_run_nmap_cmd",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L464",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner",
+      "target": "services_port_scanner_portscanner_cvss_to_severity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L481",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner",
+      "target": "services_port_scanner_portscanner_parse_vulners_output",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L505",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner",
+      "target": "services_port_scanner_portscanner_parse_nmap_xml",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L814",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner",
+      "target": "services_port_scanner_portscanner_banner_fallback",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L838",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner",
+      "target": "services_port_scanner_portscanner_ssl_service_name",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L853",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner",
+      "target": "services_port_scanner_portscanner_update_host_scan_results",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L1003",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner",
+      "target": "services_port_scanner_portscanner_fingerprint_service",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L1028",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner",
+      "target": "services_port_scanner_portscanner_parse_ssh_banner",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L1042",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner",
+      "target": "services_port_scanner_portscanner_parse_http_banner",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L1058",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner",
+      "target": "services_port_scanner_portscanner_parse_220_banner",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L1079",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner",
+      "target": "services_port_scanner_portscanner_detect_os",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L1136",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner",
+      "target": "services_port_scanner_portscanner_infer_protocol",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L1160",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner",
+      "target": "services_port_scanner_portscanner_clean_banner",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L1177",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner",
+      "target": "services_port_scanner_portscanner_grab_banner",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L63",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner_scan_host",
+      "target": "services_port_scanner_portscanner_tcp_scan_concurrent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L94",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner_scan_host",
+      "target": "services_port_scanner_portscanner_detect_services",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L103",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner_scan_host",
+      "target": "services_port_scanner_portscanner_update_host_scan_results",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L142",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner_full_nmap_scan",
+      "target": "services_port_scanner_portscanner_run_full_nmap",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L146",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner_full_nmap_scan",
+      "target": "services_port_scanner_portscanner_run_udp_scan",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L175",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner_full_nmap_scan",
+      "target": "services_port_scanner_portscanner_update_host_scan_results",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L231",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner_run_udp_scan",
+      "target": "services_port_scanner_portscanner_parse_nmap_xml",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L257",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner_tcp_scan_concurrent",
+      "target": "services_port_scanner_portscanner_is_port_open",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L284",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner_detect_services",
+      "target": "services_port_scanner_portscanner_run_nmap",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L307",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner_detect_services",
+      "target": "services_port_scanner_portscanner_banner_fallback",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L363",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner_run_nmap",
+      "target": "services_port_scanner_portscanner_parse_nmap_xml",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L371",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner_run_full_nmap",
+      "target": "services_port_scanner_portscanner_run_nmap_cmd",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L460",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner_run_nmap_cmd",
+      "target": "services_port_scanner_portscanner_parse_nmap_xml",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L496",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner_parse_vulners_output",
+      "target": "services_port_scanner_portscanner_cvss_to_severity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L601",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner_parse_nmap_xml",
+      "target": "services_port_scanner_portscanner_parse_vulners_output",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L817",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner_banner_fallback",
+      "target": "services_port_scanner_portscanner_grab_banner",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L819",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner_banner_fallback",
+      "target": "services_port_scanner_portscanner_fingerprint_service",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L821",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner_banner_fallback",
+      "target": "services_port_scanner_portscanner_infer_protocol",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L878",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner_update_host_scan_results",
+      "target": "services_port_scanner_portscanner_ssl_service_name",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L936",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner_update_host_scan_results",
+      "target": "services_port_scanner_portscanner_detect_os",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L1005",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner_fingerprint_service",
+      "target": "services_port_scanner_portscanner_parse_ssh_banner",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L1008",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner_fingerprint_service",
+      "target": "services_port_scanner_portscanner_parse_http_banner",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L1011",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner_fingerprint_service",
+      "target": "services_port_scanner_portscanner_parse_220_banner",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L1025",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner_fingerprint_service",
+      "target": "services_port_scanner_portscanner_infer_protocol",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L1062",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner_parse_220_banner",
+      "target": "services_port_scanner_portscanner_infer_protocol",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L1206",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner_grab_banner",
+      "target": "services_port_scanner_portscanner_clean_banner",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/attacks/ssh_brute.rs",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "src_services_attacks_ssh_brute_rs",
+      "target": "attacks_ssh_brute_sshbruteforce",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/attacks/ssh_brute.rs",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "attacks_ssh_brute_sshbruteforce",
+      "target": "attacks_ssh_brute_sshbruteforce_attack",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/attacks/ftp_brute.rs",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "src_services_attacks_ftp_brute_rs",
+      "target": "attacks_ftp_brute_ftpbruteforce",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/attacks/ftp_brute.rs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "attacks_ftp_brute_ftpbruteforce",
+      "target": "attacks_ftp_brute_ftpbruteforce_attack",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/attacks/file_steal.rs",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "src_services_attacks_file_steal_rs",
+      "target": "attacks_file_steal_filesteal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/attacks/file_steal.rs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "attacks_file_steal_filesteal",
+      "target": "attacks_file_steal_filesteal_steal_via_ssh",
+      "confidence_score": 1.0
+    }
+  ],
+  "hyperedges": [],
+  "built_at_commit": "59205eced7f59a093a7da9c2650162190bff83a5"
+}

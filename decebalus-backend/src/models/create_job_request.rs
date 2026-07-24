@@ -5,9 +5,14 @@ pub struct CreateJobRequest {
     #[serde(default = "default_job_type")]
     pub job_type: String,
 
-    // Discovery-specific (optional for now)
+    // Simple jobs (discovery, port-scan, nmap-scan) pass just a target string.
     pub target: Option<String>,
-    pub scheduled_at: Option<i64>
+
+    // Attack jobs pass a full config object with all parameters.
+    #[serde(default)]
+    pub config: Option<serde_json::Value>,
+
+    pub scheduled_at: Option<i64>,
 }
 
 fn default_job_type() -> String {

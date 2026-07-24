@@ -226,6 +226,27 @@ pub async fn get_host(pool: &SqlitePool, ip: &str) -> Result<Option<Host>, sqlx:
     Ok(row.map(|r| host_from_row(&r)))
 }
 
+/// Find a host by MAC address — used to detect DHCP IP reassignments.
+pub async fn find_host_by_mac(pool: &SqlitePool, mac: &str) -> Result<Option<Host>, sqlx::Error> {
+    let row = sqlx::query(
+        "SELECT ip, ports, banners, last_seen, first_seen, os, os_version, device_type, mac_address, hostname, status, services, vulnerabilities FROM hosts WHERE mac_address = ?1 LIMIT 1"
+    )
+    .bind(mac)
+    .fetch_optional(pool)
+    .await?;
+
+    Ok(row.map(|r| host_from_row(&r)))
+}
+
+/// Delete a host record by IP.
+pub async fn delete_host(pool: &SqlitePool, ip: &str) -> Result<(), sqlx::Error> {
+    sqlx::query("DELETE FROM hosts WHERE ip = ?1")
+        .bind(ip)
+        .execute(pool)
+        .await?;
+    Ok(())
+}
+
 /// List all hosts
 pub async fn list_hosts(pool: &SqlitePool) -> Result<Vec<Host>, sqlx::Error> {
     let rows = sqlx::query(

@@ -18,6 +18,8 @@
   let scheduledAt = '';
   let scanProgress = new Map<string, string>(); // jobId → latest phase message
 
+  $: activeDiscoveryJob = jobs.find(j => j.job_type === 'discovery' && j.status === 'running');
+
   function minDatetime(): string {
     const d = new Date(Date.now() + 60_000);
     const p = (n: number) => String(n).padStart(2, '0');
@@ -57,6 +59,8 @@
           scanProgress = new Map(scanProgress);
           scanProgress.delete(jobId);
         }
+        refresh();
+      } else if (msg.startsWith('host_down:') || msg.startsWith('host_found:')) {
         refresh();
       } else if (msg.startsWith('job_')) {
         refresh();
@@ -245,10 +249,15 @@
   <header><strong>Network Discovery</strong></header>
 
   {#if activeDiscovery}
-    <p>
-      Scan running on <code>{activeDiscovery.config.target ?? '—'}</code>
-      <span class="badge badge-warn">running</span>
-    </p>
+    <div class="discovery-progress">
+      <div class="discovery-status">
+        <span class="badge badge-warn badge-live">scanning</span>
+        <code>{activeDiscovery.config?.target ?? 'self'}</code>
+      </div>
+      {#if activeDiscoveryJob && scanProgress.get(activeDiscoveryJob.id)}
+        <p class="scan-phase">{scanProgress.get(activeDiscoveryJob.id)}</p>
+      {/if}
+    </div>
     <button class="outline secondary" on:click={() => handleCancel(activeDiscovery.id)}>
       Cancel Scan
     </button>
@@ -331,6 +340,7 @@
       <table>
         <thead>
           <tr>
+            <th></th>
             <th>IP</th>
             <th>Hostname</th>
             <th>MAC</th>
@@ -343,7 +353,8 @@
           {#each hosts as host}
             {@const scanning = portScanFor(host.ip)}
             {@const nmapJob = nmapScanFor(host.ip)}
-            <tr>
+            <tr class:host-down={host.status === 'Down'}>
+              <td><span class="status-dot status-dot-{host.status.toLowerCase()}" title={host.status}></span></td>
               <td><code>{host.ip}</code></td>
               <td>{host.hostname ?? '—'}</td>
               <td><code>{host.mac_address ?? '—'}</code></td>
@@ -381,7 +392,7 @@
             </tr>
             {#if expandedHostIp === host.ip}
               <tr class="detail-row">
-                <td colspan="6">
+                <td colspan="7">
                   <div class="host-detail">
                     <div class="detail-meta">
                       {#if host.os}<span><strong>OS:</strong> {host.os}</span>{/if}
@@ -751,5 +762,33 @@
     color: var(--color-ash);
     font-style: italic;
     list-style: none;
+  }
+
+  .discovery-progress {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .discovery-status {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    vertical-align: middle;
+  }
+  .status-dot-up    { background: var(--status-online, #4caf50); }
+  .status-dot-down  { background: var(--status-error,  #e53935); }
+  .status-dot-unknown { background: var(--color-ash, #888); }
+
+  tr.host-down td {
+    opacity: 0.5;
   }
 </style>

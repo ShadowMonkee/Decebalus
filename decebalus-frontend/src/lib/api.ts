@@ -89,6 +89,14 @@ export function createJob(job_type: string, target?: string): Promise<Job> {
 export const cancelJob = (id: string) =>
   req<{ message: string }>(`/jobs/${id}/cancel`, { method: 'POST' });
 
+export function createAttackJob(job_type: string, config: Record<string, unknown>): Promise<Job> {
+  return req<Job>('/jobs', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ job_type, config }),
+  });
+}
+
 export function scheduleJob(job_type: string, target: string | undefined, scheduledAt: number): Promise<Job> {
   const body: Record<string, any> = { job_type, scheduled_at: scheduledAt };
   if (target !== undefined) body.target = target;

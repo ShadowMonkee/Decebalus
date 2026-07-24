@@ -224,6 +224,46 @@ fn parse_job_from_request(payload: &CreateJobRequest) -> Result<Job, Response>  
         // No target = scan all discovered hosts
     }
 
+    if matches!(job_type.as_str(), "ssh-brute" | "ftp-brute") {
+        let cfg = payload.config.as_ref()
+            .and_then(|c| c.as_object())
+            .ok_or_else(|| (StatusCode::BAD_REQUEST, Json(json!({ "error": "config object required" }))).into_response())?;
+
+        let target = cfg.get("target").and_then(|v| v.as_str())
+            .ok_or_else(|| (StatusCode::BAD_REQUEST, Json(json!({ "error": "config.target required" }))).into_response())?;
+        target.parse::<std::net::IpAddr>().map_err(|_| {
+            (StatusCode::BAD_REQUEST, Json(json!({ "error": format!("Invalid IP: {}", target) }))).into_response()
+        })?;
+
+        let has_inline = cfg.get("passwords").and_then(|v| v.as_array()).map(|a| !a.is_empty()).unwrap_or(false);
+        let has_path   = cfg.get("wordlist_path").and_then(|v| v.as_str()).map(|s| !s.is_empty()).unwrap_or(false);
+        if !has_inline && !has_path {
+            // Neither provided — will fall back to built-in defaults, which is fine
+        }
+
+        job.config = payload.config.clone().unwrap();
+        return Ok(job);
+    }
+
+    if job_type == "file-steal" {
+        let cfg = payload.config.as_ref()
+            .and_then(|c| c.as_object())
+            .ok_or_else(|| (StatusCode::BAD_REQUEST, Json(json!({ "error": "config object required" }))).into_response())?;
+
+        for field in &["target", "username", "password", "remote_path"] {
+            cfg.get(*field).and_then(|v| v.as_str())
+                .ok_or_else(|| (StatusCode::BAD_REQUEST, Json(json!({ "error": format!("config.{} required", field) }))).into_response())?;
+        }
+
+        let target = cfg["target"].as_str().unwrap();
+        target.parse::<std::net::IpAddr>().map_err(|_| {
+            (StatusCode::BAD_REQUEST, Json(json!({ "error": format!("Invalid IP: {}", target) }))).into_response()
+        })?;
+
+        job.config = payload.config.clone().unwrap();
+        return Ok(job);
+    }
+
     // "cve-sync" and "export" take no parameters — fall through as-is
     if job_type != "discovery" && job_type != "port-scan" && job_type != "nmap-scan"
         && job_type != "cve-sync" && job_type != "export"
