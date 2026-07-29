@@ -226,9 +226,14 @@ pub async fn record_credential(
     );
 }
 
-/// Write loot bytes under the loot dir (default `data/loot`), returning the path.
-pub async fn save_loot(target: &str, label: &str, content: &[u8]) -> std::io::Result<String> {
-    let dir = std::env::var("LOOT_DIR").unwrap_or_else(|_| "data/loot".to_string());
+/// Write loot bytes, encrypted at rest, under the loot dir (default `data/loot`),
+/// returning the path. Loot is namespaced by engagement id (`"global"` for the
+/// implicit empty engagement) so the encrypted file's path alone is enough to
+/// find the right derived key when decrypting later (see `loot decrypt` in main.rs).
+pub async fn save_loot(engagement_id: &str, target: &str, label: &str, content: &[u8]) -> std::io::Result<String> {
+    let base_dir = std::env::var("LOOT_DIR").unwrap_or_else(|_| "data/loot".to_string());
+    let eng_dir = if engagement_id.is_empty() { "global" } else { engagement_id };
+    let dir = format!("{}/{}", base_dir, eng_dir);
     tokio::fs::create_dir_all(&dir).await?;
     let ts = chrono::Utc::now().format("%Y%m%d_%H%M%S");
     let safe: String = label
@@ -236,6 +241,7 @@ pub async fn save_loot(target: &str, label: &str, content: &[u8]) -> std::io::Re
         .map(|c| if c.is_alphanumeric() || matches!(c, '.' | '-' | '_') { c } else { '_' })
         .collect();
     let path = format!("{}/{}_{}_{}", dir, target, ts, safe);
-    tokio::fs::write(&path, content).await?;
+    let ciphertext = crate::services::crypto::encrypt(engagement_id, content);
+    tokio::fs::write(&path, ciphertext).await?;
     Ok(path)
 }

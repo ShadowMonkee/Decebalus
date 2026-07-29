@@ -55,7 +55,7 @@ impl AdAsrep {
 
         let mut loot_path = String::new();
         if !hashes.is_empty() {
-            loot_path = save_loot(&target, "asrep.txt", hashes.join("\n").as_bytes())
+            loot_path = save_loot(&eng, &target, "asrep.txt", hashes.join("\n").as_bytes())
                 .await
                 .unwrap_or_default();
 
@@ -68,7 +68,10 @@ impl AdAsrep {
             f.severity = "high".into();
             f.value_score = 72;
             f.rationale = "Accounts without Kerberos pre-auth allow offline AS-REP cracking with no credentials.".into();
-            f.suggested_command = Some(format!("hashcat -m 18200 {} /usr/share/wordlists/rockyou.txt --force", loot_path));
+            f.suggested_command = Some(format!(
+                "hashcat -m 18200 <(decebalus-backend loot decrypt {}) /usr/share/wordlists/rockyou.txt --force",
+                loot_path
+            ));
             f.status = "done".into();
             f.evidence = json!({ "target": target, "hashes": hashes.len(), "loot": loot_path });
             record_finding(state, &f).await;

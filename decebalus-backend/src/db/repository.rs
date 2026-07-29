@@ -1,6 +1,7 @@
 use chrono::{DateTime, Duration, Utc};
 use sqlx::{Row, SqlitePool, sqlite::SqliteRow};
 use crate::models::{Config, Credential, CveDetail, DisplayStatus, Engagement, Fact, Finding, Host, HostEvent, HostStatus, Job, JobPriority, Log};
+use crate::services::crypto;
 
 // ==================== JOB REPOSITORY ====================
 
@@ -799,13 +800,18 @@ fn credential_from_row(r: &SqliteRow) -> Credential {
         .ok()
         .and_then(|s| serde_json::from_str(&s).ok())
         .unwrap_or_default();
+    let engagement_id: String = r.get("engagement_id");
+    let secret_ciphertext: String = r.get("secret");
+    // Falls back to the raw column value on decrypt failure so pre-encryption rows
+    // (migrated with an empty secret_hash) don't panic — they just read back as-is.
+    let secret = crypto::decrypt_str(&engagement_id, &secret_ciphertext).unwrap_or(secret_ciphertext);
     Credential {
         id: r.get("id"),
-        engagement_id: r.get("engagement_id"),
+        engagement_id,
         domain: r.get("domain"),
         username: r.get("username"),
         secret_type: r.get("secret_type"),
-        secret: r.get("secret"),
+        secret,
         source_job_id: r.try_get("source_job_id").ok().flatten(),
         validated: r.try_get::<i64, _>("validated").unwrap_or(0) != 0,
         valid_on,
@@ -816,18 +822,24 @@ fn credential_from_row(r: &SqliteRow) -> Credential {
 
 /// Insert a credential, or upgrade an existing identical one (same engagement +
 /// domain + username + secret) with fresher validation/privilege info.
+///
+/// `secret` is sealed with AES-256-GCM before it touches the database; dedup runs
+/// on `secret_hash`, a deterministic HMAC of the plaintext, since the ciphertext's
+/// random nonce means the same plaintext never encrypts to the same bytes twice.
 pub async fn add_credential(pool: &SqlitePool, c: &Credential) -> Result<(), sqlx::Error> {
     let valid_on_json = serde_json::to_string(&c.valid_on).unwrap_or_else(|_| "[]".to_string());
+    let secret_ciphertext = crypto::encrypt_str(&c.engagement_id, &c.secret);
+    let secret_hash = crypto::secret_fingerprint(&c.engagement_id, &c.secret);
     sqlx::query(
         r#"
         INSERT INTO credentials
-            (id, engagement_id, domain, username, secret_type, secret, source_job_id, validated, valid_on, privilege)
-        VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)
-        ON CONFLICT(engagement_id, domain, username, secret) DO UPDATE SET
-            validated = MAX(validated, ?8),
-            valid_on = ?9,
-            privilege = ?10,
-            source_job_id = COALESCE(?7, source_job_id)
+            (id, engagement_id, domain, username, secret_type, secret, secret_hash, source_job_id, validated, valid_on, privilege)
+        VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)
+        ON CONFLICT(engagement_id, domain, username, secret_hash) DO UPDATE SET
+            validated = MAX(validated, ?9),
+            valid_on = ?10,
+            privilege = ?11,
+            source_job_id = COALESCE(?8, source_job_id)
         "#,
     )
     .bind(&c.id)
@@ -835,7 +847,8 @@ pub async fn add_credential(pool: &SqlitePool, c: &Credential) -> Result<(), sql
     .bind(&c.domain)
     .bind(&c.username)
     .bind(&c.secret_type)
-    .bind(&c.secret)
+    .bind(secret_ciphertext)
+    .bind(secret_hash)
     .bind(&c.source_job_id)
     .bind(if c.validated { 1_i64 } else { 0 })
     .bind(valid_on_json)

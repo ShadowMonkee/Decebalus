@@ -13,6 +13,50 @@ use decebalus_backend::services::{DisplayService, JobExecutor, Orchestrator};
 use decebalus_backend::state::AppState;
 use decebalus_backend::{api, db, settings};
 
+/// Web UI baked into the binary at compile time (`--features embed-ui`, built via
+/// `scripts/build.sh`) instead of served from a `dist/` folder on disk.
+#[cfg(feature = "embed-ui")]
+mod embedded_ui {
+    use axum::http::{header, StatusCode, Uri};
+    use axum::response::{IntoResponse, Response};
+    use rust_embed::RustEmbed;
+
+    #[derive(RustEmbed)]
+    #[folder = "../decebalus-frontend/dist"]
+    struct Assets;
+
+    /// Serve an embedded asset by request path; unknown paths (SPA client routes)
+    /// fall back to `index.html`, mirroring the on-disk `ServeDir` behavior.
+    pub async fn serve(uri: Uri) -> Response {
+        let path = uri.path().trim_start_matches('/');
+        if let Some(file) = Assets::get(path) {
+            let mime = mime_guess::from_path(path).first_or_octet_stream();
+            return ([(header::CONTENT_TYPE, mime.as_ref().to_string())], file.data.into_owned()).into_response();
+        }
+        match Assets::get("index.html") {
+            Some(file) => ([(header::CONTENT_TYPE, "text/html")], file.data.into_owned()).into_response(),
+            None => (
+                StatusCode::NOT_FOUND,
+                "web UI not embedded — dist/ was empty at compile time; rebuild with scripts/build.sh",
+            )
+                .into_response(),
+        }
+    }
+
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+
+        // Doesn't boot the server (which would spin up the autonomous scanning
+        // loop) — just confirms the built `dist/` was actually baked into this
+        // binary at compile time via `--features embed-ui`.
+        #[test]
+        fn dist_output_is_embedded() {
+            assert!(Assets::get("index.html").is_some(), "run scripts/build.sh so dist/ exists before compiling");
+        }
+    }
+}
+
 async fn shutdown_signal() {
     tokio::signal::ctrl_c()
         .await
@@ -28,6 +72,46 @@ async fn main() {
     if std::env::args().nth(1).as_deref() == Some("doctor") {
         decebalus_backend::doctor::print_report();
         return;
+    }
+
+    // `decebalus-backend loot decrypt <path>` → decrypt a loot file to stdout.
+    // Loot lives under `<LOOT_DIR>/<engagement-id-or-"global">/<file>`, so the
+    // engagement (and thus which derived key to use) is read straight off the path.
+    if std::env::args().nth(1).as_deref() == Some("loot") {
+        let sub = std::env::args().nth(2);
+        let path = std::env::args().nth(3);
+        let (Some("decrypt"), Some(path)) = (sub.as_deref(), path.as_deref()) else {
+            eprintln!("usage: decebalus-backend loot decrypt <path>");
+            std::process::exit(1);
+        };
+        if let Err(e) = decebalus_backend::services::crypto::init(std::path::Path::new("data")) {
+            eprintln!("crypto init failed: {}", e);
+            std::process::exit(1);
+        }
+        let eng_dir = std::path::Path::new(path)
+            .parent()
+            .and_then(|p| p.file_name())
+            .and_then(|n| n.to_str())
+            .unwrap_or("global");
+        let engagement_id = if eng_dir == "global" { "" } else { eng_dir };
+        let raw = match std::fs::read(path) {
+            Ok(r) => r,
+            Err(e) => {
+                eprintln!("cannot read {}: {}", path, e);
+                std::process::exit(1);
+            }
+        };
+        match decebalus_backend::services::crypto::decrypt(engagement_id, &raw) {
+            Ok(plain) => {
+                use std::io::Write;
+                std::io::stdout().write_all(&plain).expect("stdout write failed");
+                return;
+            }
+            Err(e) => {
+                eprintln!("decrypt failed: {}", e);
+                std::process::exit(1);
+            }
+        }
     }
 
     // Tracing with a reload handle so the Settings UI can change log level at runtime.
@@ -54,6 +138,11 @@ async fn main() {
         .unwrap_or_else(|_| "sqlite:data/decebalus.db".to_string());
 
     std::fs::create_dir_all("data").expect("Failed to create data directory");
+
+    // Load (or generate) the master key before anything touches the credential
+    // store or loot, so every encrypt/decrypt call downstream sees the real key.
+    decebalus_backend::services::crypto::init(std::path::Path::new("data"))
+        .expect("Failed to initialize secrets-at-rest master key");
 
     let db_pool = db::init_pool(&database_url)
         .await
@@ -91,11 +180,6 @@ async fn main() {
 
     // Handle unfinished jobs in case of previously closed app without finalising all jobs:
     JobExecutor::resume_incomplete_jobs(state.clone()).await;
-
-    // Directory of the built web UI (Vite `dist`). Served as a fallback so one
-    // process hosts both API and UI; override with FRONTEND_DIR.
-    let frontend_dir = std::env::var("FRONTEND_DIR")
-        .unwrap_or_else(|_| "../decebalus-frontend/dist".to_string());
 
     let app = Router::new()
         // Job routes
@@ -136,14 +220,25 @@ async fn main() {
         .route("/api/engagements/{id}/activate", post(api::engagements::activate_engagement))
         .route("/api/credentials", get(api::engagements::list_credentials))
         // WebSocket route
-        .route("/ws", get(api::websocket::ws_handler))
-        // Serve the built web UI (if present) so a single process hosts everything.
-        // Deep links fall back to index.html for the SPA router. In dev, run Vite
-        // instead and this simply 404s.
-        .fallback_service(
+        .route("/ws", get(api::websocket::ws_handler));
+
+    // Serve the web UI so one process hosts both API and UI. Deep links fall back
+    // to index.html for the SPA router. `embed-ui` bakes the UI into the binary
+    // (built via scripts/build.sh); otherwise it's served from disk (dev default —
+    // point FRONTEND_DIR at a `npm run build` output, or run Vite separately).
+    #[cfg(feature = "embed-ui")]
+    let app = app.fallback(embedded_ui::serve);
+    #[cfg(not(feature = "embed-ui"))]
+    let app = {
+        let frontend_dir = std::env::var("FRONTEND_DIR")
+            .unwrap_or_else(|_| "../decebalus-frontend/dist".to_string());
+        app.fallback_service(
             tower_http::services::ServeDir::new(&frontend_dir)
                 .not_found_service(tower_http::services::ServeFile::new(format!("{frontend_dir}/index.html"))),
         )
+    };
+
+    let app = app
         // Optional bearer-token gate (active only when DECEBALUS_TOKEN is set).
         .layer(axum::middleware::from_fn(api::auth::require_token))
         .with_state(state);

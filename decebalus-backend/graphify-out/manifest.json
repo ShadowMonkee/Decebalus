@@ -1,4 +1,12 @@
 {
+  "/Users/narcis/programming/Decebalus/decebalus-backend/build.rs": {
+    "mtime": 1785352933.370008,
+    "hash": "5d41b9bacaebc5c5d5e2a21fc67f0ecd"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/migrations/20240101000007_credential_encryption.sql": {
+    "mtime": 1785352147.9610949,
+    "hash": "2cd91c7c2b0185f1406fcbf4ee8e3f7a"
+  },
   "/Users/narcis/programming/Decebalus/decebalus-backend/migrations/20240101000004_host_events.sql": {
     "mtime": 1784911196.084986,
     "hash": "70ffb3e3ec0cac2f2263fe7beaf2549b"
@@ -35,6 +43,10 @@
     "mtime": 1784903858.1365964,
     "hash": "e658e2b1a157ef82d6f711ca44e98b46"
   },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/tests/loot_cli_tests.rs": {
+    "mtime": 1785352421.9030418,
+    "hash": "80e3245a47c94a874801bed0157cb3ba"
+  },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/lib.rs": {
     "mtime": 1785310827.5580227,
     "hash": "eb6db231f4955daa8ee3504f0fead7bd"
@@ -48,8 +60,8 @@
     "hash": "9502f7c91b28eb7d07fe4392efe77498"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/main.rs": {
-    "mtime": 1785311133.007674,
-    "hash": "40e0bd85204ea791ea26f578e5a67369"
+    "mtime": 1785353118.6922116,
+    "hash": "f9a6a27ff41fb56b9beeb9fa61c61bd5"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/settings.rs": {
     "mtime": 1785310006.8812501,
@@ -132,8 +144,8 @@
     "hash": "de95b636cff991fca8eb8750d286cb3d"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/db/repository.rs": {
-    "mtime": 1785310112.4732394,
-    "hash": "c1f9b0c3bc1eaf8989a29f1637e6f4ed"
+    "mtime": 1785352177.807202,
+    "hash": "94c929919e4c0a7883acfea2f625cec7"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/api/hosts.rs": {
     "mtime": 1784902409.846268,
@@ -220,8 +232,8 @@
     "hash": "2de65ead507c5f1ca667d2879865a989"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/mod.rs": {
-    "mtime": 1785310256.9724865,
-    "hash": "d6a5729cd6e5bade0d68ec50b8ed9470"
+    "mtime": 1785352048.0867295,
+    "hash": "5d4b8e240f0d02b0ee40176151c7816b"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/port_scanner.rs": {
     "mtime": 1784932141.9560895,
@@ -230,6 +242,10 @@
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/orchestrator.rs": {
     "mtime": 1785310282.4816136,
     "hash": "f963436aa48ad59cf50340b3c0499401"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/crypto.rs": {
+    "mtime": 1785352249.8049984,
+    "hash": "fc8c53e352cde0be5fd44c0cf5175f62"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/display/epaper.rs": {
     "mtime": 1784910084.0244358,
@@ -248,8 +264,8 @@
     "hash": "e70abcf475ec6a17d26c750d95a3c72b"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/attacks/ad_kerberoast.rs": {
-    "mtime": 1785228246.2454479,
-    "hash": "0adbcc92c3bab51941d608a5fe881960"
+    "mtime": 1785352197.271526,
+    "hash": "ba194a2e2963f17fcc326207ec2d6e3a"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/attacks/ad_null_session.rs": {
     "mtime": 1785227883.9145734,
@@ -280,8 +296,8 @@
     "hash": "c78f8742bdb08a8430897122580adfaf"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/attacks/nxc_common.rs": {
-    "mtime": 1785310273.0355449,
-    "hash": "c3c935c583799b310315b00db9b3c04c"
+    "mtime": 1785352189.6417067,
+    "hash": "48170bb73d290d9974bf788930928c4a"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/attacks/ssh_brute.rs": {
     "mtime": 1776835572.0,
@@ -300,16 +316,16 @@
     "hash": "1c7f373f65903ad300d19924763b02db"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/attacks/file_steal.rs": {
-    "mtime": 1776835578.0,
-    "hash": "cd25bd4b53161c53b4d86a00e43a4dd7"
+    "mtime": 1785352223.995529,
+    "hash": "8b29b6518e0baa61d44f014d7eddb6c7"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/attacks/ad_asrep.rs": {
-    "mtime": 1785228263.32113,
-    "hash": "d01eb4dd38b87873ef8030854cd7ff74"
+    "mtime": 1785352203.2841473,
+    "hash": "a8388fb1677a1a6fb8a508e145766895"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/attacks/ad_relay_recon.rs": {
-    "mtime": 1785228319.120521,
-    "hash": "646f02e1962b657bea9d110a4ce0ba2e"
+    "mtime": 1785352212.2782757,
+    "hash": "3e209ab4db3133fa12296168297cd269"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/attacks/ad_cred_validate.rs": {
     "mtime": 1785228128.6848102,

@@ -12,8 +12,8 @@
     "hash": "6754eb730810f7dd7273f4aea2c86474"
   },
   "/Users/narcis/programming/Decebalus/decebalus-frontend/src/App.svelte": {
-    "mtime": 1775119000.0,
-    "hash": "9d4bde9994ada0bc0e2fdd40ea4e6371"
+    "mtime": 1785310501.4517052,
+    "hash": "ddbd4e669e82feff7025f1da9c22f32f"
   },
   "/Users/narcis/programming/Decebalus/decebalus-frontend/src/vite-env.d.ts": {
     "mtime": 1773991502.0,
@@ -24,24 +24,36 @@
     "hash": "aa0d28b62cc817833c6a1528486ec99c"
   },
   "/Users/narcis/programming/Decebalus/decebalus-frontend/src/lib/api.ts": {
-    "mtime": 1784905930.417913,
-    "hash": "67bd5a665295da774d0bbca72cef872f"
+    "mtime": 1785310400.7912605,
+    "hash": "8cd835d9751779d796f9e702ce062299"
   },
   "/Users/narcis/programming/Decebalus/decebalus-frontend/src/lib/stores/websocket.ts": {
     "mtime": 1773991502.0,
     "hash": "96a6341034e501edaae304d3a5acfc9b"
   },
   "/Users/narcis/programming/Decebalus/decebalus-frontend/src/lib/stores/websocketStore.ts": {
-    "mtime": 1773991502.0,
-    "hash": "5a6e5ec288fd4290e04d6f0a6518be32"
+    "mtime": 1785310327.3884928,
+    "hash": "4875d67b21ea747555e4d8e51c163a0f"
   },
   "/Users/narcis/programming/Decebalus/decebalus-frontend/src/lib/components/Navbar.svelte": {
-    "mtime": 1784905965.283865,
-    "hash": "f52b16aebf124579011cf53954489601"
+    "mtime": 1785310505.2299283,
+    "hash": "59ae6f788c6fc7e7bab01dd39282bf9c"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-frontend/src/lib/pages/Engagements.svelte": {
+    "mtime": 1785310524.6348293,
+    "hash": "14466b027d2fd1e63c476c37c3f37a6c"
   },
   "/Users/narcis/programming/Decebalus/decebalus-frontend/src/lib/pages/VulnDb.svelte": {
     "mtime": 1775119332.0,
     "hash": "65e6cd7b226573b9aaa83e932b4d4835"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-frontend/src/lib/pages/WarTable.svelte": {
+    "mtime": 1785310522.9429097,
+    "hash": "0db8eb198b7debeaa8672514522602ca"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-frontend/src/lib/pages/History.svelte": {
+    "mtime": 1784911360.2441316,
+    "hash": "974a0f0a91e3c5fd9470aa8f656fee24"
   },
   "/Users/narcis/programming/Decebalus/decebalus-frontend/src/lib/pages/Logs.svelte": {
     "mtime": 1775115318.0,
@@ -64,40 +76,68 @@
     "hash": "08f7d136aaa902d4f7bd32b8aff31bd2"
   },
   "/Users/narcis/programming/Decebalus/decebalus-frontend/src/lib/pages/Dashboard.svelte": {
-    "mtime": 1776223330.0,
-    "hash": "8a01666cb419045463f7688fded61534"
+    "mtime": 1784923016.5495858,
+    "hash": "4fbf9d19c2e5577774e9dbdfefdd71e0"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/migrations/20240101000004_host_events.sql": {
+    "mtime": 1784911196.084986,
+    "hash": "70ffb3e3ec0cac2f2263fe7beaf2549b"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/migrations/20240101000001_initial_schema.sql": {
     "mtime": 1773991502.0,
     "hash": "3bed4952cc57058df09117841f99f551"
   },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/migrations/20240101000005_drop_vulnerabilities.sql": {
+    "mtime": 1784932411.435465,
+    "hash": "36b72ed904563d9c89b5cb462771c7e9"
+  },
   "/Users/narcis/programming/Decebalus/decebalus-backend/migrations/20240101000003_cve_details.sql": {
     "mtime": 1775117790.0,
     "hash": "bc1061d668d83a615ebdb926c6ad7bf1"
   },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/migrations/20240101000006_engagement_foundations.sql": {
+    "mtime": 1785227265.647433,
+    "hash": "6703f646be82539f305f3728c894ce50"
+  },
   "/Users/narcis/programming/Decebalus/decebalus-backend/migrations/20240101000002_hosts_add_columns.sql": {
     "mtime": 1773991502.0,
     "hash": "0357578eab638c17bc89efa5fa29f877"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/tests/rule_engine_tests.rs": {
+    "mtime": 1785310973.047422,
+    "hash": "b86cd192f28646abd1a6628b8c8598ce"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/tests/repository_tests.rs": {
+    "mtime": 1785227481.6538427,
+    "hash": "8d401d55cb753f8aeefddf4a4713a041"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/tests/job_executor_tests.rs": {
     "mtime": 1784903858.1365964,
     "hash": "e658e2b1a157ef82d6f711ca44e98b46"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/lib.rs": {
-    "mtime": 1784903463.9155447,
-    "hash": "0535f3be0572ce612eee767dbb33b2ac"
+    "mtime": 1785310827.5580227,
+    "hash": "eb6db231f4955daa8ee3504f0fead7bd"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/src/doctor.rs": {
+    "mtime": 1785310823.5245981,
+    "hash": "57231d283e1e0e34f4bf194f4137f022"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/state.rs": {
     "mtime": 1784903852.8669817,
     "hash": "9502f7c91b28eb7d07fe4392efe77498"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/main.rs": {
-    "mtime": 1784905917.6228795,
-    "hash": "18b307b454daebe3dc47c2724a4fcf35"
+    "mtime": 1785311133.007674,
+    "hash": "40e0bd85204ea791ea26f578e5a67369"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/settings.rs": {
-    "mtime": 1784903420.2707183,
-    "hash": "c9dbcc21cc898843a4245145be09405d"
+    "mtime": 1785310006.8812501,
+    "hash": "da4cb5ce955a9e51eeeda84281c997c7"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/src/bin/tui.rs": {
+    "mtime": 1785311090.5588238,
+    "hash": "a450134aceef8e834159b23af84d2f77"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/models/cve_detail.rs": {
     "mtime": 1775117814.0,
@@ -115,6 +155,10 @@
     "mtime": 1773991502.0,
     "hash": "b6017196842cf240cec14551eab76bfd"
   },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/src/models/fact.rs": {
+    "mtime": 1785227285.302037,
+    "hash": "cdc60bafe97a10fcc0f1789da480b5fb"
+  },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/models/config.rs": {
     "mtime": 1773991502.0,
     "hash": "f3984b313ffb4f32fec6fe7b43bf60d0"
@@ -122,6 +166,10 @@
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/models/log.rs": {
     "mtime": 1773991502.0,
     "hash": "b2e0045236e53667e452d8623aeef157"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/src/models/finding.rs": {
+    "mtime": 1785227292.40337,
+    "hash": "9ec16f2e904aadc084cfbb00c3ca0c12"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/models/port.rs": {
     "mtime": 1773991502.0,
@@ -132,12 +180,16 @@
     "hash": "2e9dc8eca29d9feff06c99ce33503a33"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/models/mod.rs": {
-    "mtime": 1775117834.0,
-    "hash": "7bf6bf73d1128b57a3816cdb282ef32d"
+    "mtime": 1785227300.333957,
+    "hash": "d9e0d772b076552027f3cc462c05d3f9"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/models/jobpriority.rs": {
     "mtime": 1773991502.0,
     "hash": "e8d8d953ca1d538157f20005689e899b"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/src/models/engagement.rs": {
+    "mtime": 1785227273.8113654,
+    "hash": "5da2ab17709d68141be09513ea88684b"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/models/status.rs": {
     "mtime": 1773991502.0,
@@ -146,6 +198,10 @@
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/models/vulnerability.rs": {
     "mtime": 1773991502.0,
     "hash": "85494032980d1e0e2de3e24b281097e0"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/src/models/host_event.rs": {
+    "mtime": 1784911201.4029582,
+    "hash": "591c076c14a32171de4976285c5601c6"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/models/create_job_request.rs": {
     "mtime": 1776833628.0,
@@ -156,12 +212,16 @@
     "hash": "de95b636cff991fca8eb8750d286cb3d"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/db/repository.rs": {
-    "mtime": 1784904569.836178,
-    "hash": "7f3b1078b8bb61cd9b94d4f450bc0840"
+    "mtime": 1785310112.4732394,
+    "hash": "c1f9b0c3bc1eaf8989a29f1637e6f4ed"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/api/hosts.rs": {
     "mtime": 1784902409.846268,
     "hash": "8ef601ea5b7fb2875bc733cc61ccc28c"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/src/api/engagements.rs": {
+    "mtime": 1785310134.500652,
+    "hash": "edb1cc7faa73e964fd05448106370117"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/api/display.rs": {
     "mtime": 1773991502.0,
@@ -175,13 +235,25 @@
     "mtime": 1775116482.0,
     "hash": "b43f7d0292e8b62f2dc80ec2ecdde5dc"
   },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/src/api/auth.rs": {
+    "mtime": 1785310847.9708107,
+    "hash": "d7e6533d12985bb0621a4cc2559ccbfb"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/src/api/findings.rs": {
+    "mtime": 1785228711.6344585,
+    "hash": "b6c30d97e88f345f4686cd460fbd08ee"
+  },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/api/cve.rs": {
     "mtime": 1775119370.0,
     "hash": "d6798f8329f100a2259a81143ab47c24"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/api/mod.rs": {
-    "mtime": 1784905912.4365652,
-    "hash": "4948092cb04aac7a52ec0f83f4e28f27"
+    "mtime": 1785310852.2250056,
+    "hash": "2e1205fe5e18f67b2bca1ba67c920104"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/src/api/history.rs": {
+    "mtime": 1784911325.5197213,
+    "hash": "b9133b830eb3cc8825aef4c839b86858"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/api/websocket.rs": {
     "mtime": 1773991502.0,
@@ -192,60 +264,144 @@
     "hash": "f7e19515a65a14d376d9cf6b3d9eecba"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/api/jobs.rs": {
-    "mtime": 1784906207.5608213,
-    "hash": "98d358a1e7bc5f2245606620027209a6"
+    "mtime": 1785227629.051752,
+    "hash": "ec10297ee79afd29796d2725f320b7c2"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/api/logs.rs": {
     "mtime": 1773991502.0,
     "hash": "6ffbcb647c9cf17b2a92d899fbbc10ed"
   },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/rules.rs": {
+    "mtime": 1785309841.3480203,
+    "hash": "9db547c4d6c532be2eb678341a3af63f"
+  },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/job_executor.rs": {
-    "mtime": 1784905889.856055,
-    "hash": "0a96559099e456188481fe4c9ba81858"
+    "mtime": 1785310939.1160245,
+    "hash": "125ef69fd6c4f2ad0b2ea4343dbc36cb"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/events.rs": {
+    "mtime": 1785310253.0722127,
+    "hash": "3ebd10f07a79efb9c67cdf1712f3d541"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/scanner.rs": {
-    "mtime": 1784903736.1137536,
-    "hash": "4363f36cb48b4fbbc8da8e0b79c0e366"
+    "mtime": 1784932390.2460651,
+    "hash": "167fa9bcd9786c4ccf83da403e8fab84"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/cve_enrichment.rs": {
-    "mtime": 1784903583.7018962,
-    "hash": "de611a715d57d50bf72f949d81315e55"
+    "mtime": 1784932175.8313203,
+    "hash": "3122ed538a1685143e8b5012df2c44b4"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/report.rs": {
+    "mtime": 1785310928.928787,
+    "hash": "ddab24d629ceb3f8f323c15f511560c2"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/scope.rs": {
+    "mtime": 1785310072.03144,
+    "hash": "2de65ead507c5f1ca667d2879865a989"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/mod.rs": {
-    "mtime": 1775118042.0,
-    "hash": "af3562f3591738e298fe0d36ef0d388c"
+    "mtime": 1785310256.9724865,
+    "hash": "d6a5729cd6e5bade0d68ec50b8ed9470"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/port_scanner.rs": {
-    "mtime": 1784904496.3867137,
-    "hash": "e794fdf646ea21dd996f9a953503760e"
+    "mtime": 1784932141.9560895,
+    "hash": "bcac1f3bffe26e0d1deab055df4aea2c"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/orchestrator.rs": {
+    "mtime": 1785310282.4816136,
+    "hash": "f963436aa48ad59cf50340b3c0499401"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/display/epaper.rs": {
+    "mtime": 1784910084.0244358,
+    "hash": "b6408045a5f897af06ea96257e1ad80a"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/display/mod.rs": {
+    "mtime": 1784909901.4801989,
+    "hash": "cde75f68a69005600b50a1cd7eed521e"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/display/mock.rs": {
+    "mtime": 1784909908.5707066,
+    "hash": "c7d63e6abbe6a0718079d98d6b85897e"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/attacks/rdp_brute.rs": {
     "mtime": 1784906173.654991,
     "hash": "e70abcf475ec6a17d26c750d95a3c72b"
   },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/attacks/ad_kerberoast.rs": {
+    "mtime": 1785228246.2454479,
+    "hash": "0adbcc92c3bab51941d608a5fe881960"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/attacks/ad_null_session.rs": {
+    "mtime": 1785227883.9145734,
+    "hash": "2999acddac801201d76a6b8db8b08a07"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/attacks/ad_smb_enum.rs": {
+    "mtime": 1785228010.1694646,
+    "hash": "7bed0022699c5e1c690170396d9c7251"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/attacks/ad_spray.rs": {
+    "mtime": 1785310163.9034836,
+    "hash": "70ad4c785c73373e389f5cdfddc66ef8"
+  },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/attacks/smb_brute.rs": {
     "mtime": 1784906134.2679935,
     "hash": "50571915d5710df40501348a3981cb15"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/attacks/ad_share_hunt.rs": {
+    "mtime": 1785227936.7682571,
+    "hash": "16536d2974157011087b4e1c2bbe5a14"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/attacks/ad_adcs.rs": {
+    "mtime": 1785228289.1201117,
+    "hash": "c6b4b9494779e3cfaf36325c5be10b71"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/attacks/ad_bloodhound.rs": {
+    "mtime": 1785228338.3297272,
+    "hash": "c78f8742bdb08a8430897122580adfaf"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/attacks/nxc_common.rs": {
+    "mtime": 1785310273.0355449,
+    "hash": "c3c935c583799b310315b00db9b3c04c"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/attacks/ssh_brute.rs": {
     "mtime": 1776835572.0,
     "hash": "9066452a6a7d2a7d7ba37c8204204b56"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/attacks/ftp_brute.rs": {
-    "mtime": 1776833692.0,
-    "hash": "8bedd7b1c38033146d96689258abcd58"
+    "mtime": 1784932385.5360844,
+    "hash": "972711f331491ba757df9ccf05e54fa3"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/attacks/mod.rs": {
-    "mtime": 1784906195.0372622,
-    "hash": "b13ebfdeb3fd3e2e1bb38047cb808fe3"
+    "mtime": 1785228389.6620383,
+    "hash": "c978b1d5c836cc95f4bf854dd556e12e"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/attacks/ad_password_policy.rs": {
+    "mtime": 1785227910.805425,
+    "hash": "1c7f373f65903ad300d19924763b02db"
   },
   "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/attacks/file_steal.rs": {
     "mtime": 1776835578.0,
     "hash": "cd25bd4b53161c53b4d86a00e43a4dd7"
   },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/attacks/ad_asrep.rs": {
+    "mtime": 1785228263.32113,
+    "hash": "d01eb4dd38b87873ef8030854cd7ff74"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/attacks/ad_relay_recon.rs": {
+    "mtime": 1785228319.120521,
+    "hash": "646f02e1962b657bea9d110a4ce0ba2e"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/src/services/attacks/ad_cred_validate.rs": {
+    "mtime": 1785228128.6848102,
+    "hash": "056169f4e8c6ef63433c44a81181cecf"
+  },
   "/Users/narcis/programming/Decebalus/README.md": {
-    "mtime": 1779727504.8489757,
-    "hash": "b7329edfe0bf578f9738094cbe217ef1"
+    "mtime": 1785311055.8145921,
+    "hash": "7a85f52c280cdbbcdbcaa9b936e3b037"
+  },
+  "/Users/narcis/programming/Decebalus/docs/PLAYBOOK.md": {
+    "mtime": 1785311237.7064226,
+    "hash": "8a20fb561aaf8fba9329db6a1d51cb06"
   },
   "/Users/narcis/programming/Decebalus/decebalus-frontend/index.html": {
     "mtime": 1773991502.0,
@@ -254,6 +410,14 @@
   "/Users/narcis/programming/Decebalus/decebalus-frontend/README.md": {
     "mtime": 1773991502.0,
     "hash": "7e716596ef7ced023d32b5bfed731694"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-frontend/CLAUDE.md": {
+    "mtime": 1785312336.4358795,
+    "hash": "1b1a42cbea5d7571617e341fbdd77d04"
+  },
+  "/Users/narcis/programming/Decebalus/decebalus-backend/CLAUDE.md": {
+    "mtime": 1785312324.1762516,
+    "hash": "63c733fa95e82a246e5f61bb2d4eb9f9"
   },
   "/Users/narcis/programming/Decebalus/decebalus-frontend/public/vite.svg": {
     "mtime": 1773991502.0,

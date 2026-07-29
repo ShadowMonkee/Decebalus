@@ -4,12 +4,30 @@
   "graph": {},
   "nodes": [
     {
+      "label": "build.rs",
+      "file_type": "code",
+      "source_file": "build.rs",
+      "source_location": "L1",
+      "id": "build_rs",
+      "community": 47,
+      "norm_label": "build.rs"
+    },
+    {
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "build.rs",
+      "source_location": "L6",
+      "id": "decebalus_backend_build_main",
+      "community": 47,
+      "norm_label": "main()"
+    },
+    {
       "label": "rule_engine_tests.rs",
       "file_type": "code",
       "source_file": "tests/rule_engine_tests.rs",
       "source_location": "L1",
       "id": "tests_rule_engine_tests_rs",
-      "community": 5,
+      "community": 7,
       "norm_label": "rule_engine_tests.rs"
     },
     {
@@ -18,7 +36,7 @@
       "source_file": "tests/rule_engine_tests.rs",
       "source_location": "L13",
       "id": "tests_rule_engine_tests_test_state",
-      "community": 5,
+      "community": 7,
       "norm_label": "test_state()"
     },
     {
@@ -27,7 +45,7 @@
       "source_file": "tests/rule_engine_tests.rs",
       "source_location": "L24",
       "id": "tests_rule_engine_tests_smb_host",
-      "community": 5,
+      "community": 7,
       "norm_label": "smb_host()"
     },
     {
@@ -36,7 +54,7 @@
       "source_file": "tests/rule_engine_tests.rs",
       "source_location": "L32",
       "id": "tests_rule_engine_tests_rule_engine_persists_ranked_findings_from_facts",
-      "community": 5,
+      "community": 7,
       "norm_label": "rule_engine_persists_ranked_findings_from_facts()"
     },
     {
@@ -45,7 +63,7 @@
       "source_file": "tests/rule_engine_tests.rs",
       "source_location": "L62",
       "id": "tests_rule_engine_tests_rule_engine_is_idempotent_across_passes",
-      "community": 5,
+      "community": 7,
       "norm_label": "rule_engine_is_idempotent_across_passes()"
     },
     {
@@ -54,7 +72,7 @@
       "source_file": "tests/repository_tests.rs",
       "source_location": "L1",
       "id": "tests_repository_tests_rs",
-      "community": 0,
+      "community": 1,
       "norm_label": "repository_tests.rs"
     },
     {
@@ -63,7 +81,7 @@
       "source_file": "tests/repository_tests.rs",
       "source_location": "L9",
       "id": "tests_repository_tests_mem_pool",
-      "community": 0,
+      "community": 1,
       "norm_label": "mem_pool()"
     },
     {
@@ -72,7 +90,7 @@
       "source_file": "tests/repository_tests.rs",
       "source_location": "L22",
       "id": "tests_repository_tests_open_port",
-      "community": 0,
+      "community": 1,
       "norm_label": "open_port()"
     },
     {
@@ -81,7 +99,7 @@
       "source_file": "tests/repository_tests.rs",
       "source_location": "L34",
       "id": "tests_repository_tests_config_round_trips_through_key_value_store",
-      "community": 0,
+      "community": 1,
       "norm_label": "config_round_trips_through_key_value_store()"
     },
     {
@@ -90,7 +108,7 @@
       "source_file": "tests/repository_tests.rs",
       "source_location": "L53",
       "id": "tests_repository_tests_change_detection_records_expected_events",
-      "community": 0,
+      "community": 1,
       "norm_label": "change_detection_records_expected_events()"
     },
     {
@@ -99,7 +117,7 @@
       "source_file": "tests/repository_tests.rs",
       "source_location": "L91",
       "id": "tests_repository_tests_re_upserting_unchanged_host_produces_no_duplicate_events",
-      "community": 0,
+      "community": 1,
       "norm_label": "re_upserting_unchanged_host_produces_no_duplicate_events()"
     },
     {
@@ -108,7 +126,7 @@
       "source_file": "tests/repository_tests.rs",
       "source_location": "L113",
       "id": "tests_repository_tests_engagement_create_get_and_active_selection",
-      "community": 0,
+      "community": 1,
       "norm_label": "engagement_create_get_and_active_selection()"
     },
     {
@@ -117,7 +135,7 @@
       "source_file": "tests/repository_tests.rs",
       "source_location": "L136",
       "id": "tests_repository_tests_credential_upsert_upgrades_validation",
-      "community": 0,
+      "community": 1,
       "norm_label": "credential_upsert_upgrades_validation()"
     },
     {
@@ -126,7 +144,7 @@
       "source_file": "tests/repository_tests.rs",
       "source_location": "L159",
       "id": "tests_repository_tests_fact_upsert_dedups_and_latest_value_wins",
-      "community": 0,
+      "community": 1,
       "norm_label": "fact_upsert_dedups_and_latest_value_wins()"
     },
     {
@@ -135,7 +153,7 @@
       "source_file": "tests/repository_tests.rs",
       "source_location": "L174",
       "id": "tests_repository_tests_finding_upsert_dedups_and_respects_dismissed",
-      "community": 0,
+      "community": 1,
       "norm_label": "finding_upsert_dedups_and_respects_dismissed()"
     },
     {
@@ -144,7 +162,7 @@
       "source_file": "tests/job_executor_tests.rs",
       "source_location": "L1",
       "id": "tests_job_executor_tests_rs",
-      "community": 6,
+      "community": 9,
       "norm_label": "job_executor_tests.rs"
     },
     {
@@ -153,7 +171,7 @@
       "source_file": "tests/job_executor_tests.rs",
       "source_location": "L12",
       "id": "tests_job_executor_tests_test_state",
-      "community": 6,
+      "community": 9,
       "norm_label": "test_state()"
     },
     {
@@ -162,7 +180,7 @@
       "source_file": "tests/job_executor_tests.rs",
       "source_location": "L36",
       "id": "tests_job_executor_tests_scenario_job_executor_runs_discovery_successfully",
-      "community": 6,
+      "community": 9,
       "norm_label": "scenario_job_executor_runs_discovery_successfully()"
     },
     {
@@ -171,7 +189,7 @@
       "source_file": "tests/job_executor_tests.rs",
       "source_location": "L56",
       "id": "tests_job_executor_tests_scenario_run_queue_spawns_jobs",
-      "community": 6,
+      "community": 9,
       "norm_label": "scenario_run_queue_spawns_jobs()"
     },
     {
@@ -180,8 +198,26 @@
       "source_file": "tests/job_executor_tests.rs",
       "source_location": "L85",
       "id": "tests_job_executor_tests_scenario_resume_incomplete_jobs_requeues_and_runs",
-      "community": 6,
+      "community": 9,
       "norm_label": "scenario_resume_incomplete_jobs_requeues_and_runs()"
+    },
+    {
+      "label": "loot_cli_tests.rs",
+      "file_type": "code",
+      "source_file": "tests/loot_cli_tests.rs",
+      "source_location": "L1",
+      "id": "tests_loot_cli_tests_rs",
+      "community": 6,
+      "norm_label": "loot_cli_tests.rs"
+    },
+    {
+      "label": "loot_decrypt_cli_round_trips_and_rejects_wrong_key()",
+      "file_type": "code",
+      "source_file": "tests/loot_cli_tests.rs",
+      "source_location": "L12",
+      "id": "tests_loot_cli_tests_loot_decrypt_cli_round_trips_and_rejects_wrong_key",
+      "community": 6,
+      "norm_label": "loot_decrypt_cli_round_trips_and_rejects_wrong_key()"
     },
     {
       "label": "lib.rs",
@@ -189,7 +225,7 @@
       "source_file": "src/lib.rs",
       "source_location": "L1",
       "id": "src_lib_rs",
-      "community": 66,
+      "community": 55,
       "norm_label": "lib.rs"
     },
     {
@@ -198,7 +234,7 @@
       "source_file": "src/doctor.rs",
       "source_location": "L1",
       "id": "src_doctor_rs",
-      "community": 28,
+      "community": 2,
       "norm_label": "doctor.rs"
     },
     {
@@ -207,7 +243,7 @@
       "source_file": "src/doctor.rs",
       "source_location": "L8",
       "id": "src_doctor_toolstatus",
-      "community": 28,
+      "community": 2,
       "norm_label": "toolstatus"
     },
     {
@@ -216,7 +252,7 @@
       "source_file": "src/doctor.rs",
       "source_location": "L16",
       "id": "src_doctor_check_tools",
-      "community": 28,
+      "community": 2,
       "norm_label": "check_tools()"
     },
     {
@@ -225,7 +261,7 @@
       "source_file": "src/doctor.rs",
       "source_location": "L40",
       "id": "src_doctor_on_path",
-      "community": 28,
+      "community": 2,
       "norm_label": "on_path()"
     },
     {
@@ -234,7 +270,7 @@
       "source_file": "src/doctor.rs",
       "source_location": "L50",
       "id": "src_doctor_print_report",
-      "community": 28,
+      "community": 2,
       "norm_label": "print_report()"
     },
     {
@@ -243,7 +279,7 @@
       "source_file": "src/doctor.rs",
       "source_location": "L76",
       "id": "src_doctor_check_tools_covers_the_core_stack",
-      "community": 28,
+      "community": 2,
       "norm_label": "check_tools_covers_the_core_stack()"
     },
     {
@@ -252,7 +288,7 @@
       "source_file": "src/state.rs",
       "source_location": "L1",
       "id": "src_state_rs",
-      "community": 5,
+      "community": 7,
       "norm_label": "state.rs"
     },
     {
@@ -261,7 +297,7 @@
       "source_file": "src/state.rs",
       "source_location": "L7",
       "id": "src_state_appstate",
-      "community": 5,
+      "community": 7,
       "norm_label": "appstate"
     },
     {
@@ -270,7 +306,7 @@
       "source_file": "src/state.rs",
       "source_location": "L22",
       "id": "src_state_appstate_new",
-      "community": 5,
+      "community": 7,
       "norm_label": ".new()"
     },
     {
@@ -279,25 +315,52 @@
       "source_file": "src/main.rs",
       "source_location": "L1",
       "id": "src_main_rs",
-      "community": 3,
+      "community": 2,
       "norm_label": "main.rs"
+    },
+    {
+      "label": "Assets",
+      "file_type": "code",
+      "source_file": "src/main.rs",
+      "source_location": "L26",
+      "id": "src_main_assets",
+      "community": 2,
+      "norm_label": "assets"
+    },
+    {
+      "label": "serve()",
+      "file_type": "code",
+      "source_file": "src/main.rs",
+      "source_location": "L30",
+      "id": "src_main_serve",
+      "community": 2,
+      "norm_label": "serve()"
+    },
+    {
+      "label": "dist_output_is_embedded()",
+      "file_type": "code",
+      "source_file": "src/main.rs",
+      "source_location": "L54",
+      "id": "src_main_dist_output_is_embedded",
+      "community": 2,
+      "norm_label": "dist_output_is_embedded()"
     },
     {
       "label": "shutdown_signal()",
       "file_type": "code",
       "source_file": "src/main.rs",
-      "source_location": "L16",
+      "source_location": "L60",
       "id": "src_main_shutdown_signal",
-      "community": 3,
+      "community": 2,
       "norm_label": "shutdown_signal()"
     },
     {
       "label": "main()",
       "file_type": "code",
       "source_file": "src/main.rs",
-      "source_location": "L24",
+      "source_location": "L68",
       "id": "src_main_main",
-      "community": 3,
+      "community": 2,
       "norm_label": "main()"
     },
     {
@@ -306,7 +369,7 @@
       "source_file": "src/settings.rs",
       "source_location": "L1",
       "id": "src_settings_rs",
-      "community": 3,
+      "community": 2,
       "norm_label": "settings.rs"
     },
     {
@@ -315,7 +378,7 @@
       "source_file": "src/settings.rs",
       "source_location": "L19",
       "id": "src_settings_default_fallback_ports",
-      "community": 3,
+      "community": 2,
       "norm_label": "default_fallback_ports()"
     },
     {
@@ -324,7 +387,7 @@
       "source_file": "src/settings.rs",
       "source_location": "L36",
       "id": "src_settings_settings",
-      "community": 3,
+      "community": 2,
       "norm_label": "settings"
     },
     {
@@ -333,7 +396,7 @@
       "source_file": "src/settings.rs",
       "source_location": "L62",
       "id": "src_settings_settings_default",
-      "community": 3,
+      "community": 2,
       "norm_label": ".default()"
     },
     {
@@ -342,7 +405,7 @@
       "source_file": "src/settings.rs",
       "source_location": "L86",
       "id": "src_settings_settings_load",
-      "community": 3,
+      "community": 2,
       "norm_label": ".load()"
     },
     {
@@ -351,7 +414,7 @@
       "source_file": "src/settings.rs",
       "source_location": "L95",
       "id": "src_settings_settings_from_stored",
-      "community": 3,
+      "community": 2,
       "norm_label": ".from_stored()"
     },
     {
@@ -360,7 +423,7 @@
       "source_file": "src/settings.rs",
       "source_location": "L168",
       "id": "src_settings_init",
-      "community": 3,
+      "community": 2,
       "norm_label": "init()"
     },
     {
@@ -369,7 +432,7 @@
       "source_file": "src/settings.rs",
       "source_location": "L182",
       "id": "src_settings_current",
-      "community": 5,
+      "community": 7,
       "norm_label": "current()"
     },
     {
@@ -378,7 +441,7 @@
       "source_file": "src/settings.rs",
       "source_location": "L190",
       "id": "src_settings_reload",
-      "community": 3,
+      "community": 2,
       "norm_label": "reload()"
     },
     {
@@ -387,7 +450,7 @@
       "source_file": "src/settings.rs",
       "source_location": "L204",
       "id": "src_settings_register_log_setter",
-      "community": 3,
+      "community": 2,
       "norm_label": "register_log_setter()"
     },
     {
@@ -396,7 +459,7 @@
       "source_file": "src/settings.rs",
       "source_location": "L209",
       "id": "src_settings_set_log_level",
-      "community": 3,
+      "community": 2,
       "norm_label": "set_log_level()"
     },
     {
@@ -405,7 +468,7 @@
       "source_file": "src/settings.rs",
       "source_location": "L219",
       "id": "src_settings_stored_str",
-      "community": 3,
+      "community": 2,
       "norm_label": "stored_str()"
     },
     {
@@ -414,7 +477,7 @@
       "source_file": "src/settings.rs",
       "source_location": "L228",
       "id": "src_settings_get_usize",
-      "community": 3,
+      "community": 2,
       "norm_label": "get_usize()"
     },
     {
@@ -423,7 +486,7 @@
       "source_file": "src/settings.rs",
       "source_location": "L235",
       "id": "src_settings_get_u64",
-      "community": 3,
+      "community": 2,
       "norm_label": "get_u64()"
     },
     {
@@ -432,7 +495,7 @@
       "source_file": "src/settings.rs",
       "source_location": "L242",
       "id": "src_settings_get_i64",
-      "community": 3,
+      "community": 2,
       "norm_label": "get_i64()"
     },
     {
@@ -441,7 +504,7 @@
       "source_file": "src/settings.rs",
       "source_location": "L249",
       "id": "src_settings_get_bool",
-      "community": 3,
+      "community": 2,
       "norm_label": "get_bool()"
     },
     {
@@ -450,7 +513,7 @@
       "source_file": "src/settings.rs",
       "source_location": "L261",
       "id": "src_settings_get_string",
-      "community": 3,
+      "community": 2,
       "norm_label": "get_string()"
     },
     {
@@ -459,7 +522,7 @@
       "source_file": "src/settings.rs",
       "source_location": "L268",
       "id": "src_settings_get_opt_string",
-      "community": 3,
+      "community": 2,
       "norm_label": "get_opt_string()"
     },
     {
@@ -468,7 +531,7 @@
       "source_file": "src/settings.rs",
       "source_location": "L275",
       "id": "src_settings_get_ports",
-      "community": 3,
+      "community": 2,
       "norm_label": "get_ports()"
     },
     {
@@ -477,7 +540,7 @@
       "source_file": "src/settings.rs",
       "source_location": "L302",
       "id": "src_settings_from_stored_overrides_defaults_and_coerces_types",
-      "community": 3,
+      "community": 2,
       "norm_label": "from_stored_overrides_defaults_and_coerces_types()"
     },
     {
@@ -486,7 +549,7 @@
       "source_file": "src/settings.rs",
       "source_location": "L321",
       "id": "src_settings_from_stored_falls_back_to_defaults_when_absent",
-      "community": 3,
+      "community": 2,
       "norm_label": "from_stored_falls_back_to_defaults_when_absent()"
     },
     {
@@ -495,7 +558,7 @@
       "source_file": "src/bin/tui.rs",
       "source_location": "L1",
       "id": "src_bin_tui_rs",
-      "community": 7,
+      "community": 10,
       "norm_label": "tui.rs"
     },
     {
@@ -504,7 +567,7 @@
       "source_file": "src/bin/tui.rs",
       "source_location": "L24",
       "id": "bin_tui_finding",
-      "community": 7,
+      "community": 10,
       "norm_label": "finding"
     },
     {
@@ -513,7 +576,7 @@
       "source_file": "src/bin/tui.rs",
       "source_location": "L39",
       "id": "bin_tui_portlite",
-      "community": 7,
+      "community": 10,
       "norm_label": "portlite"
     },
     {
@@ -522,7 +585,7 @@
       "source_file": "src/bin/tui.rs",
       "source_location": "L44",
       "id": "bin_tui_host",
-      "community": 7,
+      "community": 10,
       "norm_label": "host"
     },
     {
@@ -531,7 +594,7 @@
       "source_file": "src/bin/tui.rs",
       "source_location": "L53",
       "id": "bin_tui_app",
-      "community": 7,
+      "community": 10,
       "norm_label": "app"
     },
     {
@@ -540,7 +603,7 @@
       "source_file": "src/bin/tui.rs",
       "source_location": "L64",
       "id": "bin_tui_app_new",
-      "community": 7,
+      "community": 10,
       "norm_label": ".new()"
     },
     {
@@ -549,7 +612,7 @@
       "source_file": "src/bin/tui.rs",
       "source_location": "L79",
       "id": "bin_tui_app_get",
-      "community": 7,
+      "community": 10,
       "norm_label": ".get()"
     },
     {
@@ -558,7 +621,7 @@
       "source_file": "src/bin/tui.rs",
       "source_location": "L85",
       "id": "bin_tui_app_post",
-      "community": 7,
+      "community": 10,
       "norm_label": ".post()"
     },
     {
@@ -567,7 +630,7 @@
       "source_file": "src/bin/tui.rs",
       "source_location": "L90",
       "id": "bin_tui_app_refresh",
-      "community": 7,
+      "community": 10,
       "norm_label": ".refresh()"
     },
     {
@@ -576,7 +639,7 @@
       "source_file": "src/bin/tui.rs",
       "source_location": "L108",
       "id": "bin_tui_app_selected",
-      "community": 7,
+      "community": 10,
       "norm_label": ".selected()"
     },
     {
@@ -585,7 +648,7 @@
       "source_file": "src/bin/tui.rs",
       "source_location": "L112",
       "id": "bin_tui_app_next",
-      "community": 7,
+      "community": 10,
       "norm_label": ".next()"
     },
     {
@@ -594,7 +657,7 @@
       "source_file": "src/bin/tui.rs",
       "source_location": "L120",
       "id": "bin_tui_app_prev",
-      "community": 7,
+      "community": 10,
       "norm_label": ".prev()"
     },
     {
@@ -603,7 +666,7 @@
       "source_file": "src/bin/tui.rs",
       "source_location": "L132",
       "id": "bin_tui_app_run_engine",
-      "community": 7,
+      "community": 10,
       "norm_label": ".run_engine()"
     },
     {
@@ -612,7 +675,7 @@
       "source_file": "src/bin/tui.rs",
       "source_location": "L138",
       "id": "bin_tui_app_run_selected",
-      "community": 7,
+      "community": 10,
       "norm_label": ".run_selected()"
     },
     {
@@ -621,7 +684,7 @@
       "source_file": "src/bin/tui.rs",
       "source_location": "L149",
       "id": "bin_tui_app_dismiss_selected",
-      "community": 7,
+      "community": 10,
       "norm_label": ".dismiss_selected()"
     },
     {
@@ -630,7 +693,7 @@
       "source_file": "src/bin/tui.rs",
       "source_location": "L156",
       "id": "bin_tui_sev_color",
-      "community": 7,
+      "community": 10,
       "norm_label": "sev_color()"
     },
     {
@@ -639,7 +702,7 @@
       "source_file": "src/bin/tui.rs",
       "source_location": "L166",
       "id": "bin_tui_ui",
-      "community": 7,
+      "community": 10,
       "norm_label": "ui()"
     },
     {
@@ -648,7 +711,7 @@
       "source_file": "src/bin/tui.rs",
       "source_location": "L256",
       "id": "bin_tui_main",
-      "community": 7,
+      "community": 10,
       "norm_label": "main()"
     },
     {
@@ -657,7 +720,7 @@
       "source_file": "src/models/cve_detail.rs",
       "source_location": "L1",
       "id": "src_models_cve_detail_rs",
-      "community": 59,
+      "community": 48,
       "norm_label": "cve_detail.rs"
     },
     {
@@ -666,7 +729,7 @@
       "source_file": "src/models/cve_detail.rs",
       "source_location": "L5",
       "id": "models_cve_detail_cvedetail",
-      "community": 59,
+      "community": 48,
       "norm_label": "cvedetail"
     },
     {
@@ -675,7 +738,7 @@
       "source_file": "src/models/display.rs",
       "source_location": "L1",
       "id": "src_models_display_rs",
-      "community": 19,
+      "community": 17,
       "norm_label": "display.rs"
     },
     {
@@ -684,7 +747,7 @@
       "source_file": "src/models/display.rs",
       "source_location": "L4",
       "id": "models_display_displaystatus",
-      "community": 19,
+      "community": 17,
       "norm_label": "displaystatus"
     },
     {
@@ -693,7 +756,7 @@
       "source_file": "src/models/display.rs",
       "source_location": "L10",
       "id": "models_display_displaystatus_new",
-      "community": 19,
+      "community": 17,
       "norm_label": ".new()"
     },
     {
@@ -702,7 +765,7 @@
       "source_file": "src/models/display.rs",
       "source_location": "L17",
       "id": "models_display_displaystatus_update",
-      "community": 19,
+      "community": 17,
       "norm_label": ".update()"
     },
     {
@@ -711,7 +774,7 @@
       "source_file": "src/models/display.rs",
       "source_location": "L24",
       "id": "models_display_displaystatus_default",
-      "community": 19,
+      "community": 17,
       "norm_label": ".default()"
     },
     {
@@ -720,7 +783,7 @@
       "source_file": "src/models/display.rs",
       "source_location": "L35",
       "id": "models_display_new_initializes_correctly",
-      "community": 19,
+      "community": 17,
       "norm_label": "new_initializes_correctly()"
     },
     {
@@ -729,7 +792,7 @@
       "source_file": "src/models/display.rs",
       "source_location": "L43",
       "id": "models_display_update_changes_status_and_timestamp",
-      "community": 19,
+      "community": 17,
       "norm_label": "update_changes_status_and_timestamp()"
     },
     {
@@ -738,7 +801,7 @@
       "source_file": "src/models/display.rs",
       "source_location": "L58",
       "id": "models_display_update_multiple_times",
-      "community": 19,
+      "community": 17,
       "norm_label": "update_multiple_times()"
     },
     {
@@ -747,7 +810,7 @@
       "source_file": "src/models/display.rs",
       "source_location": "L74",
       "id": "models_display_default_matches_new",
-      "community": 19,
+      "community": 17,
       "norm_label": "default_matches_new()"
     },
     {
@@ -756,7 +819,7 @@
       "source_file": "src/models/job.rs",
       "source_location": "L1",
       "id": "src_models_job_rs",
-      "community": 11,
+      "community": 12,
       "norm_label": "job.rs"
     },
     {
@@ -765,7 +828,7 @@
       "source_file": "src/models/job.rs",
       "source_location": "L8",
       "id": "models_job_job",
-      "community": 11,
+      "community": 12,
       "norm_label": "job"
     },
     {
@@ -774,7 +837,7 @@
       "source_file": "src/models/job.rs",
       "source_location": "L20",
       "id": "models_job_job_new",
-      "community": 11,
+      "community": 12,
       "norm_label": ".new()"
     },
     {
@@ -783,7 +846,7 @@
       "source_file": "src/models/job.rs",
       "source_location": "L33",
       "id": "models_job_job_is_running",
-      "community": 11,
+      "community": 12,
       "norm_label": ".is_running()"
     },
     {
@@ -792,7 +855,7 @@
       "source_file": "src/models/job.rs",
       "source_location": "L37",
       "id": "models_job_job_is_completed",
-      "community": 11,
+      "community": 12,
       "norm_label": ".is_completed()"
     },
     {
@@ -801,7 +864,7 @@
       "source_file": "src/models/job.rs",
       "source_location": "L41",
       "id": "models_job_job_is_cancelled",
-      "community": 11,
+      "community": 12,
       "norm_label": ".is_cancelled()"
     },
     {
@@ -810,7 +873,7 @@
       "source_file": "src/models/job.rs",
       "source_location": "L45",
       "id": "models_job_job_is_queued",
-      "community": 11,
+      "community": 12,
       "norm_label": ".is_queued()"
     },
     {
@@ -819,7 +882,7 @@
       "source_file": "src/models/job.rs",
       "source_location": "L49",
       "id": "models_job_job_is_scheduled",
-      "community": 11,
+      "community": 12,
       "norm_label": ".is_scheduled()"
     },
     {
@@ -828,7 +891,7 @@
       "source_file": "src/models/job.rs",
       "source_location": "L53",
       "id": "models_job_job_target",
-      "community": 11,
+      "community": 12,
       "norm_label": ".target()"
     },
     {
@@ -837,7 +900,7 @@
       "source_file": "src/models/job.rs",
       "source_location": "L68",
       "id": "models_job_new_initializes_correctly",
-      "community": 11,
+      "community": 12,
       "norm_label": "new_initializes_correctly()"
     },
     {
@@ -846,7 +909,7 @@
       "source_file": "src/models/job.rs",
       "source_location": "L83",
       "id": "models_job_uuid_is_unique",
-      "community": 11,
+      "community": 12,
       "norm_label": "uuid_is_unique()"
     },
     {
@@ -855,7 +918,7 @@
       "source_file": "src/models/job.rs",
       "source_location": "L91",
       "id": "models_job_status_checks_work",
-      "community": 11,
+      "community": 12,
       "norm_label": "status_checks_work()"
     },
     {
@@ -864,7 +927,7 @@
       "source_file": "src/models/job.rs",
       "source_location": "L119",
       "id": "models_job_results_can_be_stored",
-      "community": 11,
+      "community": 12,
       "norm_label": "results_can_be_stored()"
     },
     {
@@ -873,7 +936,7 @@
       "source_file": "src/models/host.rs",
       "source_location": "L1",
       "id": "src_models_host_rs",
-      "community": 10,
+      "community": 11,
       "norm_label": "host.rs"
     },
     {
@@ -882,7 +945,7 @@
       "source_file": "src/models/host.rs",
       "source_location": "L6",
       "id": "models_host_host",
-      "community": 10,
+      "community": 11,
       "norm_label": "host"
     },
     {
@@ -891,7 +954,7 @@
       "source_file": "src/models/host.rs",
       "source_location": "L23",
       "id": "models_host_default_first_seen",
-      "community": 10,
+      "community": 11,
       "norm_label": "default_first_seen()"
     },
     {
@@ -900,7 +963,7 @@
       "source_file": "src/models/host.rs",
       "source_location": "L28",
       "id": "models_host_host_new",
-      "community": 10,
+      "community": 11,
       "norm_label": ".new()"
     },
     {
@@ -909,7 +972,7 @@
       "source_file": "src/models/host.rs",
       "source_location": "L48",
       "id": "models_host_host_add_port",
-      "community": 10,
+      "community": 11,
       "norm_label": ".add_port()"
     },
     {
@@ -918,7 +981,7 @@
       "source_file": "src/models/host.rs",
       "source_location": "L86",
       "id": "models_host_host_add_banner",
-      "community": 10,
+      "community": 11,
       "norm_label": ".add_banner()"
     },
     {
@@ -927,7 +990,7 @@
       "source_file": "src/models/host.rs",
       "source_location": "L92",
       "id": "models_host_host_update_last_seen",
-      "community": 10,
+      "community": 11,
       "norm_label": ".update_last_seen()"
     },
     {
@@ -936,7 +999,7 @@
       "source_file": "src/models/host.rs",
       "source_location": "L98",
       "id": "models_host_host_default",
-      "community": 10,
+      "community": 11,
       "norm_label": ".default()"
     },
     {
@@ -945,7 +1008,7 @@
       "source_file": "src/models/host.rs",
       "source_location": "L110",
       "id": "models_host_host_new_initializes_correctly",
-      "community": 10,
+      "community": 11,
       "norm_label": "host_new_initializes_correctly()"
     },
     {
@@ -954,7 +1017,7 @@
       "source_file": "src/models/host.rs",
       "source_location": "L126",
       "id": "models_host_add_port_adds_new_port",
-      "community": 10,
+      "community": 11,
       "norm_label": "add_port_adds_new_port()"
     },
     {
@@ -963,7 +1026,7 @@
       "source_file": "src/models/host.rs",
       "source_location": "L139",
       "id": "models_host_add_port_updates_existing_port",
-      "community": 10,
+      "community": 11,
       "norm_label": "add_port_updates_existing_port()"
     },
     {
@@ -972,7 +1035,7 @@
       "source_file": "src/models/host.rs",
       "source_location": "L150",
       "id": "models_host_add_port_sorts_ports",
-      "community": 10,
+      "community": 11,
       "norm_label": "add_port_sorts_ports()"
     },
     {
@@ -981,7 +1044,7 @@
       "source_file": "src/models/host.rs",
       "source_location": "L162",
       "id": "models_host_add_banner_adds_only_once",
-      "community": 10,
+      "community": 11,
       "norm_label": "add_banner_adds_only_once()"
     },
     {
@@ -990,7 +1053,7 @@
       "source_file": "src/models/host.rs",
       "source_location": "L173",
       "id": "models_host_update_last_seen_changes_timestamp",
-      "community": 10,
+      "community": 11,
       "norm_label": "update_last_seen_changes_timestamp()"
     },
     {
@@ -999,7 +1062,7 @@
       "source_file": "src/models/host.rs",
       "source_location": "L185",
       "id": "models_host_default_uses_correct_ip",
-      "community": 10,
+      "community": 11,
       "norm_label": "default_uses_correct_ip()"
     },
     {
@@ -1008,7 +1071,7 @@
       "source_file": "src/models/fact.rs",
       "source_location": "L1",
       "id": "src_models_fact_rs",
-      "community": 38,
+      "community": 26,
       "norm_label": "fact.rs"
     },
     {
@@ -1017,7 +1080,7 @@
       "source_file": "src/models/fact.rs",
       "source_location": "L7",
       "id": "models_fact_fact",
-      "community": 38,
+      "community": 26,
       "norm_label": "fact"
     },
     {
@@ -1026,7 +1089,7 @@
       "source_file": "src/models/fact.rs",
       "source_location": "L24",
       "id": "models_fact_fact_new",
-      "community": 38,
+      "community": 26,
       "norm_label": ".new()"
     },
     {
@@ -1143,7 +1206,7 @@
       "source_file": "src/models/log.rs",
       "source_location": "L1",
       "id": "src_models_log_rs",
-      "community": 27,
+      "community": 19,
       "norm_label": "log.rs"
     },
     {
@@ -1152,7 +1215,7 @@
       "source_file": "src/models/log.rs",
       "source_location": "L4",
       "id": "models_log_log",
-      "community": 27,
+      "community": 19,
       "norm_label": "log"
     },
     {
@@ -1161,7 +1224,7 @@
       "source_file": "src/models/log.rs",
       "source_location": "L15",
       "id": "models_log_log_new",
-      "community": 27,
+      "community": 19,
       "norm_label": ".new()"
     },
     {
@@ -1170,7 +1233,7 @@
       "source_file": "src/models/log.rs",
       "source_location": "L34",
       "id": "models_log_new_initializes_correctly",
-      "community": 27,
+      "community": 19,
       "norm_label": "new_initializes_correctly()"
     },
     {
@@ -1179,7 +1242,7 @@
       "source_file": "src/models/log.rs",
       "source_location": "L55",
       "id": "models_log_optional_fields_can_be_none",
-      "community": 27,
+      "community": 19,
       "norm_label": "optional_fields_can_be_none()"
     },
     {
@@ -1188,7 +1251,7 @@
       "source_file": "src/models/log.rs",
       "source_location": "L71",
       "id": "models_log_log_can_serialize_and_deserialize",
-      "community": 27,
+      "community": 19,
       "norm_label": "log_can_serialize_and_deserialize()"
     },
     {
@@ -1197,7 +1260,7 @@
       "source_file": "src/models/finding.rs",
       "source_location": "L1",
       "id": "src_models_finding_rs",
-      "community": 39,
+      "community": 27,
       "norm_label": "finding.rs"
     },
     {
@@ -1206,7 +1269,7 @@
       "source_file": "src/models/finding.rs",
       "source_location": "L9",
       "id": "models_finding_finding",
-      "community": 39,
+      "community": 27,
       "norm_label": "finding"
     },
     {
@@ -1215,7 +1278,7 @@
       "source_file": "src/models/finding.rs",
       "source_location": "L37",
       "id": "models_finding_finding_new",
-      "community": 39,
+      "community": 27,
       "norm_label": ".new()"
     },
     {
@@ -1224,7 +1287,7 @@
       "source_file": "src/models/port.rs",
       "source_location": "L1",
       "id": "src_models_port_rs",
-      "community": 60,
+      "community": 49,
       "norm_label": "port.rs"
     },
     {
@@ -1233,7 +1296,7 @@
       "source_file": "src/models/port.rs",
       "source_location": "L4",
       "id": "models_port_port",
-      "community": 60,
+      "community": 49,
       "norm_label": "port"
     },
     {
@@ -1242,7 +1305,7 @@
       "source_file": "src/models/service.rs",
       "source_location": "L1",
       "id": "src_models_service_rs",
-      "community": 61,
+      "community": 50,
       "norm_label": "service.rs"
     },
     {
@@ -1251,7 +1314,7 @@
       "source_file": "src/models/service.rs",
       "source_location": "L4",
       "id": "models_service_service",
-      "community": 61,
+      "community": 50,
       "norm_label": "service"
     },
     {
@@ -1260,7 +1323,7 @@
       "source_file": "src/models/mod.rs",
       "source_location": "L1",
       "id": "src_models_mod_rs",
-      "community": 67,
+      "community": 56,
       "norm_label": "mod.rs"
     },
     {
@@ -1269,7 +1332,7 @@
       "source_file": "src/models/jobpriority.rs",
       "source_location": "L1",
       "id": "src_models_jobpriority_rs",
-      "community": 62,
+      "community": 51,
       "norm_label": "jobpriority.rs"
     },
     {
@@ -1278,7 +1341,7 @@
       "source_file": "src/models/jobpriority.rs",
       "source_location": "L4",
       "id": "models_jobpriority_jobpriority",
-      "community": 62,
+      "community": 51,
       "norm_label": "jobpriority"
     },
     {
@@ -1287,7 +1350,7 @@
       "source_file": "src/models/engagement.rs",
       "source_location": "L1",
       "id": "src_models_engagement_rs",
-      "community": 40,
+      "community": 28,
       "norm_label": "engagement.rs"
     },
     {
@@ -1296,7 +1359,7 @@
       "source_file": "src/models/engagement.rs",
       "source_location": "L9",
       "id": "models_engagement_engagement",
-      "community": 40,
+      "community": 28,
       "norm_label": "engagement"
     },
     {
@@ -1305,7 +1368,7 @@
       "source_file": "src/models/engagement.rs",
       "source_location": "L22",
       "id": "models_engagement_engagement_new",
-      "community": 40,
+      "community": 28,
       "norm_label": ".new()"
     },
     {
@@ -1314,7 +1377,7 @@
       "source_file": "src/models/status.rs",
       "source_location": "L1",
       "id": "src_models_status_rs",
-      "community": 41,
+      "community": 29,
       "norm_label": "status.rs"
     },
     {
@@ -1323,7 +1386,7 @@
       "source_file": "src/models/status.rs",
       "source_location": "L4",
       "id": "models_status_hoststatus",
-      "community": 41,
+      "community": 29,
       "norm_label": "hoststatus"
     },
     {
@@ -1332,7 +1395,7 @@
       "source_file": "src/models/status.rs",
       "source_location": "L11",
       "id": "models_status_hoststatus_fmt",
-      "community": 41,
+      "community": 29,
       "norm_label": ".fmt()"
     },
     {
@@ -1341,7 +1404,7 @@
       "source_file": "src/models/vulnerability.rs",
       "source_location": "L1",
       "id": "src_models_vulnerability_rs",
-      "community": 63,
+      "community": 52,
       "norm_label": "vulnerability.rs"
     },
     {
@@ -1350,7 +1413,7 @@
       "source_file": "src/models/vulnerability.rs",
       "source_location": "L4",
       "id": "models_vulnerability_vulnerability",
-      "community": 63,
+      "community": 52,
       "norm_label": "vulnerability"
     },
     {
@@ -1359,7 +1422,7 @@
       "source_file": "src/models/host_event.rs",
       "source_location": "L1",
       "id": "src_models_host_event_rs",
-      "community": 64,
+      "community": 53,
       "norm_label": "host_event.rs"
     },
     {
@@ -1368,7 +1431,7 @@
       "source_file": "src/models/host_event.rs",
       "source_location": "L5",
       "id": "models_host_event_hostevent",
-      "community": 64,
+      "community": 53,
       "norm_label": "hostevent"
     },
     {
@@ -1377,7 +1440,7 @@
       "source_file": "src/models/create_job_request.rs",
       "source_location": "L1",
       "id": "src_models_create_job_request_rs",
-      "community": 42,
+      "community": 30,
       "norm_label": "create_job_request.rs"
     },
     {
@@ -1386,7 +1449,7 @@
       "source_file": "src/models/create_job_request.rs",
       "source_location": "L4",
       "id": "models_create_job_request_createjobrequest",
-      "community": 42,
+      "community": 30,
       "norm_label": "createjobrequest"
     },
     {
@@ -1395,7 +1458,7 @@
       "source_file": "src/models/create_job_request.rs",
       "source_location": "L18",
       "id": "models_create_job_request_default_job_type",
-      "community": 42,
+      "community": 30,
       "norm_label": "default_job_type()"
     },
     {
@@ -1404,7 +1467,7 @@
       "source_file": "src/db/mod.rs",
       "source_location": "L1",
       "id": "src_db_mod_rs",
-      "community": 3,
+      "community": 2,
       "norm_label": "mod.rs"
     },
     {
@@ -1413,7 +1476,7 @@
       "source_file": "src/db/mod.rs",
       "source_location": "L12",
       "id": "db_mod_init_pool",
-      "community": 3,
+      "community": 2,
       "norm_label": "init_pool()"
     },
     {
@@ -1422,428 +1485,428 @@
       "source_file": "src/db/repository.rs",
       "source_location": "L1",
       "id": "src_db_repository_rs",
-      "community": 4,
+      "community": 1,
       "norm_label": "repository.rs"
     },
     {
       "label": "create_job()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L8",
+      "source_location": "L9",
       "id": "db_repository_create_job",
-      "community": 4,
+      "community": 1,
       "norm_label": "create_job()"
     },
     {
       "label": "get_job()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L33",
+      "source_location": "L34",
       "id": "db_repository_get_job",
-      "community": 4,
+      "community": 1,
       "norm_label": "get_job()"
     },
     {
       "label": "list_jobs()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L45",
+      "source_location": "L46",
       "id": "db_repository_list_jobs",
-      "community": 4,
+      "community": 1,
       "norm_label": "list_jobs()"
     },
     {
       "label": "update_job_status()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L78",
+      "source_location": "L79",
       "id": "db_repository_update_job_status",
-      "community": 4,
+      "community": 1,
       "norm_label": "update_job_status()"
     },
     {
       "label": "get_running_jobs()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L94",
+      "source_location": "L95",
       "id": "db_repository_get_running_jobs",
-      "community": 4,
+      "community": 1,
       "norm_label": "get_running_jobs()"
     },
     {
       "label": "get_queued_jobs()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L102",
+      "source_location": "L103",
       "id": "db_repository_get_queued_jobs",
-      "community": 4,
+      "community": 1,
       "norm_label": "get_queued_jobs()"
     },
     {
       "label": "get_scheduled_jobs_due()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L110",
+      "source_location": "L111",
       "id": "db_repository_get_scheduled_jobs_due",
-      "community": 4,
+      "community": 1,
       "norm_label": "get_scheduled_jobs_due()"
     },
     {
       "label": "update_job_results()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L127",
+      "source_location": "L128",
       "id": "db_repository_update_job_results",
-      "community": 4,
+      "community": 1,
       "norm_label": "update_job_results()"
     },
     {
       "label": "from_row()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L143",
+      "source_location": "L144",
       "id": "db_repository_from_row",
-      "community": 4,
+      "community": 1,
       "norm_label": "from_row()"
     },
     {
       "label": "upsert_host()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L169",
+      "source_location": "L170",
       "id": "db_repository_upsert_host",
-      "community": 5,
+      "community": 7,
       "norm_label": "upsert_host()"
     },
     {
       "label": "get_host()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L218",
+      "source_location": "L219",
       "id": "db_repository_get_host",
-      "community": 4,
+      "community": 1,
       "norm_label": "get_host()"
     },
     {
       "label": "find_host_by_mac()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L230",
+      "source_location": "L231",
       "id": "db_repository_find_host_by_mac",
-      "community": 0,
+      "community": 4,
       "norm_label": "find_host_by_mac()"
     },
     {
       "label": "delete_host()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L242",
+      "source_location": "L243",
       "id": "db_repository_delete_host",
-      "community": 0,
+      "community": 4,
       "norm_label": "delete_host()"
     },
     {
       "label": "list_hosts()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L251",
+      "source_location": "L252",
       "id": "db_repository_list_hosts",
-      "community": 4,
+      "community": 1,
       "norm_label": "list_hosts()"
     },
     {
       "label": "host_from_row()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L265",
+      "source_location": "L266",
       "id": "db_repository_host_from_row",
-      "community": 4,
+      "community": 1,
       "norm_label": "host_from_row()"
     },
     {
       "label": "get_config()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L312",
+      "source_location": "L313",
       "id": "db_repository_get_config",
-      "community": 4,
+      "community": 1,
       "norm_label": "get_config()"
     },
     {
       "label": "update_config()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L334",
+      "source_location": "L335",
       "id": "db_repository_update_config",
-      "community": 4,
+      "community": 1,
       "norm_label": "update_config()"
     },
     {
       "label": "get_display_status()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L359",
+      "source_location": "L360",
       "id": "db_repository_get_display_status",
-      "community": 4,
+      "community": 1,
       "norm_label": "get_display_status()"
     },
     {
       "label": "update_display_status()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L373",
+      "source_location": "L374",
       "id": "db_repository_update_display_status",
-      "community": 5,
+      "community": 7,
       "norm_label": "update_display_status()"
     },
     {
       "label": "add_log()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L391",
+      "source_location": "L392",
       "id": "db_repository_add_log",
-      "community": 6,
+      "community": 9,
       "norm_label": "add_log()"
     },
     {
       "label": "get_logs()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L417",
+      "source_location": "L418",
       "id": "db_repository_get_logs",
-      "community": 36,
+      "community": 1,
       "norm_label": "get_logs()"
     },
     {
       "label": "get_logs_by_job_id()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L443",
+      "source_location": "L444",
       "id": "db_repository_get_logs_by_job_id",
-      "community": 4,
+      "community": 1,
       "norm_label": "get_logs_by_job_id()"
     },
     {
       "label": "cleanup_old_logs()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L471",
+      "source_location": "L472",
       "id": "db_repository_cleanup_old_logs",
-      "community": 3,
+      "community": 2,
       "norm_label": "cleanup_old_logs()"
     },
     {
       "label": "cve_from_row()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L489",
+      "source_location": "L490",
       "id": "db_repository_cve_from_row",
-      "community": 4,
+      "community": 1,
       "norm_label": "cve_from_row()"
     },
     {
       "label": "get_cve_detail()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L506",
+      "source_location": "L507",
       "id": "db_repository_get_cve_detail",
-      "community": 12,
+      "community": 14,
       "norm_label": "get_cve_detail()"
     },
     {
       "label": "upsert_cve_detail()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L519",
+      "source_location": "L520",
       "id": "db_repository_upsert_cve_detail",
-      "community": 12,
+      "community": 14,
       "norm_label": "upsert_cve_detail()"
     },
     {
       "label": "list_cve_details()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L551",
+      "source_location": "L552",
       "id": "db_repository_list_cve_details",
-      "community": 6,
+      "community": 9,
       "norm_label": "list_cve_details()"
     },
     {
       "label": "get_unenriched_cve_ids()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L563",
+      "source_location": "L564",
       "id": "db_repository_get_unenriched_cve_ids",
-      "community": 12,
+      "community": 14,
       "norm_label": "get_unenriched_cve_ids()"
     },
     {
       "label": "host_event_from_row()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L598",
+      "source_location": "L599",
       "id": "db_repository_host_event_from_row",
-      "community": 4,
+      "community": 1,
       "norm_label": "host_event_from_row()"
     },
     {
       "label": "add_host_event()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L610",
+      "source_location": "L611",
       "id": "db_repository_add_host_event",
-      "community": 4,
+      "community": 1,
       "norm_label": "add_host_event()"
     },
     {
       "label": "list_host_events()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L630",
+      "source_location": "L631",
       "id": "db_repository_list_host_events",
-      "community": 0,
+      "community": 1,
       "norm_label": "list_host_events()"
     },
     {
       "label": "upsert_host_tracked()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L643",
+      "source_location": "L644",
       "id": "db_repository_upsert_host_tracked",
-      "community": 0,
+      "community": 4,
       "norm_label": "upsert_host_tracked()"
     },
     {
       "label": "record_host_changes()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L649",
+      "source_location": "L650",
       "id": "db_repository_record_host_changes",
-      "community": 4,
+      "community": 1,
       "norm_label": "record_host_changes()"
     },
     {
       "label": "engagement_from_row()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L705",
+      "source_location": "L706",
       "id": "db_repository_engagement_from_row",
-      "community": 13,
+      "community": 1,
       "norm_label": "engagement_from_row()"
     },
     {
       "label": "create_engagement()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L723",
+      "source_location": "L724",
       "id": "db_repository_create_engagement",
-      "community": 4,
+      "community": 1,
       "norm_label": "create_engagement()"
     },
     {
       "label": "get_engagement()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L740",
+      "source_location": "L741",
       "id": "db_repository_get_engagement",
-      "community": 13,
+      "community": 1,
       "norm_label": "get_engagement()"
     },
     {
       "label": "list_engagements()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L751",
+      "source_location": "L752",
       "id": "db_repository_list_engagements",
-      "community": 4,
+      "community": 1,
       "norm_label": "list_engagements()"
     },
     {
       "label": "get_active_engagement()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L762",
+      "source_location": "L763",
       "id": "db_repository_get_active_engagement",
-      "community": 13,
+      "community": 1,
       "norm_label": "get_active_engagement()"
     },
     {
       "label": "set_engagement_status()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L772",
+      "source_location": "L773",
       "id": "db_repository_set_engagement_status",
-      "community": 0,
+      "community": 1,
       "norm_label": "set_engagement_status()"
     },
     {
       "label": "set_active_engagement()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L783",
+      "source_location": "L784",
       "id": "db_repository_set_active_engagement",
-      "community": 13,
+      "community": 1,
       "norm_label": "set_active_engagement()"
     },
     {
       "label": "credential_from_row()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L796",
+      "source_location": "L797",
       "id": "db_repository_credential_from_row",
-      "community": 4,
+      "community": 6,
       "norm_label": "credential_from_row()"
     },
     {
       "label": "add_credential()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L819",
+      "source_location": "L829",
       "id": "db_repository_add_credential",
-      "community": 22,
+      "community": 6,
       "norm_label": "add_credential()"
     },
     {
       "label": "list_credentials()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L849",
+      "source_location": "L862",
       "id": "db_repository_list_credentials",
-      "community": 4,
+      "community": 1,
       "norm_label": "list_credentials()"
     },
     {
       "label": "fact_from_row()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L862",
+      "source_location": "L875",
       "id": "db_repository_fact_from_row",
-      "community": 4,
+      "community": 1,
       "norm_label": "fact_from_row()"
     },
     {
       "label": "upsert_fact()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L882",
+      "source_location": "L895",
       "id": "db_repository_upsert_fact",
-      "community": 25,
+      "community": 0,
       "norm_label": "upsert_fact()"
     },
     {
       "label": "list_facts()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L905",
+      "source_location": "L918",
       "id": "db_repository_list_facts",
-      "community": 13,
+      "community": 8,
       "norm_label": "list_facts()"
     },
     {
       "label": "get_facts_for_subject()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L917",
+      "source_location": "L930",
       "id": "db_repository_get_facts_for_subject",
       "community": 16,
       "norm_label": "get_facts_for_subject()"
@@ -1852,45 +1915,45 @@
       "label": "finding_from_row()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L937",
+      "source_location": "L950",
       "id": "db_repository_finding_from_row",
-      "community": 20,
+      "community": 1,
       "norm_label": "finding_from_row()"
     },
     {
       "label": "upsert_finding()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L970",
+      "source_location": "L983",
       "id": "db_repository_upsert_finding",
-      "community": 9,
+      "community": 0,
       "norm_label": "upsert_finding()"
     },
     {
       "label": "list_findings()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L1013",
+      "source_location": "L1026",
       "id": "db_repository_list_findings",
-      "community": 4,
+      "community": 1,
       "norm_label": "list_findings()"
     },
     {
       "label": "get_finding()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L1026",
+      "source_location": "L1039",
       "id": "db_repository_get_finding",
-      "community": 20,
+      "community": 1,
       "norm_label": "get_finding()"
     },
     {
       "label": "update_finding_status()",
       "file_type": "code",
       "source_file": "src/db/repository.rs",
-      "source_location": "L1039",
+      "source_location": "L1052",
       "id": "db_repository_update_finding_status",
-      "community": 20,
+      "community": 1,
       "norm_label": "update_finding_status()"
     },
     {
@@ -1899,7 +1962,7 @@
       "source_file": "src/api/hosts.rs",
       "source_location": "L1",
       "id": "src_api_hosts_rs",
-      "community": 34,
+      "community": 23,
       "norm_label": "hosts.rs"
     },
     {
@@ -1908,7 +1971,7 @@
       "source_file": "src/api/hosts.rs",
       "source_location": "L14",
       "id": "api_hosts_cve_lookup",
-      "community": 34,
+      "community": 23,
       "norm_label": "cve_lookup()"
     },
     {
@@ -1917,7 +1980,7 @@
       "source_file": "src/api/hosts.rs",
       "source_location": "L26",
       "id": "api_hosts_enrich_host",
-      "community": 34,
+      "community": 23,
       "norm_label": "enrich_host()"
     },
     {
@@ -1926,7 +1989,7 @@
       "source_file": "src/api/hosts.rs",
       "source_location": "L52",
       "id": "api_hosts_list_hosts",
-      "community": 34,
+      "community": 23,
       "norm_label": "list_hosts()"
     },
     {
@@ -1935,7 +1998,7 @@
       "source_file": "src/api/hosts.rs",
       "source_location": "L70",
       "id": "api_hosts_get_host",
-      "community": 34,
+      "community": 23,
       "norm_label": "get_host()"
     },
     {
@@ -1944,7 +2007,7 @@
       "source_file": "src/api/engagements.rs",
       "source_location": "L1",
       "id": "src_api_engagements_rs",
-      "community": 13,
+      "community": 1,
       "norm_label": "engagements.rs"
     },
     {
@@ -1953,7 +2016,7 @@
       "source_file": "src/api/engagements.rs",
       "source_location": "L17",
       "id": "api_engagements_createengagementrequest",
-      "community": 13,
+      "community": 1,
       "norm_label": "createengagementrequest"
     },
     {
@@ -1962,7 +2025,7 @@
       "source_file": "src/api/engagements.rs",
       "source_location": "L30",
       "id": "api_engagements_create_engagement",
-      "community": 13,
+      "community": 1,
       "norm_label": "create_engagement()"
     },
     {
@@ -1971,7 +2034,7 @@
       "source_file": "src/api/engagements.rs",
       "source_location": "L72",
       "id": "api_engagements_list_engagements",
-      "community": 13,
+      "community": 1,
       "norm_label": "list_engagements()"
     },
     {
@@ -1980,7 +2043,7 @@
       "source_file": "src/api/engagements.rs",
       "source_location": "L84",
       "id": "api_engagements_active_engagement",
-      "community": 13,
+      "community": 1,
       "norm_label": "active_engagement()"
     },
     {
@@ -1989,7 +2052,7 @@
       "source_file": "src/api/engagements.rs",
       "source_location": "L96",
       "id": "api_engagements_activate_engagement",
-      "community": 13,
+      "community": 1,
       "norm_label": "activate_engagement()"
     },
     {
@@ -1998,7 +2061,7 @@
       "source_file": "src/api/engagements.rs",
       "source_location": "L119",
       "id": "api_engagements_list_credentials",
-      "community": 13,
+      "community": 1,
       "norm_label": "list_credentials()"
     },
     {
@@ -2007,7 +2070,7 @@
       "source_file": "src/api/display.rs",
       "source_location": "L1",
       "id": "src_api_display_rs",
-      "community": 5,
+      "community": 7,
       "norm_label": "display.rs"
     },
     {
@@ -2016,7 +2079,7 @@
       "source_file": "src/api/display.rs",
       "source_location": "L16",
       "id": "api_display_get_display_status",
-      "community": 5,
+      "community": 7,
       "norm_label": "get_display_status()"
     },
     {
@@ -2025,7 +2088,7 @@
       "source_file": "src/api/display.rs",
       "source_location": "L29",
       "id": "api_display_update_display",
-      "community": 5,
+      "community": 7,
       "norm_label": "update_display()"
     },
     {
@@ -2034,7 +2097,7 @@
       "source_file": "src/api/config.rs",
       "source_location": "L1",
       "id": "src_api_config_rs",
-      "community": 3,
+      "community": 2,
       "norm_label": "config.rs"
     },
     {
@@ -2043,7 +2106,7 @@
       "source_file": "src/api/config.rs",
       "source_location": "L16",
       "id": "api_config_get_config",
-      "community": 3,
+      "community": 2,
       "norm_label": "get_config()"
     },
     {
@@ -2052,7 +2115,7 @@
       "source_file": "src/api/config.rs",
       "source_location": "L36",
       "id": "api_config_update_config",
-      "community": 3,
+      "community": 2,
       "norm_label": "update_config()"
     },
     {
@@ -2061,7 +2124,7 @@
       "source_file": "src/api/exports.rs",
       "source_location": "L1",
       "id": "src_api_exports_rs",
-      "community": 37,
+      "community": 10,
       "norm_label": "exports.rs"
     },
     {
@@ -2070,7 +2133,7 @@
       "source_file": "src/api/exports.rs",
       "source_location": "L11",
       "id": "api_exports_export_dir",
-      "community": 37,
+      "community": 10,
       "norm_label": "export_dir()"
     },
     {
@@ -2079,7 +2142,7 @@
       "source_file": "src/api/exports.rs",
       "source_location": "L16",
       "id": "api_exports_list_exports",
-      "community": 37,
+      "community": 10,
       "norm_label": "list_exports()"
     },
     {
@@ -2088,7 +2151,7 @@
       "source_file": "src/api/exports.rs",
       "source_location": "L61",
       "id": "api_exports_download_export",
-      "community": 37,
+      "community": 10,
       "norm_label": "download_export()"
     },
     {
@@ -2097,7 +2160,7 @@
       "source_file": "src/api/auth.rs",
       "source_location": "L1",
       "id": "src_api_auth_rs",
-      "community": 65,
+      "community": 54,
       "norm_label": "auth.rs"
     },
     {
@@ -2106,7 +2169,7 @@
       "source_file": "src/api/auth.rs",
       "source_location": "L16",
       "id": "api_auth_require_token",
-      "community": 65,
+      "community": 54,
       "norm_label": "require_token()"
     },
     {
@@ -2115,7 +2178,7 @@
       "source_file": "src/api/findings.rs",
       "source_location": "L1",
       "id": "src_api_findings_rs",
-      "community": 20,
+      "community": 1,
       "norm_label": "findings.rs"
     },
     {
@@ -2124,7 +2187,7 @@
       "source_file": "src/api/findings.rs",
       "source_location": "L16",
       "id": "api_findings_active_engagement_id",
-      "community": 20,
+      "community": 1,
       "norm_label": "active_engagement_id()"
     },
     {
@@ -2133,7 +2196,7 @@
       "source_file": "src/api/findings.rs",
       "source_location": "L27",
       "id": "api_findings_list_findings",
-      "community": 20,
+      "community": 1,
       "norm_label": "list_findings()"
     },
     {
@@ -2142,7 +2205,7 @@
       "source_file": "src/api/findings.rs",
       "source_location": "L40",
       "id": "api_findings_run_finding",
-      "community": 20,
+      "community": 1,
       "norm_label": "run_finding()"
     },
     {
@@ -2151,7 +2214,7 @@
       "source_file": "src/api/findings.rs",
       "source_location": "L78",
       "id": "api_findings_dismiss_finding",
-      "community": 20,
+      "community": 1,
       "norm_label": "dismiss_finding()"
     },
     {
@@ -2160,7 +2223,7 @@
       "source_file": "src/api/findings.rs",
       "source_location": "L96",
       "id": "api_findings_run_engine",
-      "community": 20,
+      "community": 1,
       "norm_label": "run_engine()"
     },
     {
@@ -2169,7 +2232,7 @@
       "source_file": "src/api/cve.rs",
       "source_location": "L1",
       "id": "src_api_cve_rs",
-      "community": 6,
+      "community": 9,
       "norm_label": "cve.rs"
     },
     {
@@ -2178,7 +2241,7 @@
       "source_file": "src/api/cve.rs",
       "source_location": "L15",
       "id": "api_cve_list_cves",
-      "community": 6,
+      "community": 9,
       "norm_label": "list_cves()"
     },
     {
@@ -2187,7 +2250,7 @@
       "source_file": "src/api/cve.rs",
       "source_location": "L26",
       "id": "api_cve_get_cve",
-      "community": 6,
+      "community": 9,
       "norm_label": "get_cve()"
     },
     {
@@ -2196,7 +2259,7 @@
       "source_file": "src/api/cve.rs",
       "source_location": "L51",
       "id": "api_cve_sync_cves",
-      "community": 6,
+      "community": 9,
       "norm_label": "sync_cves()"
     },
     {
@@ -2205,7 +2268,7 @@
       "source_file": "src/api/mod.rs",
       "source_location": "L1",
       "id": "src_api_mod_rs",
-      "community": 68,
+      "community": 57,
       "norm_label": "mod.rs"
     },
     {
@@ -2214,7 +2277,7 @@
       "source_file": "src/api/history.rs",
       "source_location": "L1",
       "id": "src_api_history_rs",
-      "community": 0,
+      "community": 1,
       "norm_label": "history.rs"
     },
     {
@@ -2223,7 +2286,7 @@
       "source_file": "src/api/history.rs",
       "source_location": "L14",
       "id": "api_history_historyquery",
-      "community": 0,
+      "community": 1,
       "norm_label": "historyquery"
     },
     {
@@ -2232,7 +2295,7 @@
       "source_file": "src/api/history.rs",
       "source_location": "L20",
       "id": "api_history_list_history",
-      "community": 0,
+      "community": 1,
       "norm_label": "list_history()"
     },
     {
@@ -2241,7 +2304,7 @@
       "source_file": "src/api/websocket.rs",
       "source_location": "L1",
       "id": "src_api_websocket_rs",
-      "community": 43,
+      "community": 31,
       "norm_label": "websocket.rs"
     },
     {
@@ -2250,7 +2313,7 @@
       "source_file": "src/api/websocket.rs",
       "source_location": "L12",
       "id": "api_websocket_ws_handler",
-      "community": 43,
+      "community": 31,
       "norm_label": "ws_handler()"
     },
     {
@@ -2259,7 +2322,7 @@
       "source_file": "src/api/websocket.rs",
       "source_location": "L21",
       "id": "api_websocket_handle_socket",
-      "community": 43,
+      "community": 31,
       "norm_label": "handle_socket()"
     },
     {
@@ -2268,7 +2331,7 @@
       "source_file": "src/api/modules.rs",
       "source_location": "L1",
       "id": "src_api_modules_rs",
-      "community": 1,
+      "community": 3,
       "norm_label": "modules.rs"
     },
     {
@@ -2277,7 +2340,7 @@
       "source_file": "src/api/modules.rs",
       "source_location": "L6",
       "id": "api_modules_list_modules",
-      "community": 1,
+      "community": 3,
       "norm_label": "list_modules()"
     },
     {
@@ -2286,7 +2349,7 @@
       "source_file": "src/api/jobs.rs",
       "source_location": "L1",
       "id": "src_api_jobs_rs",
-      "community": 14,
+      "community": 13,
       "norm_label": "jobs.rs"
     },
     {
@@ -2295,7 +2358,7 @@
       "source_file": "src/api/jobs.rs",
       "source_location": "L17",
       "id": "api_jobs_create_job",
-      "community": 14,
+      "community": 13,
       "norm_label": "create_job()"
     },
     {
@@ -2304,7 +2367,7 @@
       "source_file": "src/api/jobs.rs",
       "source_location": "L49",
       "id": "api_jobs_schedule_job",
-      "community": 14,
+      "community": 13,
       "norm_label": "schedule_job()"
     },
     {
@@ -2313,7 +2376,7 @@
       "source_file": "src/api/jobs.rs",
       "source_location": "L80",
       "id": "api_jobs_list_jobs",
-      "community": 14,
+      "community": 13,
       "norm_label": "list_jobs()"
     },
     {
@@ -2322,7 +2385,7 @@
       "source_file": "src/api/jobs.rs",
       "source_location": "L94",
       "id": "api_jobs_get_job",
-      "community": 14,
+      "community": 13,
       "norm_label": "get_job()"
     },
     {
@@ -2331,7 +2394,7 @@
       "source_file": "src/api/jobs.rs",
       "source_location": "L115",
       "id": "api_jobs_cancel_job",
-      "community": 14,
+      "community": 13,
       "norm_label": "cancel_job()"
     },
     {
@@ -2340,7 +2403,7 @@
       "source_file": "src/api/jobs.rs",
       "source_location": "L167",
       "id": "api_jobs_parse_job_from_request",
-      "community": 14,
+      "community": 13,
       "norm_label": "parse_job_from_request()"
     },
     {
@@ -2349,7 +2412,7 @@
       "source_file": "src/api/jobs.rs",
       "source_location": "L274",
       "id": "api_jobs_bad_request",
-      "community": 14,
+      "community": 13,
       "norm_label": "bad_request()"
     },
     {
@@ -2358,7 +2421,7 @@
       "source_file": "src/api/jobs.rs",
       "source_location": "L279",
       "id": "api_jobs_is_blank",
-      "community": 14,
+      "community": 13,
       "norm_label": "is_blank()"
     },
     {
@@ -2367,7 +2430,7 @@
       "source_file": "src/api/jobs.rs",
       "source_location": "L289",
       "id": "api_jobs_is_valid_target",
-      "community": 14,
+      "community": 13,
       "norm_label": "is_valid_target()"
     },
     {
@@ -2376,7 +2439,7 @@
       "source_file": "src/api/jobs.rs",
       "source_location": "L298",
       "id": "api_jobs_apply_schedule",
-      "community": 14,
+      "community": 13,
       "norm_label": "apply_schedule()"
     },
     {
@@ -2385,7 +2448,7 @@
       "source_file": "src/api/jobs.rs",
       "source_location": "L304",
       "id": "api_jobs_persist_job",
-      "community": 14,
+      "community": 13,
       "norm_label": "persist_job()"
     },
     {
@@ -2394,7 +2457,7 @@
       "source_file": "src/api/jobs.rs",
       "source_location": "L323",
       "id": "api_jobs_validate_cidr",
-      "community": 14,
+      "community": 13,
       "norm_label": "validate_cidr()"
     },
     {
@@ -2403,7 +2466,7 @@
       "source_file": "src/api/logs.rs",
       "source_location": "L1",
       "id": "src_api_logs_rs",
-      "community": 36,
+      "community": 1,
       "norm_label": "logs.rs"
     },
     {
@@ -2412,7 +2475,7 @@
       "source_file": "src/api/logs.rs",
       "source_location": "L11",
       "id": "api_logs_get_all_logs",
-      "community": 36,
+      "community": 1,
       "norm_label": "get_all_logs()"
     },
     {
@@ -2421,7 +2484,7 @@
       "source_file": "src/api/logs.rs",
       "source_location": "L24",
       "id": "api_logs_get_logs_by_job_id",
-      "community": 36,
+      "community": 1,
       "norm_label": "get_logs_by_job_id()"
     },
     {
@@ -2448,7 +2511,7 @@
       "source_file": "src/services/rules.rs",
       "source_location": "L30",
       "id": "services_rules_snapshot_load",
-      "community": 13,
+      "community": 8,
       "norm_label": ".load()"
     },
     {
@@ -2601,7 +2664,7 @@
       "source_file": "src/services/job_executor.rs",
       "source_location": "L1",
       "id": "src_services_job_executor_rs",
-      "community": 6,
+      "community": 9,
       "norm_label": "job_executor.rs"
     },
     {
@@ -2610,7 +2673,7 @@
       "source_file": "src/services/job_executor.rs",
       "source_location": "L14",
       "id": "services_job_executor_jobexecutor",
-      "community": 6,
+      "community": 9,
       "norm_label": "jobexecutor"
     },
     {
@@ -2619,7 +2682,7 @@
       "source_file": "src/services/job_executor.rs",
       "source_location": "L20",
       "id": "services_job_executor_jobexecutor_execute_job",
-      "community": 6,
+      "community": 9,
       "norm_label": ".execute_job()"
     },
     {
@@ -2628,7 +2691,7 @@
       "source_file": "src/services/job_executor.rs",
       "source_location": "L98",
       "id": "services_job_executor_jobexecutor_run_queue",
-      "community": 6,
+      "community": 9,
       "norm_label": ".run_queue()"
     },
     {
@@ -2637,7 +2700,7 @@
       "source_file": "src/services/job_executor.rs",
       "source_location": "L140",
       "id": "services_job_executor_jobexecutor_run_discovery",
-      "community": 6,
+      "community": 9,
       "norm_label": ".run_discovery()"
     },
     {
@@ -2646,7 +2709,7 @@
       "source_file": "src/services/job_executor.rs",
       "source_location": "L158",
       "id": "services_job_executor_jobexecutor_run_port_scan",
-      "community": 6,
+      "community": 9,
       "norm_label": ".run_port_scan()"
     },
     {
@@ -2655,7 +2718,7 @@
       "source_file": "src/services/job_executor.rs",
       "source_location": "L215",
       "id": "services_job_executor_jobexecutor_resume_incomplete_jobs",
-      "community": 6,
+      "community": 9,
       "norm_label": ".resume_incomplete_jobs()"
     },
     {
@@ -2664,7 +2727,7 @@
       "source_file": "src/services/job_executor.rs",
       "source_location": "L292",
       "id": "services_job_executor_jobexecutor_run_nmap_scan",
-      "community": 6,
+      "community": 9,
       "norm_label": ".run_nmap_scan()"
     },
     {
@@ -2673,7 +2736,7 @@
       "source_file": "src/services/job_executor.rs",
       "source_location": "L349",
       "id": "services_job_executor_jobexecutor_run_export",
-      "community": 6,
+      "community": 9,
       "norm_label": ".run_export()"
     },
     {
@@ -2682,7 +2745,7 @@
       "source_file": "src/services/job_executor.rs",
       "source_location": "L393",
       "id": "services_job_executor_jobexecutor_run_report",
-      "community": 6,
+      "community": 9,
       "norm_label": ".run_report()"
     },
     {
@@ -2691,7 +2754,7 @@
       "source_file": "src/services/job_executor.rs",
       "source_location": "L443",
       "id": "services_job_executor_jobexecutor_run_cve_sync",
-      "community": 6,
+      "community": 9,
       "norm_label": ".run_cve_sync()"
     },
     {
@@ -2700,7 +2763,7 @@
       "source_file": "src/services/job_executor.rs",
       "source_location": "L466",
       "id": "services_job_executor_jobexecutor_update_job_status",
-      "community": 6,
+      "community": 9,
       "norm_label": ".update_job_status()"
     },
     {
@@ -2709,7 +2772,7 @@
       "source_file": "src/services/job_executor.rs",
       "source_location": "L472",
       "id": "services_job_executor_jobexecutor_update_job_results",
-      "community": 6,
+      "community": 9,
       "norm_label": ".update_job_results()"
     },
     {
@@ -2718,7 +2781,7 @@
       "source_file": "src/services/job_executor.rs",
       "source_location": "L478",
       "id": "services_job_executor_jobexecutor_check_and_run_scheduled_jobs",
-      "community": 6,
+      "community": 9,
       "norm_label": ".check_and_run_scheduled_jobs()"
     },
     {
@@ -2727,7 +2790,7 @@
       "source_file": "src/services/events.rs",
       "source_location": "L1",
       "id": "src_services_events_rs",
-      "community": 22,
+      "community": 6,
       "norm_label": "events.rs"
     },
     {
@@ -2736,7 +2799,7 @@
       "source_file": "src/services/events.rs",
       "source_location": "L17",
       "id": "services_events_emit",
-      "community": 22,
+      "community": 6,
       "norm_label": "emit()"
     },
     {
@@ -2745,7 +2808,7 @@
       "source_file": "src/services/scanner.rs",
       "source_location": "L1",
       "id": "src_services_scanner_rs",
-      "community": 0,
+      "community": 4,
       "norm_label": "scanner.rs"
     },
     {
@@ -2754,7 +2817,7 @@
       "source_file": "src/services/scanner.rs",
       "source_location": "L17",
       "id": "services_scanner_networkscanner",
-      "community": 0,
+      "community": 4,
       "norm_label": "networkscanner"
     },
     {
@@ -2763,7 +2826,7 @@
       "source_file": "src/services/scanner.rs",
       "source_location": "L20",
       "id": "services_scanner_networkscanner_discover_hosts",
-      "community": 0,
+      "community": 4,
       "norm_label": ".discover_hosts()"
     },
     {
@@ -2772,7 +2835,7 @@
       "source_file": "src/services/scanner.rs",
       "source_location": "L119",
       "id": "services_scanner_networkscanner_retry_missed_hosts",
-      "community": 0,
+      "community": 4,
       "norm_label": ".retry_missed_hosts()"
     },
     {
@@ -2781,7 +2844,7 @@
       "source_file": "src/services/scanner.rs",
       "source_location": "L161",
       "id": "services_scanner_networkscanner_arp_scan",
-      "community": 0,
+      "community": 4,
       "norm_label": ".arp_scan()"
     },
     {
@@ -2790,7 +2853,7 @@
       "source_file": "src/services/scanner.rs",
       "source_location": "L173",
       "id": "services_scanner_networkscanner_arp_scan_blocking",
-      "community": 0,
+      "community": 4,
       "norm_label": ".arp_scan_blocking()"
     },
     {
@@ -2799,7 +2862,7 @@
       "source_file": "src/services/scanner.rs",
       "source_location": "L278",
       "id": "services_scanner_networkscanner_icmp_scan",
-      "community": 0,
+      "community": 4,
       "norm_label": ".icmp_scan()"
     },
     {
@@ -2808,7 +2871,7 @@
       "source_file": "src/services/scanner.rs",
       "source_location": "L285",
       "id": "services_scanner_networkscanner_icmp_scan_blocking",
-      "community": 0,
+      "community": 4,
       "norm_label": ".icmp_scan_blocking()"
     },
     {
@@ -2817,7 +2880,7 @@
       "source_file": "src/services/scanner.rs",
       "source_location": "L368",
       "id": "services_scanner_networkscanner_save_arp_results",
-      "community": 0,
+      "community": 4,
       "norm_label": ".save_arp_results()"
     },
     {
@@ -2826,7 +2889,7 @@
       "source_file": "src/services/scanner.rs",
       "source_location": "L406",
       "id": "services_scanner_networkscanner_save_hosts_no_mac",
-      "community": 0,
+      "community": 4,
       "norm_label": ".save_hosts_no_mac()"
     },
     {
@@ -2835,7 +2898,7 @@
       "source_file": "src/services/scanner.rs",
       "source_location": "L428",
       "id": "services_scanner_networkscanner_tcp_discover",
-      "community": 0,
+      "community": 4,
       "norm_label": ".tcp_discover()"
     },
     {
@@ -2844,7 +2907,7 @@
       "source_file": "src/services/scanner.rs",
       "source_location": "L467",
       "id": "services_scanner_networkscanner_mark_stale_hosts_down",
-      "community": 0,
+      "community": 4,
       "norm_label": ".mark_stale_hosts_down()"
     },
     {
@@ -2853,7 +2916,7 @@
       "source_file": "src/services/scanner.rs",
       "source_location": "L506",
       "id": "services_scanner_networkscanner_resolve_hostname",
-      "community": 0,
+      "community": 4,
       "norm_label": ".resolve_hostname()"
     },
     {
@@ -2862,7 +2925,7 @@
       "source_file": "src/services/scanner.rs",
       "source_location": "L521",
       "id": "services_scanner_networkscanner_default_route_iface",
-      "community": 0,
+      "community": 4,
       "norm_label": ".default_route_iface()"
     },
     {
@@ -2871,7 +2934,7 @@
       "source_file": "src/services/scanner.rs",
       "source_location": "L534",
       "id": "services_scanner_networkscanner_detect_local_interface_info",
-      "community": 0,
+      "community": 4,
       "norm_label": ".detect_local_interface_info()"
     },
     {
@@ -2880,7 +2943,7 @@
       "source_file": "src/services/scanner.rs",
       "source_location": "L575",
       "id": "services_scanner_networkscanner_detect_local_network",
-      "community": 0,
+      "community": 4,
       "norm_label": ".detect_local_network()"
     },
     {
@@ -2889,7 +2952,7 @@
       "source_file": "src/services/scanner.rs",
       "source_location": "L582",
       "id": "services_scanner_networkscanner_local_ipv4",
-      "community": 0,
+      "community": 4,
       "norm_label": ".local_ipv4()"
     },
     {
@@ -2898,7 +2961,7 @@
       "source_file": "src/services/scanner.rs",
       "source_location": "L589",
       "id": "services_scanner_networkscanner_is_host_alive",
-      "community": 0,
+      "community": 4,
       "norm_label": ".is_host_alive()"
     },
     {
@@ -2907,7 +2970,7 @@
       "source_file": "src/services/scanner.rs",
       "source_location": "L615",
       "id": "services_scanner_networkscanner_progress",
-      "community": 0,
+      "community": 4,
       "norm_label": ".progress()"
     },
     {
@@ -2916,7 +2979,7 @@
       "source_file": "src/services/cve_enrichment.rs",
       "source_location": "L1",
       "id": "src_services_cve_enrichment_rs",
-      "community": 12,
+      "community": 14,
       "norm_label": "cve_enrichment.rs"
     },
     {
@@ -2925,7 +2988,7 @@
       "source_file": "src/services/cve_enrichment.rs",
       "source_location": "L16",
       "id": "services_cve_enrichment_nvd_api_key",
-      "community": 12,
+      "community": 14,
       "norm_label": "nvd_api_key()"
     },
     {
@@ -2934,7 +2997,7 @@
       "source_file": "src/services/cve_enrichment.rs",
       "source_location": "L29",
       "id": "services_cve_enrichment_nvd_rate_ms",
-      "community": 12,
+      "community": 14,
       "norm_label": "nvd_rate_ms()"
     },
     {
@@ -2943,7 +3006,7 @@
       "source_file": "src/services/cve_enrichment.rs",
       "source_location": "L37",
       "id": "services_cve_enrichment_cveenrichment",
-      "community": 12,
+      "community": 14,
       "norm_label": "cveenrichment"
     },
     {
@@ -2952,7 +3015,7 @@
       "source_file": "src/services/cve_enrichment.rs",
       "source_location": "L44",
       "id": "services_cve_enrichment_cveenrichment_get",
-      "community": 12,
+      "community": 14,
       "norm_label": ".get()"
     },
     {
@@ -2961,7 +3024,7 @@
       "source_file": "src/services/cve_enrichment.rs",
       "source_location": "L68",
       "id": "services_cve_enrichment_cveenrichment_enrich_all_unenriched",
-      "community": 12,
+      "community": 14,
       "norm_label": ".enrich_all_unenriched()"
     },
     {
@@ -2970,7 +3033,7 @@
       "source_file": "src/services/cve_enrichment.rs",
       "source_location": "L162",
       "id": "services_cve_enrichment_cveenrichment_fetch_nvd",
-      "community": 12,
+      "community": 14,
       "norm_label": ".fetch_nvd()"
     },
     {
@@ -2979,7 +3042,7 @@
       "source_file": "src/services/cve_enrichment.rs",
       "source_location": "L198",
       "id": "services_cve_enrichment_cveenrichment_parse_nvd_response",
-      "community": 12,
+      "community": 14,
       "norm_label": ".parse_nvd_response()"
     },
     {
@@ -2988,7 +3051,7 @@
       "source_file": "src/services/cve_enrichment.rs",
       "source_location": "L277",
       "id": "services_cve_enrichment_parse_nvd_response_extracts_v3_score_desc_and_refs",
-      "community": 12,
+      "community": 14,
       "norm_label": "parse_nvd_response_extracts_v3_score_desc_and_refs()"
     },
     {
@@ -2997,7 +3060,7 @@
       "source_file": "src/services/cve_enrichment.rs",
       "source_location": "L311",
       "id": "services_cve_enrichment_parse_nvd_response_none_on_unexpected_shape",
-      "community": 12,
+      "community": 14,
       "norm_label": "parse_nvd_response_none_on_unexpected_shape()"
     },
     {
@@ -3006,7 +3069,7 @@
       "source_file": "src/services/report.rs",
       "source_location": "L1",
       "id": "src_services_report_rs",
-      "community": 24,
+      "community": 18,
       "norm_label": "report.rs"
     },
     {
@@ -3015,7 +3078,7 @@
       "source_file": "src/services/report.rs",
       "source_location": "L7",
       "id": "services_report_esc",
-      "community": 24,
+      "community": 18,
       "norm_label": "esc()"
     },
     {
@@ -3024,7 +3087,7 @@
       "source_file": "src/services/report.rs",
       "source_location": "L14",
       "id": "services_report_truncate",
-      "community": 24,
+      "community": 18,
       "norm_label": "truncate()"
     },
     {
@@ -3033,7 +3096,7 @@
       "source_file": "src/services/report.rs",
       "source_location": "L25",
       "id": "services_report_vuln_severity",
-      "community": 24,
+      "community": 18,
       "norm_label": "vuln_severity()"
     },
     {
@@ -3042,7 +3105,7 @@
       "source_file": "src/services/report.rs",
       "source_location": "L36",
       "id": "services_report_sev_class",
-      "community": 24,
+      "community": 18,
       "norm_label": "sev_class()"
     },
     {
@@ -3051,7 +3114,7 @@
       "source_file": "src/services/report.rs",
       "source_location": "L46",
       "id": "services_report_status_label",
-      "community": 24,
+      "community": 18,
       "norm_label": "status_label()"
     },
     {
@@ -3060,7 +3123,7 @@
       "source_file": "src/services/report.rs",
       "source_location": "L55",
       "id": "services_report_render_html",
-      "community": 24,
+      "community": 18,
       "norm_label": "render_html()"
     },
     {
@@ -3069,7 +3132,7 @@
       "source_file": "src/services/report.rs",
       "source_location": "L280",
       "id": "services_report_renders_self_contained_html_with_sections",
-      "community": 24,
+      "community": 18,
       "norm_label": "renders_self_contained_html_with_sections()"
     },
     {
@@ -3078,7 +3141,7 @@
       "source_file": "src/services/scope.rs",
       "source_location": "L1",
       "id": "src_services_scope_rs",
-      "community": 29,
+      "community": 20,
       "norm_label": "scope.rs"
     },
     {
@@ -3087,7 +3150,7 @@
       "source_file": "src/services/scope.rs",
       "source_location": "L18",
       "id": "services_scope_target_in_scope",
-      "community": 29,
+      "community": 20,
       "norm_label": "target_in_scope()"
     },
     {
@@ -3096,7 +3159,7 @@
       "source_file": "src/services/scope.rs",
       "source_location": "L32",
       "id": "services_scope_in_scope",
-      "community": 29,
+      "community": 20,
       "norm_label": "in_scope()"
     },
     {
@@ -3105,7 +3168,7 @@
       "source_file": "src/services/scope.rs",
       "source_location": "L52",
       "id": "services_scope_nets",
-      "community": 29,
+      "community": 20,
       "norm_label": "nets()"
     },
     {
@@ -3114,7 +3177,7 @@
       "source_file": "src/services/scope.rs",
       "source_location": "L57",
       "id": "services_scope_empty_scope_is_permissive",
-      "community": 29,
+      "community": 20,
       "norm_label": "empty_scope_is_permissive()"
     },
     {
@@ -3123,7 +3186,7 @@
       "source_file": "src/services/scope.rs",
       "source_location": "L62",
       "id": "services_scope_enforces_ip_and_cidr_membership",
-      "community": 29,
+      "community": 20,
       "norm_label": "enforces_ip_and_cidr_membership()"
     },
     {
@@ -3132,7 +3195,7 @@
       "source_file": "src/services/mod.rs",
       "source_location": "L1",
       "id": "src_services_mod_rs",
-      "community": 69,
+      "community": 58,
       "norm_label": "mod.rs"
     },
     {
@@ -3141,7 +3204,7 @@
       "source_file": "src/services/port_scanner.rs",
       "source_location": "L1",
       "id": "src_services_port_scanner_rs",
-      "community": 2,
+      "community": 5,
       "norm_label": "port_scanner.rs"
     },
     {
@@ -3150,7 +3213,7 @@
       "source_file": "src/services/port_scanner.rs",
       "source_location": "L9",
       "id": "services_port_scanner_serviceinfo",
-      "community": 2,
+      "community": 5,
       "norm_label": "serviceinfo"
     },
     {
@@ -3159,7 +3222,7 @@
       "source_file": "src/services/port_scanner.rs",
       "source_location": "L20",
       "id": "services_port_scanner_nmapscanresult",
-      "community": 2,
+      "community": 5,
       "norm_label": "nmapscanresult"
     },
     {
@@ -3168,7 +3231,7 @@
       "source_file": "src/services/port_scanner.rs",
       "source_location": "L33",
       "id": "services_port_scanner_nmapextra",
-      "community": 2,
+      "community": 5,
       "norm_label": "nmapextra"
     },
     {
@@ -3177,7 +3240,7 @@
       "source_file": "src/services/port_scanner.rs",
       "source_location": "L47",
       "id": "services_port_scanner_portscanner",
-      "community": 2,
+      "community": 5,
       "norm_label": "portscanner"
     },
     {
@@ -3186,7 +3249,7 @@
       "source_file": "src/services/port_scanner.rs",
       "source_location": "L51",
       "id": "services_port_scanner_portscanner_scan_host",
-      "community": 2,
+      "community": 5,
       "norm_label": ".scan_host()"
     },
     {
@@ -3195,7 +3258,7 @@
       "source_file": "src/services/port_scanner.rs",
       "source_location": "L125",
       "id": "services_port_scanner_portscanner_full_nmap_scan",
-      "community": 2,
+      "community": 5,
       "norm_label": ".full_nmap_scan()"
     },
     {
@@ -3204,7 +3267,7 @@
       "source_file": "src/services/port_scanner.rs",
       "source_location": "L190",
       "id": "services_port_scanner_portscanner_run_udp_scan",
-      "community": 2,
+      "community": 5,
       "norm_label": ".run_udp_scan()"
     },
     {
@@ -3213,7 +3276,7 @@
       "source_file": "src/services/port_scanner.rs",
       "source_location": "L250",
       "id": "services_port_scanner_portscanner_tcp_scan_concurrent",
-      "community": 2,
+      "community": 5,
       "norm_label": ".tcp_scan_concurrent()"
     },
     {
@@ -3222,7 +3285,7 @@
       "source_file": "src/services/port_scanner.rs",
       "source_location": "L270",
       "id": "services_port_scanner_portscanner_is_port_open",
-      "community": 2,
+      "community": 5,
       "norm_label": ".is_port_open()"
     },
     {
@@ -3231,7 +3294,7 @@
       "source_file": "src/services/port_scanner.rs",
       "source_location": "L284",
       "id": "services_port_scanner_portscanner_detect_services",
-      "community": 2,
+      "community": 5,
       "norm_label": ".detect_services()"
     },
     {
@@ -3240,7 +3303,7 @@
       "source_file": "src/services/port_scanner.rs",
       "source_location": "L324",
       "id": "services_port_scanner_portscanner_run_nmap",
-      "community": 2,
+      "community": 5,
       "norm_label": ".run_nmap()"
     },
     {
@@ -3249,7 +3312,7 @@
       "source_file": "src/services/port_scanner.rs",
       "source_location": "L370",
       "id": "services_port_scanner_portscanner_run_full_nmap",
-      "community": 2,
+      "community": 5,
       "norm_label": ".run_full_nmap()"
     },
     {
@@ -3258,7 +3321,7 @@
       "source_file": "src/services/port_scanner.rs",
       "source_location": "L400",
       "id": "services_port_scanner_portscanner_run_nmap_cmd",
-      "community": 2,
+      "community": 5,
       "norm_label": ".run_nmap_cmd()"
     },
     {
@@ -3267,7 +3330,7 @@
       "source_file": "src/services/port_scanner.rs",
       "source_location": "L465",
       "id": "services_port_scanner_portscanner_cvss_to_severity",
-      "community": 2,
+      "community": 5,
       "norm_label": ".cvss_to_severity()"
     },
     {
@@ -3276,7 +3339,7 @@
       "source_file": "src/services/port_scanner.rs",
       "source_location": "L482",
       "id": "services_port_scanner_portscanner_parse_vulners_output",
-      "community": 2,
+      "community": 5,
       "norm_label": ".parse_vulners_output()"
     },
     {
@@ -3285,7 +3348,7 @@
       "source_file": "src/services/port_scanner.rs",
       "source_location": "L506",
       "id": "services_port_scanner_portscanner_parse_nmap_xml",
-      "community": 2,
+      "community": 5,
       "norm_label": ".parse_nmap_xml()"
     },
     {
@@ -3294,7 +3357,7 @@
       "source_file": "src/services/port_scanner.rs",
       "source_location": "L815",
       "id": "services_port_scanner_portscanner_banner_fallback",
-      "community": 2,
+      "community": 5,
       "norm_label": ".banner_fallback()"
     },
     {
@@ -3303,7 +3366,7 @@
       "source_file": "src/services/port_scanner.rs",
       "source_location": "L839",
       "id": "services_port_scanner_portscanner_ssl_service_name",
-      "community": 2,
+      "community": 5,
       "norm_label": ".ssl_service_name()"
     },
     {
@@ -3312,7 +3375,7 @@
       "source_file": "src/services/port_scanner.rs",
       "source_location": "L854",
       "id": "services_port_scanner_portscanner_update_host_scan_results",
-      "community": 2,
+      "community": 5,
       "norm_label": ".update_host_scan_results()"
     },
     {
@@ -3321,7 +3384,7 @@
       "source_file": "src/services/port_scanner.rs",
       "source_location": "L1004",
       "id": "services_port_scanner_portscanner_fingerprint_service",
-      "community": 2,
+      "community": 5,
       "norm_label": ".fingerprint_service()"
     },
     {
@@ -3330,7 +3393,7 @@
       "source_file": "src/services/port_scanner.rs",
       "source_location": "L1029",
       "id": "services_port_scanner_portscanner_parse_ssh_banner",
-      "community": 2,
+      "community": 5,
       "norm_label": ".parse_ssh_banner()"
     },
     {
@@ -3339,7 +3402,7 @@
       "source_file": "src/services/port_scanner.rs",
       "source_location": "L1043",
       "id": "services_port_scanner_portscanner_parse_http_banner",
-      "community": 2,
+      "community": 5,
       "norm_label": ".parse_http_banner()"
     },
     {
@@ -3348,7 +3411,7 @@
       "source_file": "src/services/port_scanner.rs",
       "source_location": "L1059",
       "id": "services_port_scanner_portscanner_parse_220_banner",
-      "community": 2,
+      "community": 5,
       "norm_label": ".parse_220_banner()"
     },
     {
@@ -3357,7 +3420,7 @@
       "source_file": "src/services/port_scanner.rs",
       "source_location": "L1080",
       "id": "services_port_scanner_portscanner_detect_os",
-      "community": 2,
+      "community": 5,
       "norm_label": ".detect_os()"
     },
     {
@@ -3366,7 +3429,7 @@
       "source_file": "src/services/port_scanner.rs",
       "source_location": "L1137",
       "id": "services_port_scanner_portscanner_infer_protocol",
-      "community": 2,
+      "community": 5,
       "norm_label": ".infer_protocol()"
     },
     {
@@ -3375,7 +3438,7 @@
       "source_file": "src/services/port_scanner.rs",
       "source_location": "L1161",
       "id": "services_port_scanner_portscanner_clean_banner",
-      "community": 2,
+      "community": 5,
       "norm_label": ".clean_banner()"
     },
     {
@@ -3384,7 +3447,7 @@
       "source_file": "src/services/port_scanner.rs",
       "source_location": "L1178",
       "id": "services_port_scanner_portscanner_grab_banner",
-      "community": 2,
+      "community": 5,
       "norm_label": ".grab_banner()"
     },
     {
@@ -3393,7 +3456,7 @@
       "source_file": "src/services/port_scanner.rs",
       "source_location": "L1220",
       "id": "services_port_scanner_parse_nmap_xml_extracts_ports_services_host_and_mac",
-      "community": 2,
+      "community": 5,
       "norm_label": "parse_nmap_xml_extracts_ports_services_host_and_mac()"
     },
     {
@@ -3402,7 +3465,7 @@
       "source_file": "src/services/port_scanner.rs",
       "source_location": "L1250",
       "id": "services_port_scanner_parse_vulners_output_extracts_cves",
-      "community": 2,
+      "community": 5,
       "norm_label": "parse_vulners_output_extracts_cves()"
     },
     {
@@ -3411,7 +3474,7 @@
       "source_file": "src/services/orchestrator.rs",
       "source_location": "L1",
       "id": "src_services_orchestrator_rs",
-      "community": 5,
+      "community": 7,
       "norm_label": "orchestrator.rs"
     },
     {
@@ -3420,7 +3483,7 @@
       "source_file": "src/services/orchestrator.rs",
       "source_location": "L19",
       "id": "services_orchestrator_orchestrator",
-      "community": 5,
+      "community": 7,
       "norm_label": "orchestrator"
     },
     {
@@ -3429,7 +3492,7 @@
       "source_file": "src/services/orchestrator.rs",
       "source_location": "L22",
       "id": "services_orchestrator_orchestrator_run",
-      "community": 5,
+      "community": 7,
       "norm_label": ".run()"
     },
     {
@@ -3438,7 +3501,7 @@
       "source_file": "src/services/orchestrator.rs",
       "source_location": "L52",
       "id": "services_orchestrator_orchestrator_run_cycle",
-      "community": 5,
+      "community": 7,
       "norm_label": ".run_cycle()"
     },
     {
@@ -3447,7 +3510,7 @@
       "source_file": "src/services/orchestrator.rs",
       "source_location": "L136",
       "id": "services_orchestrator_orchestrator_run_rule_engine",
-      "community": 5,
+      "community": 7,
       "norm_label": ".run_rule_engine()"
     },
     {
@@ -3456,7 +3519,7 @@
       "source_file": "src/services/orchestrator.rs",
       "source_location": "L175",
       "id": "services_orchestrator_orchestrator_up_host_ips",
-      "community": 5,
+      "community": 7,
       "norm_label": ".up_host_ips()"
     },
     {
@@ -3465,7 +3528,7 @@
       "source_file": "src/services/orchestrator.rs",
       "source_location": "L186",
       "id": "services_orchestrator_orchestrator_run_and_wait",
-      "community": 5,
+      "community": 7,
       "norm_label": ".run_and_wait()"
     },
     {
@@ -3474,7 +3537,7 @@
       "source_file": "src/services/orchestrator.rs",
       "source_location": "L219",
       "id": "services_orchestrator_orchestrator_set_status",
-      "community": 5,
+      "community": 7,
       "norm_label": ".set_status()"
     },
     {
@@ -3483,7 +3546,7 @@
       "source_file": "src/services/orchestrator.rs",
       "source_location": "L232",
       "id": "services_orchestrator_attack_job_types_for",
-      "community": 5,
+      "community": 7,
       "norm_label": "attack_job_types_for()"
     },
     {
@@ -3492,7 +3555,7 @@
       "source_file": "src/services/orchestrator.rs",
       "source_location": "L245",
       "id": "services_orchestrator_meta",
-      "community": 5,
+      "community": 7,
       "norm_label": "meta()"
     },
     {
@@ -3501,7 +3564,7 @@
       "source_file": "src/services/orchestrator.rs",
       "source_location": "L260",
       "id": "services_orchestrator_selects_matching_attack_modules_by_open_port",
-      "community": 5,
+      "community": 7,
       "norm_label": "selects_matching_attack_modules_by_open_port()"
     },
     {
@@ -3510,7 +3573,7 @@
       "source_file": "src/services/orchestrator.rs",
       "source_location": "L272",
       "id": "services_orchestrator_no_open_ports_yields_nothing",
-      "community": 5,
+      "community": 7,
       "norm_label": "no_open_ports_yields_nothing()"
     },
     {
@@ -3519,8 +3582,206 @@
       "source_file": "src/services/orchestrator.rs",
       "source_location": "L279",
       "id": "services_orchestrator_excludes_exfil_even_when_port_matches",
-      "community": 5,
+      "community": 7,
       "norm_label": "excludes_exfil_even_when_port_matches()"
+    },
+    {
+      "label": "crypto.rs",
+      "file_type": "code",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L1",
+      "id": "src_services_crypto_rs",
+      "community": 6,
+      "norm_label": "crypto.rs"
+    },
+    {
+      "label": "CryptoError",
+      "file_type": "code",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L24",
+      "id": "services_crypto_cryptoerror",
+      "community": 6,
+      "norm_label": "cryptoerror"
+    },
+    {
+      "label": ".fmt()",
+      "file_type": "code",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L27",
+      "id": "services_crypto_cryptoerror_fmt",
+      "community": 6,
+      "norm_label": ".fmt()"
+    },
+    {
+      "label": ".from()",
+      "file_type": "code",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L34",
+      "id": "services_crypto_cryptoerror_from",
+      "community": 10,
+      "norm_label": ".from()"
+    },
+    {
+      "label": "MasterKey",
+      "file_type": "code",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L39",
+      "id": "services_crypto_masterkey",
+      "community": 6,
+      "norm_label": "masterkey"
+    },
+    {
+      "label": ".load_or_create()",
+      "file_type": "code",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L42",
+      "id": "services_crypto_masterkey_load_or_create",
+      "community": 6,
+      "norm_label": ".load_or_create()"
+    },
+    {
+      "label": ".from_hex()",
+      "file_type": "code",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L66",
+      "id": "services_crypto_masterkey_from_hex",
+      "community": 6,
+      "norm_label": ".from_hex()"
+    },
+    {
+      "label": ".ephemeral()",
+      "file_type": "code",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L74",
+      "id": "services_crypto_masterkey_ephemeral",
+      "community": 6,
+      "norm_label": ".ephemeral()"
+    },
+    {
+      "label": ".derive()",
+      "file_type": "code",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L81",
+      "id": "services_crypto_masterkey_derive",
+      "community": 6,
+      "norm_label": ".derive()"
+    },
+    {
+      "label": "init()",
+      "file_type": "code",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L94",
+      "id": "services_crypto_init",
+      "community": 6,
+      "norm_label": "init()"
+    },
+    {
+      "label": "current()",
+      "file_type": "code",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L104",
+      "id": "services_crypto_current",
+      "community": 6,
+      "norm_label": "current()"
+    },
+    {
+      "label": "cipher_for()",
+      "file_type": "code",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L108",
+      "id": "services_crypto_cipher_for",
+      "community": 6,
+      "norm_label": "cipher_for()"
+    },
+    {
+      "label": "encrypt()",
+      "file_type": "code",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L114",
+      "id": "services_crypto_encrypt",
+      "community": 6,
+      "norm_label": "encrypt()"
+    },
+    {
+      "label": "decrypt()",
+      "file_type": "code",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L129",
+      "id": "services_crypto_decrypt",
+      "community": 6,
+      "norm_label": "decrypt()"
+    },
+    {
+      "label": "encrypt_str()",
+      "file_type": "code",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L141",
+      "id": "services_crypto_encrypt_str",
+      "community": 6,
+      "norm_label": "encrypt_str()"
+    },
+    {
+      "label": "decrypt_str()",
+      "file_type": "code",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L146",
+      "id": "services_crypto_decrypt_str",
+      "community": 6,
+      "norm_label": "decrypt_str()"
+    },
+    {
+      "label": "secret_fingerprint()",
+      "file_type": "code",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L155",
+      "id": "services_crypto_secret_fingerprint",
+      "community": 6,
+      "norm_label": "secret_fingerprint()"
+    },
+    {
+      "label": "round_trips_a_string()",
+      "file_type": "code",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L167",
+      "id": "services_crypto_round_trips_a_string",
+      "community": 6,
+      "norm_label": "round_trips_a_string()"
+    },
+    {
+      "label": "wrong_engagement_fails_to_decrypt()",
+      "file_type": "code",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L174",
+      "id": "services_crypto_wrong_engagement_fails_to_decrypt",
+      "community": 6,
+      "norm_label": "wrong_engagement_fails_to_decrypt()"
+    },
+    {
+      "label": "same_plaintext_encrypts_differently_each_time()",
+      "file_type": "code",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L180",
+      "id": "services_crypto_same_plaintext_encrypts_differently_each_time",
+      "community": 6,
+      "norm_label": "same_plaintext_encrypts_differently_each_time()"
+    },
+    {
+      "label": "fingerprint_is_deterministic_and_engagement_scoped()",
+      "file_type": "code",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L187",
+      "id": "services_crypto_fingerprint_is_deterministic_and_engagement_scoped",
+      "community": 6,
+      "norm_label": "fingerprint_is_deterministic_and_engagement_scoped()"
+    },
+    {
+      "label": "round_trips_raw_bytes()",
+      "file_type": "code",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L196",
+      "id": "services_crypto_round_trips_raw_bytes",
+      "community": 6,
+      "norm_label": "round_trips_raw_bytes()"
     },
     {
       "label": "epaper.rs",
@@ -3528,7 +3789,7 @@
       "source_file": "src/services/display/epaper.rs",
       "source_location": "L1",
       "id": "src_services_display_epaper_rs",
-      "community": 30,
+      "community": 21,
       "norm_label": "epaper.rs"
     },
     {
@@ -3537,7 +3798,7 @@
       "source_file": "src/services/display/epaper.rs",
       "source_location": "L34",
       "id": "display_epaper_epaperdisplay",
-      "community": 30,
+      "community": 21,
       "norm_label": "epaperdisplay"
     },
     {
@@ -3546,7 +3807,7 @@
       "source_file": "src/services/display/epaper.rs",
       "source_location": "L42",
       "id": "display_epaper_epaperdisplay_new",
-      "community": 30,
+      "community": 21,
       "norm_label": ".new()"
     },
     {
@@ -3555,7 +3816,7 @@
       "source_file": "src/services/display/epaper.rs",
       "source_location": "L73",
       "id": "display_epaper_init_pin",
-      "community": 30,
+      "community": 21,
       "norm_label": "init_pin()"
     },
     {
@@ -3564,7 +3825,7 @@
       "source_file": "src/services/display/epaper.rs",
       "source_location": "L81",
       "id": "display_epaper_init_pin_in",
-      "community": 30,
+      "community": 21,
       "norm_label": "init_pin_in()"
     },
     {
@@ -3573,7 +3834,7 @@
       "source_file": "src/services/display/epaper.rs",
       "source_location": "L86",
       "id": "display_epaper_epaperdisplay_render",
-      "community": 30,
+      "community": 21,
       "norm_label": ".render()"
     },
     {
@@ -3582,7 +3843,7 @@
       "source_file": "src/services/display/mod.rs",
       "source_location": "L1",
       "id": "src_services_display_mod_rs",
-      "community": 0,
+      "community": 4,
       "norm_label": "mod.rs"
     },
     {
@@ -3591,7 +3852,7 @@
       "source_file": "src/services/display/mod.rs",
       "source_location": "L26",
       "id": "display_mod_displaystate",
-      "community": 0,
+      "community": 4,
       "norm_label": "displaystate"
     },
     {
@@ -3600,7 +3861,7 @@
       "source_file": "src/services/display/mod.rs",
       "source_location": "L38",
       "id": "display_mod_displaystate_lines",
-      "community": 0,
+      "community": 4,
       "norm_label": ".lines()"
     },
     {
@@ -3609,7 +3870,7 @@
       "source_file": "src/services/display/mod.rs",
       "source_location": "L48",
       "id": "display_mod_truncate",
-      "community": 0,
+      "community": 4,
       "norm_label": "truncate()"
     },
     {
@@ -3618,7 +3879,7 @@
       "source_file": "src/services/display/mod.rs",
       "source_location": "L58",
       "id": "display_mod_displaydriver",
-      "community": 0,
+      "community": 4,
       "norm_label": "displaydriver"
     },
     {
@@ -3627,7 +3888,7 @@
       "source_file": "src/services/display/mod.rs",
       "source_location": "L62",
       "id": "display_mod_displayservice",
-      "community": 0,
+      "community": 4,
       "norm_label": "displayservice"
     },
     {
@@ -3636,7 +3897,7 @@
       "source_file": "src/services/display/mod.rs",
       "source_location": "L65",
       "id": "display_mod_displayservice_run",
-      "community": 0,
+      "community": 4,
       "norm_label": ".run()"
     },
     {
@@ -3645,7 +3906,7 @@
       "source_file": "src/services/display/mod.rs",
       "source_location": "L86",
       "id": "display_mod_build_state",
-      "community": 0,
+      "community": 4,
       "norm_label": "build_state()"
     },
     {
@@ -3654,7 +3915,7 @@
       "source_file": "src/services/display/mod.rs",
       "source_location": "L111",
       "id": "display_mod_make_driver",
-      "community": 0,
+      "community": 4,
       "norm_label": "make_driver()"
     },
     {
@@ -3663,7 +3924,7 @@
       "source_file": "src/services/display/mock.rs",
       "source_location": "L1",
       "id": "src_services_display_mock_rs",
-      "community": 35,
+      "community": 24,
       "norm_label": "mock.rs"
     },
     {
@@ -3672,7 +3933,7 @@
       "source_file": "src/services/display/mock.rs",
       "source_location": "L6",
       "id": "display_mock_mockdisplay",
-      "community": 35,
+      "community": 24,
       "norm_label": "mockdisplay"
     },
     {
@@ -3681,7 +3942,7 @@
       "source_file": "src/services/display/mock.rs",
       "source_location": "L9",
       "id": "display_mock_mockdisplay_new",
-      "community": 35,
+      "community": 24,
       "norm_label": ".new()"
     },
     {
@@ -3690,7 +3951,7 @@
       "source_file": "src/services/display/mock.rs",
       "source_location": "L15",
       "id": "display_mock_mockdisplay_default",
-      "community": 35,
+      "community": 24,
       "norm_label": ".default()"
     },
     {
@@ -3699,7 +3960,7 @@
       "source_file": "src/services/display/mock.rs",
       "source_location": "L21",
       "id": "display_mock_mockdisplay_render",
-      "community": 35,
+      "community": 24,
       "norm_label": ".render()"
     },
     {
@@ -3708,7 +3969,7 @@
       "source_file": "src/services/attacks/rdp_brute.rs",
       "source_location": "L1",
       "id": "src_services_attacks_rdp_brute_rs",
-      "community": 1,
+      "community": 3,
       "norm_label": "rdp_brute.rs"
     },
     {
@@ -3717,7 +3978,7 @@
       "source_file": "src/services/attacks/rdp_brute.rs",
       "source_location": "L12",
       "id": "attacks_rdp_brute_rdpbruteforce",
-      "community": 1,
+      "community": 3,
       "norm_label": "rdpbruteforce"
     },
     {
@@ -3726,7 +3987,7 @@
       "source_file": "src/services/attacks/rdp_brute.rs",
       "source_location": "L15",
       "id": "attacks_rdp_brute_rdpbruteforce_run",
-      "community": 1,
+      "community": 3,
       "norm_label": ".run()"
     },
     {
@@ -3735,7 +3996,7 @@
       "source_file": "src/services/attacks/rdp_brute.rs",
       "source_location": "L114",
       "id": "attacks_rdp_brute_freerdp_binary",
-      "community": 1,
+      "community": 3,
       "norm_label": "freerdp_binary()"
     },
     {
@@ -3744,7 +4005,7 @@
       "source_file": "src/services/attacks/rdp_brute.rs",
       "source_location": "L133",
       "id": "attacks_rdp_brute_try_rdp_login",
-      "community": 1,
+      "community": 3,
       "norm_label": "try_rdp_login()"
     },
     {
@@ -3753,7 +4014,7 @@
       "source_file": "src/services/attacks/ad_kerberoast.rs",
       "source_location": "L1",
       "id": "src_services_attacks_ad_kerberoast_rs",
-      "community": 9,
+      "community": 0,
       "norm_label": "ad_kerberoast.rs"
     },
     {
@@ -3762,7 +4023,7 @@
       "source_file": "src/services/attacks/ad_kerberoast.rs",
       "source_location": "L17",
       "id": "attacks_ad_kerberoast_adkerberoast",
-      "community": 9,
+      "community": 0,
       "norm_label": "adkerberoast"
     },
     {
@@ -3771,25 +4032,25 @@
       "source_file": "src/services/attacks/ad_kerberoast.rs",
       "source_location": "L20",
       "id": "attacks_ad_kerberoast_adkerberoast_run",
-      "community": 9,
+      "community": 0,
       "norm_label": ".run()"
     },
     {
       "label": "parse_hashes()",
       "file_type": "code",
       "source_file": "src/services/attacks/ad_kerberoast.rs",
-      "source_location": "L85",
+      "source_location": "L88",
       "id": "attacks_ad_kerberoast_parse_hashes",
-      "community": 9,
+      "community": 0,
       "norm_label": "parse_hashes()"
     },
     {
       "label": "extracts_krb5tgs_hashes()",
       "file_type": "code",
       "source_file": "src/services/attacks/ad_kerberoast.rs",
-      "source_location": "L103",
+      "source_location": "L106",
       "id": "attacks_ad_kerberoast_extracts_krb5tgs_hashes",
-      "community": 9,
+      "community": 0,
       "norm_label": "extracts_krb5tgs_hashes()"
     },
     {
@@ -3798,7 +4059,7 @@
       "source_file": "src/services/attacks/ad_null_session.rs",
       "source_location": "L1",
       "id": "src_services_attacks_ad_null_session_rs",
-      "community": 23,
+      "community": 0,
       "norm_label": "ad_null_session.rs"
     },
     {
@@ -3807,7 +4068,7 @@
       "source_file": "src/services/attacks/ad_null_session.rs",
       "source_location": "L18",
       "id": "attacks_ad_null_session_adnullsession",
-      "community": 23,
+      "community": 0,
       "norm_label": "adnullsession"
     },
     {
@@ -3816,7 +4077,7 @@
       "source_file": "src/services/attacks/ad_null_session.rs",
       "source_location": "L22",
       "id": "attacks_ad_null_session_shareinfo",
-      "community": 23,
+      "community": 0,
       "norm_label": "shareinfo"
     },
     {
@@ -3825,7 +4086,7 @@
       "source_file": "src/services/attacks/ad_null_session.rs",
       "source_location": "L29",
       "id": "attacks_ad_null_session_adnullsession_run",
-      "community": 23,
+      "community": 0,
       "norm_label": ".run()"
     },
     {
@@ -3834,7 +4095,7 @@
       "source_file": "src/services/attacks/ad_null_session.rs",
       "source_location": "L91",
       "id": "attacks_ad_null_session_null_session_allowed",
-      "community": 23,
+      "community": 0,
       "norm_label": "null_session_allowed()"
     },
     {
@@ -3843,7 +4104,7 @@
       "source_file": "src/services/attacks/ad_null_session.rs",
       "source_location": "L96",
       "id": "attacks_ad_null_session_parse_users",
-      "community": 23,
+      "community": 0,
       "norm_label": "parse_users()"
     },
     {
@@ -3852,7 +4113,7 @@
       "source_file": "src/services/attacks/ad_null_session.rs",
       "source_location": "L120",
       "id": "attacks_ad_null_session_parse_shares",
-      "community": 23,
+      "community": 0,
       "norm_label": "parse_shares()"
     },
     {
@@ -3861,7 +4122,7 @@
       "source_file": "src/services/attacks/ad_null_session.rs",
       "source_location": "L171",
       "id": "attacks_ad_null_session_detects_null_session_and_shares",
-      "community": 23,
+      "community": 0,
       "norm_label": "detects_null_session_and_shares()"
     },
     {
@@ -3870,7 +4131,7 @@
       "source_file": "src/services/attacks/ad_null_session.rs",
       "source_location": "L188",
       "id": "attacks_ad_null_session_parses_and_dedups_users",
-      "community": 23,
+      "community": 0,
       "norm_label": "parses_and_dedups_users()"
     },
     {
@@ -3879,7 +4140,7 @@
       "source_file": "src/services/attacks/ad_smb_enum.rs",
       "source_location": "L1",
       "id": "src_services_attacks_ad_smb_enum_rs",
-      "community": 17,
+      "community": 0,
       "norm_label": "ad_smb_enum.rs"
     },
     {
@@ -3888,7 +4149,7 @@
       "source_file": "src/services/attacks/ad_smb_enum.rs",
       "source_location": "L18",
       "id": "attacks_ad_smb_enum_adsmbenum",
-      "community": 17,
+      "community": 0,
       "norm_label": "adsmbenum"
     },
     {
@@ -3897,7 +4158,7 @@
       "source_file": "src/services/attacks/ad_smb_enum.rs",
       "source_location": "L22",
       "id": "attacks_ad_smb_enum_smbhostinfo",
-      "community": 17,
+      "community": 0,
       "norm_label": "smbhostinfo"
     },
     {
@@ -3906,7 +4167,7 @@
       "source_file": "src/services/attacks/ad_smb_enum.rs",
       "source_location": "L32",
       "id": "attacks_ad_smb_enum_adsmbenum_run",
-      "community": 17,
+      "community": 0,
       "norm_label": ".run()"
     },
     {
@@ -3915,7 +4176,7 @@
       "source_file": "src/services/attacks/ad_smb_enum.rs",
       "source_location": "L98",
       "id": "attacks_ad_smb_enum_paren_value",
-      "community": 17,
+      "community": 0,
       "norm_label": "paren_value()"
     },
     {
@@ -3924,7 +4185,7 @@
       "source_file": "src/services/attacks/ad_smb_enum.rs",
       "source_location": "L107",
       "id": "attacks_ad_smb_enum_os_from_line",
-      "community": 17,
+      "community": 0,
       "norm_label": "os_from_line()"
     },
     {
@@ -3933,7 +4194,7 @@
       "source_file": "src/services/attacks/ad_smb_enum.rs",
       "source_location": "L114",
       "id": "attacks_ad_smb_enum_parse_bool",
-      "community": 17,
+      "community": 0,
       "norm_label": "parse_bool()"
     },
     {
@@ -3942,7 +4203,7 @@
       "source_file": "src/services/attacks/ad_smb_enum.rs",
       "source_location": "L124",
       "id": "attacks_ad_smb_enum_parse_smb_enum",
-      "community": 17,
+      "community": 0,
       "norm_label": "parse_smb_enum()"
     },
     {
@@ -3951,7 +4212,7 @@
       "source_file": "src/services/attacks/ad_smb_enum.rs",
       "source_location": "L160",
       "id": "attacks_ad_smb_enum_parses_signing_domain_and_os",
-      "community": 17,
+      "community": 0,
       "norm_label": "parses_signing_domain_and_os()"
     },
     {
@@ -3960,7 +4221,7 @@
       "source_file": "src/services/attacks/ad_smb_enum.rs",
       "source_location": "L179",
       "id": "attacks_ad_smb_enum_ignores_non_host_lines",
-      "community": 17,
+      "community": 0,
       "norm_label": "ignores_non_host_lines()"
     },
     {
@@ -4050,7 +4311,7 @@
       "source_file": "src/services/attacks/smb_brute.rs",
       "source_location": "L1",
       "id": "src_services_attacks_smb_brute_rs",
-      "community": 1,
+      "community": 3,
       "norm_label": "smb_brute.rs"
     },
     {
@@ -4059,7 +4320,7 @@
       "source_file": "src/services/attacks/smb_brute.rs",
       "source_location": "L11",
       "id": "attacks_smb_brute_smbbruteforce",
-      "community": 1,
+      "community": 3,
       "norm_label": "smbbruteforce"
     },
     {
@@ -4068,7 +4329,7 @@
       "source_file": "src/services/attacks/smb_brute.rs",
       "source_location": "L14",
       "id": "attacks_smb_brute_smbbruteforce_run",
-      "community": 1,
+      "community": 3,
       "norm_label": ".run()"
     },
     {
@@ -4077,7 +4338,7 @@
       "source_file": "src/services/attacks/smb_brute.rs",
       "source_location": "L110",
       "id": "attacks_smb_brute_smbclient_available",
-      "community": 1,
+      "community": 3,
       "norm_label": "smbclient_available()"
     },
     {
@@ -4086,7 +4347,7 @@
       "source_file": "src/services/attacks/smb_brute.rs",
       "source_location": "L121",
       "id": "attacks_smb_brute_try_smb_login",
-      "community": 1,
+      "community": 3,
       "norm_label": "try_smb_login()"
     },
     {
@@ -4095,7 +4356,7 @@
       "source_file": "src/services/attacks/ad_share_hunt.rs",
       "source_location": "L1",
       "id": "src_services_attacks_ad_share_hunt_rs",
-      "community": 25,
+      "community": 0,
       "norm_label": "ad_share_hunt.rs"
     },
     {
@@ -4104,7 +4365,7 @@
       "source_file": "src/services/attacks/ad_share_hunt.rs",
       "source_location": "L20",
       "id": "attacks_ad_share_hunt_adsharehunt",
-      "community": 25,
+      "community": 0,
       "norm_label": "adsharehunt"
     },
     {
@@ -4113,7 +4374,7 @@
       "source_file": "src/services/attacks/ad_share_hunt.rs",
       "source_location": "L23",
       "id": "attacks_ad_share_hunt_adsharehunt_run",
-      "community": 25,
+      "community": 0,
       "norm_label": ".run()"
     },
     {
@@ -4122,7 +4383,7 @@
       "source_file": "src/services/attacks/ad_share_hunt.rs",
       "source_location": "L68",
       "id": "attacks_ad_share_hunt_is_interesting_share",
-      "community": 25,
+      "community": 0,
       "norm_label": "is_interesting_share()"
     },
     {
@@ -4131,7 +4392,7 @@
       "source_file": "src/services/attacks/ad_share_hunt.rs",
       "source_location": "L86",
       "id": "attacks_ad_share_hunt_flags_policy_and_loot_shares",
-      "community": 25,
+      "community": 0,
       "norm_label": "flags_policy_and_loot_shares()"
     },
     {
@@ -4140,7 +4401,7 @@
       "source_file": "src/services/attacks/ad_adcs.rs",
       "source_location": "L1",
       "id": "src_services_attacks_ad_adcs_rs",
-      "community": 31,
+      "community": 0,
       "norm_label": "ad_adcs.rs"
     },
     {
@@ -4149,7 +4410,7 @@
       "source_file": "src/services/attacks/ad_adcs.rs",
       "source_location": "L17",
       "id": "attacks_ad_adcs_adadcs",
-      "community": 31,
+      "community": 0,
       "norm_label": "adadcs"
     },
     {
@@ -4158,7 +4419,7 @@
       "source_file": "src/services/attacks/ad_adcs.rs",
       "source_location": "L21",
       "id": "attacks_ad_adcs_adcsvuln",
-      "community": 31,
+      "community": 0,
       "norm_label": "adcsvuln"
     },
     {
@@ -4167,7 +4428,7 @@
       "source_file": "src/services/attacks/ad_adcs.rs",
       "source_location": "L28",
       "id": "attacks_ad_adcs_adadcs_run",
-      "community": 31,
+      "community": 0,
       "norm_label": ".run()"
     },
     {
@@ -4176,7 +4437,7 @@
       "source_file": "src/services/attacks/ad_adcs.rs",
       "source_location": "L96",
       "id": "attacks_ad_adcs_parse_adcs",
-      "community": 31,
+      "community": 0,
       "norm_label": "parse_adcs()"
     },
     {
@@ -4185,7 +4446,7 @@
       "source_file": "src/services/attacks/ad_adcs.rs",
       "source_location": "L135",
       "id": "attacks_ad_adcs_parses_esc_vulnerabilities",
-      "community": 31,
+      "community": 0,
       "norm_label": "parses_esc_vulnerabilities()"
     },
     {
@@ -4194,7 +4455,7 @@
       "source_file": "src/services/attacks/ad_bloodhound.rs",
       "source_location": "L1",
       "id": "src_services_attacks_ad_bloodhound_rs",
-      "community": 26,
+      "community": 0,
       "norm_label": "ad_bloodhound.rs"
     },
     {
@@ -4203,7 +4464,7 @@
       "source_file": "src/services/attacks/ad_bloodhound.rs",
       "source_location": "L15",
       "id": "attacks_ad_bloodhound_adbloodhound",
-      "community": 26,
+      "community": 0,
       "norm_label": "adbloodhound"
     },
     {
@@ -4212,7 +4473,7 @@
       "source_file": "src/services/attacks/ad_bloodhound.rs",
       "source_location": "L18",
       "id": "attacks_ad_bloodhound_adbloodhound_run",
-      "community": 26,
+      "community": 0,
       "norm_label": ".run()"
     },
     {
@@ -4221,7 +4482,7 @@
       "source_file": "src/services/attacks/ad_bloodhound.rs",
       "source_location": "L76",
       "id": "attacks_ad_bloodhound_parse_bh_zip",
-      "community": 26,
+      "community": 0,
       "norm_label": "parse_bh_zip()"
     },
     {
@@ -4230,7 +4491,7 @@
       "source_file": "src/services/attacks/ad_bloodhound.rs",
       "source_location": "L96",
       "id": "attacks_ad_bloodhound_extracts_zip_path",
-      "community": 26,
+      "community": 0,
       "norm_label": "extracts_zip_path()"
     },
     {
@@ -4239,7 +4500,7 @@
       "source_file": "src/services/attacks/nxc_common.rs",
       "source_location": "L1",
       "id": "src_services_attacks_nxc_common_rs",
-      "community": 18,
+      "community": 0,
       "norm_label": "nxc_common.rs"
     },
     {
@@ -4248,7 +4509,7 @@
       "source_file": "src/services/attacks/nxc_common.rs",
       "source_location": "L20",
       "id": "attacks_nxc_common_nxcoutput",
-      "community": 18,
+      "community": 0,
       "norm_label": "nxcoutput"
     },
     {
@@ -4257,7 +4518,7 @@
       "source_file": "src/services/attacks/nxc_common.rs",
       "source_location": "L28",
       "id": "attacks_nxc_common_nxc_binary",
-      "community": 18,
+      "community": 0,
       "norm_label": "nxc_binary()"
     },
     {
@@ -4266,7 +4527,7 @@
       "source_file": "src/services/attacks/nxc_common.rs",
       "source_location": "L46",
       "id": "attacks_nxc_common_run_tool",
-      "community": 26,
+      "community": 0,
       "norm_label": "run_tool()"
     },
     {
@@ -4275,7 +4536,7 @@
       "source_file": "src/services/attacks/nxc_common.rs",
       "source_location": "L74",
       "id": "attacks_nxc_common_run_nxc",
-      "community": 26,
+      "community": 0,
       "norm_label": "run_nxc()"
     },
     {
@@ -4284,7 +4545,7 @@
       "source_file": "src/services/attacks/nxc_common.rs",
       "source_location": "L79",
       "id": "attacks_nxc_common_creds",
-      "community": 18,
+      "community": 0,
       "norm_label": "creds"
     },
     {
@@ -4293,7 +4554,7 @@
       "source_file": "src/services/attacks/nxc_common.rs",
       "source_location": "L86",
       "id": "attacks_nxc_common_creds_from_config",
-      "community": 21,
+      "community": 0,
       "norm_label": "creds_from_config()"
     },
     {
@@ -4302,7 +4563,7 @@
       "source_file": "src/services/attacks/nxc_common.rs",
       "source_location": "L97",
       "id": "attacks_nxc_common_creds_is_null_session",
-      "community": 18,
+      "community": 0,
       "norm_label": ".is_null_session()"
     },
     {
@@ -4311,7 +4572,7 @@
       "source_file": "src/services/attacks/nxc_common.rs",
       "source_location": "L102",
       "id": "attacks_nxc_common_creds_auth_args",
-      "community": 18,
+      "community": 0,
       "norm_label": ".auth_args()"
     },
     {
@@ -4320,7 +4581,7 @@
       "source_file": "src/services/attacks/nxc_common.rs",
       "source_location": "L118",
       "id": "attacks_nxc_common_active_engagement_id",
-      "community": 18,
+      "community": 0,
       "norm_label": "active_engagement_id()"
     },
     {
@@ -4329,7 +4590,7 @@
       "source_file": "src/services/attacks/nxc_common.rs",
       "source_location": "L128",
       "id": "attacks_nxc_common_record_fact",
-      "community": 25,
+      "community": 0,
       "norm_label": "record_fact()"
     },
     {
@@ -4338,7 +4599,7 @@
       "source_file": "src/services/attacks/nxc_common.rs",
       "source_location": "L145",
       "id": "attacks_nxc_common_require_nxc",
-      "community": 18,
+      "community": 0,
       "norm_label": "require_nxc()"
     },
     {
@@ -4347,7 +4608,7 @@
       "source_file": "src/services/attacks/nxc_common.rs",
       "source_location": "L158",
       "id": "attacks_nxc_common_binary_available",
-      "community": 18,
+      "community": 0,
       "norm_label": "binary_available()"
     },
     {
@@ -4356,7 +4617,7 @@
       "source_file": "src/services/attacks/nxc_common.rs",
       "source_location": "L169",
       "id": "attacks_nxc_common_require_binary",
-      "community": 18,
+      "community": 0,
       "norm_label": "require_binary()"
     },
     {
@@ -4365,7 +4626,7 @@
       "source_file": "src/services/attacks/nxc_common.rs",
       "source_location": "L185",
       "id": "attacks_nxc_common_record_finding",
-      "community": 9,
+      "community": 0,
       "norm_label": "record_finding()"
     },
     {
@@ -4374,16 +4635,16 @@
       "source_file": "src/services/attacks/nxc_common.rs",
       "source_location": "L193",
       "id": "attacks_nxc_common_record_credential",
-      "community": 22,
+      "community": 6,
       "norm_label": "record_credential()"
     },
     {
       "label": "save_loot()",
       "file_type": "code",
       "source_file": "src/services/attacks/nxc_common.rs",
-      "source_location": "L230",
+      "source_location": "L233",
       "id": "attacks_nxc_common_save_loot",
-      "community": 9,
+      "community": 0,
       "norm_label": "save_loot()"
     },
     {
@@ -4392,7 +4653,7 @@
       "source_file": "src/services/attacks/ssh_brute.rs",
       "source_location": "L1",
       "id": "src_services_attacks_ssh_brute_rs",
-      "community": 1,
+      "community": 3,
       "norm_label": "ssh_brute.rs"
     },
     {
@@ -4401,7 +4662,7 @@
       "source_file": "src/services/attacks/ssh_brute.rs",
       "source_location": "L12",
       "id": "attacks_ssh_brute_sshbruteforce",
-      "community": 1,
+      "community": 3,
       "norm_label": "sshbruteforce"
     },
     {
@@ -4410,7 +4671,7 @@
       "source_file": "src/services/attacks/ssh_brute.rs",
       "source_location": "L15",
       "id": "attacks_ssh_brute_sshbruteforce_run",
-      "community": 1,
+      "community": 3,
       "norm_label": ".run()"
     },
     {
@@ -4419,7 +4680,7 @@
       "source_file": "src/services/attacks/ssh_brute.rs",
       "source_location": "L98",
       "id": "attacks_ssh_brute_ignoreserverkey",
-      "community": 1,
+      "community": 3,
       "norm_label": "ignoreserverkey"
     },
     {
@@ -4428,7 +4689,7 @@
       "source_file": "src/services/attacks/ssh_brute.rs",
       "source_location": "L103",
       "id": "attacks_ssh_brute_ignoreserverkey_check_server_key",
-      "community": 1,
+      "community": 3,
       "norm_label": ".check_server_key()"
     },
     {
@@ -4437,7 +4698,7 @@
       "source_file": "src/services/attacks/ssh_brute.rs",
       "source_location": "L111",
       "id": "attacks_ssh_brute_try_ssh_login",
-      "community": 1,
+      "community": 3,
       "norm_label": "try_ssh_login()"
     },
     {
@@ -4446,7 +4707,7 @@
       "source_file": "src/services/attacks/ftp_brute.rs",
       "source_location": "L1",
       "id": "src_services_attacks_ftp_brute_rs",
-      "community": 1,
+      "community": 3,
       "norm_label": "ftp_brute.rs"
     },
     {
@@ -4455,7 +4716,7 @@
       "source_file": "src/services/attacks/ftp_brute.rs",
       "source_location": "L13",
       "id": "attacks_ftp_brute_ftpbruteforce",
-      "community": 1,
+      "community": 3,
       "norm_label": "ftpbruteforce"
     },
     {
@@ -4464,7 +4725,7 @@
       "source_file": "src/services/attacks/ftp_brute.rs",
       "source_location": "L16",
       "id": "attacks_ftp_brute_ftpbruteforce_run",
-      "community": 1,
+      "community": 3,
       "norm_label": ".run()"
     },
     {
@@ -4473,7 +4734,7 @@
       "source_file": "src/services/attacks/ftp_brute.rs",
       "source_location": "L103",
       "id": "attacks_ftp_brute_try_ftp_login",
-      "community": 1,
+      "community": 3,
       "norm_label": "try_ftp_login()"
     },
     {
@@ -4482,7 +4743,7 @@
       "source_file": "src/services/attacks/ftp_brute.rs",
       "source_location": "L151",
       "id": "attacks_ftp_brute_read_ftp_response",
-      "community": 1,
+      "community": 3,
       "norm_label": "read_ftp_response()"
     },
     {
@@ -4491,7 +4752,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L1",
       "id": "src_services_attacks_mod_rs",
-      "community": 1,
+      "community": 3,
       "norm_label": "mod.rs"
     },
     {
@@ -4500,7 +4761,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L50",
       "id": "attacks_mod_modulemeta",
-      "community": 1,
+      "community": 3,
       "norm_label": "modulemeta"
     },
     {
@@ -4509,7 +4770,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L83",
       "id": "attacks_mod_attackmodule",
-      "community": 1,
+      "community": 3,
       "norm_label": "attackmodule"
     },
     {
@@ -4518,7 +4779,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L89",
       "id": "attacks_mod_registry",
-      "community": 1,
+      "community": 3,
       "norm_label": "registry()"
     },
     {
@@ -4527,7 +4788,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L111",
       "id": "attacks_mod_module_for",
-      "community": 1,
+      "community": 3,
       "norm_label": "module_for()"
     },
     {
@@ -4536,7 +4797,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L116",
       "id": "attacks_mod_all_meta",
-      "community": 1,
+      "community": 3,
       "norm_label": "all_meta()"
     },
     {
@@ -4545,7 +4806,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L121",
       "id": "attacks_mod_sshbruteforce",
-      "community": 44,
+      "community": 32,
       "norm_label": "sshbruteforce"
     },
     {
@@ -4554,7 +4815,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L122",
       "id": "attacks_mod_sshbruteforce_meta",
-      "community": 44,
+      "community": 32,
       "norm_label": ".meta()"
     },
     {
@@ -4563,7 +4824,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L139",
       "id": "attacks_mod_sshbruteforce_execute",
-      "community": 44,
+      "community": 32,
       "norm_label": ".execute()"
     },
     {
@@ -4572,7 +4833,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L145",
       "id": "attacks_mod_ftpbruteforce",
-      "community": 45,
+      "community": 33,
       "norm_label": "ftpbruteforce"
     },
     {
@@ -4581,7 +4842,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L146",
       "id": "attacks_mod_ftpbruteforce_meta",
-      "community": 45,
+      "community": 33,
       "norm_label": ".meta()"
     },
     {
@@ -4590,7 +4851,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L163",
       "id": "attacks_mod_ftpbruteforce_execute",
-      "community": 45,
+      "community": 33,
       "norm_label": ".execute()"
     },
     {
@@ -4599,7 +4860,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L169",
       "id": "attacks_mod_smbbruteforce",
-      "community": 46,
+      "community": 34,
       "norm_label": "smbbruteforce"
     },
     {
@@ -4608,7 +4869,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L170",
       "id": "attacks_mod_smbbruteforce_meta",
-      "community": 46,
+      "community": 34,
       "norm_label": ".meta()"
     },
     {
@@ -4617,7 +4878,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L187",
       "id": "attacks_mod_smbbruteforce_execute",
-      "community": 46,
+      "community": 34,
       "norm_label": ".execute()"
     },
     {
@@ -4626,7 +4887,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L193",
       "id": "attacks_mod_rdpbruteforce",
-      "community": 47,
+      "community": 35,
       "norm_label": "rdpbruteforce"
     },
     {
@@ -4635,7 +4896,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L194",
       "id": "attacks_mod_rdpbruteforce_meta",
-      "community": 47,
+      "community": 35,
       "norm_label": ".meta()"
     },
     {
@@ -4644,7 +4905,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L211",
       "id": "attacks_mod_rdpbruteforce_execute",
-      "community": 47,
+      "community": 35,
       "norm_label": ".execute()"
     },
     {
@@ -4653,7 +4914,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L217",
       "id": "attacks_mod_filesteal",
-      "community": 48,
+      "community": 36,
       "norm_label": "filesteal"
     },
     {
@@ -4662,7 +4923,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L218",
       "id": "attacks_mod_filesteal_meta",
-      "community": 48,
+      "community": 36,
       "norm_label": ".meta()"
     },
     {
@@ -4671,7 +4932,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L235",
       "id": "attacks_mod_filesteal_execute",
-      "community": 48,
+      "community": 36,
       "norm_label": ".execute()"
     },
     {
@@ -4680,7 +4941,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L241",
       "id": "attacks_mod_adsmbenum",
-      "community": 49,
+      "community": 37,
       "norm_label": "adsmbenum"
     },
     {
@@ -4689,7 +4950,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L242",
       "id": "attacks_mod_adsmbenum_meta",
-      "community": 49,
+      "community": 37,
       "norm_label": ".meta()"
     },
     {
@@ -4698,7 +4959,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L259",
       "id": "attacks_mod_adsmbenum_execute",
-      "community": 49,
+      "community": 37,
       "norm_label": ".execute()"
     },
     {
@@ -4707,7 +4968,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L265",
       "id": "attacks_mod_adnullsession",
-      "community": 50,
+      "community": 38,
       "norm_label": "adnullsession"
     },
     {
@@ -4716,7 +4977,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L266",
       "id": "attacks_mod_adnullsession_meta",
-      "community": 50,
+      "community": 38,
       "norm_label": ".meta()"
     },
     {
@@ -4725,7 +4986,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L283",
       "id": "attacks_mod_adnullsession_execute",
-      "community": 50,
+      "community": 38,
       "norm_label": ".execute()"
     },
     {
@@ -4734,7 +4995,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L289",
       "id": "attacks_mod_adpasswordpolicy",
-      "community": 51,
+      "community": 39,
       "norm_label": "adpasswordpolicy"
     },
     {
@@ -4743,7 +5004,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L290",
       "id": "attacks_mod_adpasswordpolicy_meta",
-      "community": 51,
+      "community": 39,
       "norm_label": ".meta()"
     },
     {
@@ -4752,7 +5013,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L307",
       "id": "attacks_mod_adpasswordpolicy_execute",
-      "community": 51,
+      "community": 39,
       "norm_label": ".execute()"
     },
     {
@@ -4761,7 +5022,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L313",
       "id": "attacks_mod_adsharehunt",
-      "community": 52,
+      "community": 40,
       "norm_label": "adsharehunt"
     },
     {
@@ -4770,7 +5031,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L314",
       "id": "attacks_mod_adsharehunt_meta",
-      "community": 52,
+      "community": 40,
       "norm_label": ".meta()"
     },
     {
@@ -4779,7 +5040,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L331",
       "id": "attacks_mod_adsharehunt_execute",
-      "community": 52,
+      "community": 40,
       "norm_label": ".execute()"
     },
     {
@@ -4788,7 +5049,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L337",
       "id": "attacks_mod_adcredvalidate",
-      "community": 53,
+      "community": 41,
       "norm_label": "adcredvalidate"
     },
     {
@@ -4797,7 +5058,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L338",
       "id": "attacks_mod_adcredvalidate_meta",
-      "community": 53,
+      "community": 41,
       "norm_label": ".meta()"
     },
     {
@@ -4806,7 +5067,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L355",
       "id": "attacks_mod_adcredvalidate_execute",
-      "community": 53,
+      "community": 41,
       "norm_label": ".execute()"
     },
     {
@@ -4815,7 +5076,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L361",
       "id": "attacks_mod_adspray",
-      "community": 54,
+      "community": 42,
       "norm_label": "adspray"
     },
     {
@@ -4824,7 +5085,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L362",
       "id": "attacks_mod_adspray_meta",
-      "community": 54,
+      "community": 42,
       "norm_label": ".meta()"
     },
     {
@@ -4833,7 +5094,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L379",
       "id": "attacks_mod_adspray_execute",
-      "community": 54,
+      "community": 42,
       "norm_label": ".execute()"
     },
     {
@@ -4842,7 +5103,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L385",
       "id": "attacks_mod_adkerberoast",
-      "community": 55,
+      "community": 43,
       "norm_label": "adkerberoast"
     },
     {
@@ -4851,7 +5112,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L386",
       "id": "attacks_mod_adkerberoast_meta",
-      "community": 55,
+      "community": 43,
       "norm_label": ".meta()"
     },
     {
@@ -4860,7 +5121,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L403",
       "id": "attacks_mod_adkerberoast_execute",
-      "community": 55,
+      "community": 43,
       "norm_label": ".execute()"
     },
     {
@@ -4869,7 +5130,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L409",
       "id": "attacks_mod_adasrep",
-      "community": 56,
+      "community": 44,
       "norm_label": "adasrep"
     },
     {
@@ -4878,7 +5139,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L410",
       "id": "attacks_mod_adasrep_meta",
-      "community": 56,
+      "community": 44,
       "norm_label": ".meta()"
     },
     {
@@ -4887,7 +5148,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L427",
       "id": "attacks_mod_adasrep_execute",
-      "community": 56,
+      "community": 44,
       "norm_label": ".execute()"
     },
     {
@@ -4896,7 +5157,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L433",
       "id": "attacks_mod_adadcs",
-      "community": 57,
+      "community": 45,
       "norm_label": "adadcs"
     },
     {
@@ -4905,7 +5166,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L434",
       "id": "attacks_mod_adadcs_meta",
-      "community": 57,
+      "community": 45,
       "norm_label": ".meta()"
     },
     {
@@ -4914,7 +5175,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L451",
       "id": "attacks_mod_adadcs_execute",
-      "community": 57,
+      "community": 45,
       "norm_label": ".execute()"
     },
     {
@@ -4923,7 +5184,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L457",
       "id": "attacks_mod_adrelayrecon",
-      "community": 58,
+      "community": 46,
       "norm_label": "adrelayrecon"
     },
     {
@@ -4932,7 +5193,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L458",
       "id": "attacks_mod_adrelayrecon_meta",
-      "community": 58,
+      "community": 46,
       "norm_label": ".meta()"
     },
     {
@@ -4941,7 +5202,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L475",
       "id": "attacks_mod_adrelayrecon_execute",
-      "community": 58,
+      "community": 46,
       "norm_label": ".execute()"
     },
     {
@@ -4950,7 +5211,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L481",
       "id": "attacks_mod_adbloodhound",
-      "community": 1,
+      "community": 3,
       "norm_label": "adbloodhound"
     },
     {
@@ -4959,7 +5220,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L482",
       "id": "attacks_mod_adbloodhound_meta",
-      "community": 1,
+      "community": 3,
       "norm_label": ".meta()"
     },
     {
@@ -4968,7 +5229,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L499",
       "id": "attacks_mod_adbloodhound_execute",
-      "community": 1,
+      "community": 3,
       "norm_label": ".execute()"
     },
     {
@@ -4977,7 +5238,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L509",
       "id": "attacks_mod_load_wordlist_prefers_inline_then_defaults",
-      "community": 1,
+      "community": 3,
       "norm_label": "load_wordlist_prefers_inline_then_defaults()"
     },
     {
@@ -4986,7 +5247,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L521",
       "id": "attacks_mod_registry_covers_all_expected_modules",
-      "community": 1,
+      "community": 3,
       "norm_label": "registry_covers_all_expected_modules()"
     },
     {
@@ -4995,7 +5256,7 @@
       "source_file": "src/services/attacks/mod.rs",
       "source_location": "L545",
       "id": "attacks_mod_load_wordlist",
-      "community": 1,
+      "community": 3,
       "norm_label": "load_wordlist()"
     },
     {
@@ -5004,7 +5265,7 @@
       "source_file": "src/services/attacks/ad_password_policy.rs",
       "source_location": "L1",
       "id": "src_services_attacks_ad_password_policy_rs",
-      "community": 21,
+      "community": 0,
       "norm_label": "ad_password_policy.rs"
     },
     {
@@ -5013,7 +5274,7 @@
       "source_file": "src/services/attacks/ad_password_policy.rs",
       "source_location": "L19",
       "id": "attacks_ad_password_policy_adpasswordpolicy",
-      "community": 21,
+      "community": 0,
       "norm_label": "adpasswordpolicy"
     },
     {
@@ -5022,7 +5283,7 @@
       "source_file": "src/services/attacks/ad_password_policy.rs",
       "source_location": "L23",
       "id": "attacks_ad_password_policy_passwordpolicy",
-      "community": 21,
+      "community": 0,
       "norm_label": "passwordpolicy"
     },
     {
@@ -5031,7 +5292,7 @@
       "source_file": "src/services/attacks/ad_password_policy.rs",
       "source_location": "L31",
       "id": "attacks_ad_password_policy_adpasswordpolicy_run",
-      "community": 21,
+      "community": 0,
       "norm_label": ".run()"
     },
     {
@@ -5040,7 +5301,7 @@
       "source_file": "src/services/attacks/ad_password_policy.rs",
       "source_location": "L90",
       "id": "attacks_ad_password_policy_int_after_colon",
-      "community": 21,
+      "community": 0,
       "norm_label": "int_after_colon()"
     },
     {
@@ -5049,7 +5310,7 @@
       "source_file": "src/services/attacks/ad_password_policy.rs",
       "source_location": "L102",
       "id": "attacks_ad_password_policy_parse_pass_pol",
-      "community": 21,
+      "community": 0,
       "norm_label": "parse_pass_pol()"
     },
     {
@@ -5058,7 +5319,7 @@
       "source_file": "src/services/attacks/ad_password_policy.rs",
       "source_location": "L137",
       "id": "attacks_ad_password_policy_parses_lockout_policy",
-      "community": 21,
+      "community": 0,
       "norm_label": "parses_lockout_policy()"
     },
     {
@@ -5067,7 +5328,7 @@
       "source_file": "src/services/attacks/ad_password_policy.rs",
       "source_location": "L146",
       "id": "attacks_ad_password_policy_none_threshold_means_no_lockout",
-      "community": 21,
+      "community": 0,
       "norm_label": "none_threshold_means_no_lockout()"
     },
     {
@@ -5076,52 +5337,52 @@
       "source_file": "src/services/attacks/file_steal.rs",
       "source_location": "L1",
       "id": "src_services_attacks_file_steal_rs",
-      "community": 32,
+      "community": 25,
       "norm_label": "file_steal.rs"
     },
     {
       "label": "FileSteal",
       "file_type": "code",
       "source_file": "src/services/attacks/file_steal.rs",
-      "source_location": "L12",
+      "source_location": "L14",
       "id": "attacks_file_steal_filesteal",
-      "community": 32,
+      "community": 25,
       "norm_label": "filesteal"
     },
     {
       "label": ".run()",
       "file_type": "code",
       "source_file": "src/services/attacks/file_steal.rs",
-      "source_location": "L15",
+      "source_location": "L17",
       "id": "attacks_file_steal_filesteal_run",
-      "community": 32,
+      "community": 0,
       "norm_label": ".run()"
     },
     {
       "label": "IgnoreServerKey",
       "file_type": "code",
       "source_file": "src/services/attacks/file_steal.rs",
-      "source_location": "L125",
+      "source_location": "L119",
       "id": "attacks_file_steal_ignoreserverkey",
-      "community": 32,
+      "community": 25,
       "norm_label": "ignoreserverkey"
     },
     {
       "label": ".check_server_key()",
       "file_type": "code",
       "source_file": "src/services/attacks/file_steal.rs",
-      "source_location": "L130",
+      "source_location": "L124",
       "id": "attacks_file_steal_ignoreserverkey_check_server_key",
-      "community": 32,
+      "community": 25,
       "norm_label": ".check_server_key()"
     },
     {
       "label": "preview_text()",
       "file_type": "code",
       "source_file": "src/services/attacks/file_steal.rs",
-      "source_location": "L139",
+      "source_location": "L133",
       "id": "attacks_file_steal_preview_text",
-      "community": 32,
+      "community": 25,
       "norm_label": "preview_text()"
     },
     {
@@ -5130,7 +5391,7 @@
       "source_file": "src/services/attacks/ad_asrep.rs",
       "source_location": "L1",
       "id": "src_services_attacks_ad_asrep_rs",
-      "community": 9,
+      "community": 0,
       "norm_label": "ad_asrep.rs"
     },
     {
@@ -5139,7 +5400,7 @@
       "source_file": "src/services/attacks/ad_asrep.rs",
       "source_location": "L18",
       "id": "attacks_ad_asrep_adasrep",
-      "community": 9,
+      "community": 0,
       "norm_label": "adasrep"
     },
     {
@@ -5148,7 +5409,7 @@
       "source_file": "src/services/attacks/ad_asrep.rs",
       "source_location": "L21",
       "id": "attacks_ad_asrep_adasrep_run",
-      "community": 9,
+      "community": 0,
       "norm_label": ".run()"
     },
     {
@@ -5157,7 +5418,7 @@
       "source_file": "src/services/attacks/ad_relay_recon.rs",
       "source_location": "L1",
       "id": "src_services_attacks_ad_relay_recon_rs",
-      "community": 9,
+      "community": 8,
       "norm_label": "ad_relay_recon.rs"
     },
     {
@@ -5166,7 +5427,7 @@
       "source_file": "src/services/attacks/ad_relay_recon.rs",
       "source_location": "L17",
       "id": "attacks_ad_relay_recon_adrelayrecon",
-      "community": 9,
+      "community": 8,
       "norm_label": "adrelayrecon"
     },
     {
@@ -5175,7 +5436,7 @@
       "source_file": "src/services/attacks/ad_relay_recon.rs",
       "source_location": "L20",
       "id": "attacks_ad_relay_recon_adrelayrecon_run",
-      "community": 9,
+      "community": 8,
       "norm_label": ".run()"
     },
     {
@@ -5184,7 +5445,7 @@
       "source_file": "src/services/attacks/ad_relay_recon.rs",
       "source_location": "L64",
       "id": "attacks_ad_relay_recon_relay_targets_from_facts",
-      "community": 9,
+      "community": 8,
       "norm_label": "relay_targets_from_facts()"
     },
     {
@@ -5193,7 +5454,7 @@
       "source_file": "src/services/attacks/ad_relay_recon.rs",
       "source_location": "L80",
       "id": "attacks_ad_relay_recon_fact",
-      "community": 9,
+      "community": 8,
       "norm_label": "fact()"
     },
     {
@@ -5202,7 +5463,7 @@
       "source_file": "src/services/attacks/ad_relay_recon.rs",
       "source_location": "L87",
       "id": "attacks_ad_relay_recon_selects_only_signing_disabled_hosts",
-      "community": 9,
+      "community": 8,
       "norm_label": "selects_only_signing_disabled_hosts()"
     },
     {
@@ -5211,7 +5472,7 @@
       "source_file": "src/services/attacks/ad_cred_validate.rs",
       "source_location": "L1",
       "id": "src_services_attacks_ad_cred_validate_rs",
-      "community": 22,
+      "community": 0,
       "norm_label": "ad_cred_validate.rs"
     },
     {
@@ -5220,7 +5481,7 @@
       "source_file": "src/services/attacks/ad_cred_validate.rs",
       "source_location": "L16",
       "id": "attacks_ad_cred_validate_adcredvalidate",
-      "community": 22,
+      "community": 0,
       "norm_label": "adcredvalidate"
     },
     {
@@ -5229,7 +5490,7 @@
       "source_file": "src/services/attacks/ad_cred_validate.rs",
       "source_location": "L19",
       "id": "attacks_ad_cred_validate_adcredvalidate_run",
-      "community": 22,
+      "community": 0,
       "norm_label": ".run()"
     },
     {
@@ -5238,7 +5499,7 @@
       "source_file": "src/services/attacks/ad_cred_validate.rs",
       "source_location": "L85",
       "id": "attacks_ad_cred_validate_parse_auth",
-      "community": 22,
+      "community": 0,
       "norm_label": "parse_auth()"
     },
     {
@@ -5247,7 +5508,7 @@
       "source_file": "src/services/attacks/ad_cred_validate.rs",
       "source_location": "L104",
       "id": "attacks_ad_cred_validate_detects_success_and_admin",
-      "community": 22,
+      "community": 0,
       "norm_label": "detects_success_and_admin()"
     },
     {
@@ -5256,7 +5517,7 @@
       "source_file": "CLAUDE.md",
       "source_location": "L1",
       "id": "claude_md",
-      "community": 33,
+      "community": 22,
       "norm_label": "claude.md"
     },
     {
@@ -5265,7 +5526,7 @@
       "source_file": "CLAUDE.md",
       "source_location": "L1",
       "id": "decebalus_backend_claude_backend_working_rules",
-      "community": 33,
+      "community": 22,
       "norm_label": "backend \u2014 working rules"
     },
     {
@@ -5274,7 +5535,7 @@
       "source_file": "CLAUDE.md",
       "source_location": "L3",
       "id": "decebalus_backend_claude_consult_the_knowledge_graph_first_token_discipline",
-      "community": 33,
+      "community": 22,
       "norm_label": "consult the knowledge graph first (token discipline)"
     },
     {
@@ -5283,7 +5544,7 @@
       "source_file": "CLAUDE.md",
       "source_location": "L17",
       "id": "decebalus_backend_claude_keep_the_graph_fresh",
-      "community": 33,
+      "community": 22,
       "norm_label": "keep the graph fresh"
     },
     {
@@ -5292,7 +5553,7 @@
       "source_file": "CLAUDE.md",
       "source_location": "L20",
       "id": "decebalus_backend_claude_codeblock_1",
-      "community": 33,
+      "community": 22,
       "norm_label": "code:block1 (cd decebalus-backend && graphify update .)"
     },
     {
@@ -5301,11 +5562,21 @@
       "source_file": "CLAUDE.md",
       "source_location": "L25",
       "id": "decebalus_backend_claude_build_test",
-      "community": 33,
+      "community": 22,
       "norm_label": "build / test"
     }
   ],
   "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "build.rs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "build_rs",
+      "target": "decebalus_backend_build_main",
+      "confidence_score": 1.0
+    },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
@@ -5853,6 +6124,27 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "tests/loot_cli_tests.rs",
+      "source_location": "L12",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "tests_loot_cli_tests_rs",
+      "target": "tests_loot_cli_tests_loot_decrypt_cli_round_trips_and_rejects_wrong_key"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/loot_cli_tests.rs",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "tests_loot_cli_tests_loot_decrypt_cli_round_trips_and_rejects_wrong_key",
+      "target": "services_crypto_encrypt"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "src/doctor.rs",
       "source_location": "L8",
       "weight": 1.0,
@@ -5979,6 +6271,36 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/main.rs",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "src_main_rs",
+      "target": "src_main_assets",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.rs",
+      "source_location": "L30",
+      "weight": 1.0,
+      "source": "src_main_rs",
+      "target": "src_main_serve",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.rs",
+      "source_location": "L54",
+      "weight": 1.0,
+      "source": "src_main_rs",
+      "target": "src_main_dist_output_is_embedded",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.rs",
       "source_location": "L16",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -6000,11 +6322,33 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/main.rs",
+      "source_location": "L254",
+      "weight": 1.0,
+      "source": "src_main_main",
+      "target": "src_main_serve",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.rs",
       "source_location": "L160",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "src_main_main",
       "target": "src_main_shutdown_signal"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/main.rs",
+      "source_location": "L60",
+      "weight": 1.0,
+      "source": "src_main_main",
+      "target": "services_crypto_decrypt"
     },
     {
       "relation": "calls",
@@ -6045,32 +6389,10 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "src/main.rs",
-      "source_location": "L64",
-      "weight": 1.0,
-      "source": "src_main_main",
-      "target": "src_settings_init"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "src/main.rs",
       "source_location": "L65",
       "weight": 1.0,
       "source": "src_main_main",
       "target": "src_settings_set_log_level"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "src/main.rs",
-      "source_location": "L65",
-      "weight": 1.0,
-      "source": "src_main_main",
-      "target": "src_settings_current"
     },
     {
       "relation": "calls",
@@ -6115,6 +6437,39 @@
       "weight": 1.0,
       "source": "src_main_main",
       "target": "bin_tui_app_post"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/main.rs",
+      "source_location": "L197",
+      "weight": 1.0,
+      "source": "src_main_main",
+      "target": "services_crypto_cryptoerror_from"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/main.rs",
+      "source_location": "L64",
+      "weight": 1.0,
+      "source": "src_main_main",
+      "target": "src_settings_init"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/main.rs",
+      "source_location": "L65",
+      "weight": 1.0,
+      "source": "src_main_main",
+      "target": "src_settings_current"
     },
     {
       "relation": "contains",
@@ -7156,6 +7511,17 @@
       "confidence_score": 1.0,
       "source": "bin_tui_main",
       "target": "bin_tui_ui"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/bin/tui.rs",
+      "source_location": "L173",
+      "weight": 1.0,
+      "source": "bin_tui_ui",
+      "target": "services_crypto_cryptoerror_from"
     },
     {
       "relation": "contains",
@@ -9617,6 +9983,39 @@
       "context": "call",
       "confidence": "INFERRED",
       "confidence_score": 0.8,
+      "source_file": "src/db/repository.rs",
+      "source_location": "L807",
+      "weight": 1.0,
+      "source": "db_repository_credential_from_row",
+      "target": "services_crypto_decrypt_str"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/db/repository.rs",
+      "source_location": "L831",
+      "weight": 1.0,
+      "source": "db_repository_add_credential",
+      "target": "services_crypto_encrypt_str"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/db/repository.rs",
+      "source_location": "L832",
+      "weight": 1.0,
+      "source": "db_repository_add_credential",
+      "target": "services_crypto_secret_fingerprint"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
       "source_file": "src/api/engagements.rs",
       "source_location": "L62",
       "weight": 1.0,
@@ -10001,6 +10400,17 @@
       "confidence_score": 1.0,
       "source": "api_exports_list_exports",
       "target": "api_exports_export_dir"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/api/exports.rs",
+      "source_location": "L91",
+      "weight": 1.0,
+      "source": "api_exports_download_export",
+      "target": "services_crypto_cryptoerror_from"
     },
     {
       "relation": "contains",
@@ -12561,6 +12971,17 @@
     {
       "relation": "calls",
       "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/services/port_scanner.rs",
+      "source_location": "L514",
+      "weight": 1.0,
+      "source": "services_port_scanner_portscanner_parse_nmap_xml",
+      "target": "services_crypto_cryptoerror_from"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/services/port_scanner.rs",
       "source_location": "L818",
@@ -12908,6 +13329,426 @@
       "weight": 1.0,
       "source": "services_orchestrator_orchestrator_run_rule_engine",
       "target": "attacks_mod_module_for"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L24",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_services_crypto_rs",
+      "target": "services_crypto_cryptoerror"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L39",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_services_crypto_rs",
+      "target": "services_crypto_masterkey"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L94",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_services_crypto_rs",
+      "target": "services_crypto_init"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L104",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_services_crypto_rs",
+      "target": "services_crypto_current"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L108",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_services_crypto_rs",
+      "target": "services_crypto_cipher_for"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L114",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_services_crypto_rs",
+      "target": "services_crypto_encrypt"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L129",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_services_crypto_rs",
+      "target": "services_crypto_decrypt"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L141",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_services_crypto_rs",
+      "target": "services_crypto_encrypt_str"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L146",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_services_crypto_rs",
+      "target": "services_crypto_decrypt_str"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L155",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_services_crypto_rs",
+      "target": "services_crypto_secret_fingerprint"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L167",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_services_crypto_rs",
+      "target": "services_crypto_round_trips_a_string"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L174",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_services_crypto_rs",
+      "target": "services_crypto_wrong_engagement_fails_to_decrypt"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L180",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_services_crypto_rs",
+      "target": "services_crypto_same_plaintext_encrypts_differently_each_time"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L187",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_services_crypto_rs",
+      "target": "services_crypto_fingerprint_is_deterministic_and_engagement_scoped"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L196",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_services_crypto_rs",
+      "target": "services_crypto_round_trips_raw_bytes"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L27",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "services_crypto_cryptoerror",
+      "target": "services_crypto_cryptoerror_fmt"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L35",
+      "weight": 1.0,
+      "context": "call",
+      "confidence_score": 1.0,
+      "source": "services_crypto_cryptoerror_from",
+      "target": "services_crypto_cryptoerror"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L67",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "services_crypto_masterkey_from_hex",
+      "target": "services_crypto_cryptoerror"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L131",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "services_crypto_decrypt",
+      "target": "services_crypto_cryptoerror"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L147",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "services_crypto_decrypt_str",
+      "target": "services_crypto_cryptoerror"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L42",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "services_crypto_masterkey",
+      "target": "services_crypto_masterkey_load_or_create"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L66",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "services_crypto_masterkey",
+      "target": "services_crypto_masterkey_from_hex"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L74",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "services_crypto_masterkey",
+      "target": "services_crypto_masterkey_ephemeral"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L81",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "services_crypto_masterkey",
+      "target": "services_crypto_masterkey_derive"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L44",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "services_crypto_masterkey_load_or_create",
+      "target": "services_crypto_masterkey_from_hex"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L95",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "services_crypto_init",
+      "target": "services_crypto_masterkey_load_or_create"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L109",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "services_crypto_cipher_for",
+      "target": "services_crypto_masterkey_derive"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L156",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "services_crypto_secret_fingerprint",
+      "target": "services_crypto_masterkey_derive"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L109",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "services_crypto_cipher_for",
+      "target": "services_crypto_current"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L156",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "services_crypto_secret_fingerprint",
+      "target": "services_crypto_current"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L115",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "services_crypto_encrypt",
+      "target": "services_crypto_cipher_for"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L134",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "services_crypto_decrypt",
+      "target": "services_crypto_cipher_for"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L142",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "services_crypto_encrypt_str",
+      "target": "services_crypto_encrypt"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L197",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "services_crypto_round_trips_raw_bytes",
+      "target": "services_crypto_encrypt"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/services/attacks/nxc_common.rs",
+      "source_location": "L244",
+      "weight": 1.0,
+      "source": "attacks_nxc_common_save_loot",
+      "target": "services_crypto_encrypt"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L148",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "services_crypto_decrypt_str",
+      "target": "services_crypto_decrypt"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L168",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "services_crypto_round_trips_a_string",
+      "target": "services_crypto_encrypt_str"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L175",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "services_crypto_wrong_engagement_fails_to_decrypt",
+      "target": "services_crypto_encrypt_str"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L181",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "services_crypto_same_plaintext_encrypts_differently_each_time",
+      "target": "services_crypto_encrypt_str"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/services/crypto.rs",
+      "source_location": "L188",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "services_crypto_fingerprint_is_deterministic_and_engagement_scoped",
+      "target": "services_crypto_secret_fingerprint"
     },
     {
       "relation": "contains",
@@ -14624,6 +15465,17 @@
       "context": "call",
       "confidence": "INFERRED",
       "confidence_score": 0.8,
+      "source_file": "src/services/attacks/file_steal.rs",
+      "source_location": "L100",
+      "weight": 1.0,
+      "source": "attacks_file_steal_filesteal_run",
+      "target": "attacks_nxc_common_save_loot"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
       "source_file": "src/services/attacks/ad_asrep.rs",
       "source_location": "L58",
       "weight": 1.0,
@@ -15554,9 +16406,9 @@
       "source_file": "CLAUDE.md",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "claude_md",
-      "target": "decebalus_backend_claude_backend_working_rules",
-      "confidence_score": 1.0
+      "target": "decebalus_backend_claude_backend_working_rules"
     },
     {
       "relation": "contains",
@@ -15564,9 +16416,9 @@
       "source_file": "CLAUDE.md",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "decebalus_backend_claude_backend_working_rules",
-      "target": "decebalus_backend_claude_consult_the_knowledge_graph_first_token_discipline",
-      "confidence_score": 1.0
+      "target": "decebalus_backend_claude_consult_the_knowledge_graph_first_token_discipline"
     },
     {
       "relation": "contains",
@@ -15574,9 +16426,9 @@
       "source_file": "CLAUDE.md",
       "source_location": "L17",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "decebalus_backend_claude_backend_working_rules",
-      "target": "decebalus_backend_claude_keep_the_graph_fresh",
-      "confidence_score": 1.0
+      "target": "decebalus_backend_claude_keep_the_graph_fresh"
     },
     {
       "relation": "contains",
@@ -15584,9 +16436,9 @@
       "source_file": "CLAUDE.md",
       "source_location": "L25",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "decebalus_backend_claude_backend_working_rules",
-      "target": "decebalus_backend_claude_build_test",
-      "confidence_score": 1.0
+      "target": "decebalus_backend_claude_build_test"
     },
     {
       "relation": "contains",
@@ -15594,11 +16446,11 @@
       "source_file": "CLAUDE.md",
       "source_location": "L20",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "decebalus_backend_claude_keep_the_graph_fresh",
-      "target": "decebalus_backend_claude_codeblock_1",
-      "confidence_score": 1.0
+      "target": "decebalus_backend_claude_codeblock_1"
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "cc18c92481217feb1be674a44f7f5ce0d2dd4772"
+  "built_at_commit": "060decdbb429285095defccc681864f1d784ba49"
 }

@@ -54,7 +54,7 @@ impl AdKerberoast {
 
         let mut loot_path = String::new();
         if !hashes.is_empty() {
-            loot_path = save_loot(&target, "kerberoast.txt", hashes.join("\n").as_bytes())
+            loot_path = save_loot(&eng, &target, "kerberoast.txt", hashes.join("\n").as_bytes())
                 .await
                 .unwrap_or_default();
 
@@ -67,7 +67,10 @@ impl AdKerberoast {
             f.severity = "high".into();
             f.value_score = 75;
             f.rationale = "SPN accounts allow offline TGS cracking; weak service passwords lead to compromise.".into();
-            f.suggested_command = Some(format!("hashcat -m 13100 {} /usr/share/wordlists/rockyou.txt --force", loot_path));
+            f.suggested_command = Some(format!(
+                "hashcat -m 13100 <(decebalus-backend loot decrypt {}) /usr/share/wordlists/rockyou.txt --force",
+                loot_path
+            ));
             f.status = "done".into();
             f.evidence = json!({ "target": target, "hashes": hashes.len(), "loot": loot_path });
             record_finding(state, &f).await;

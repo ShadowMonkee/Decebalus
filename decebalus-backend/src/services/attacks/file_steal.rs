@@ -6,6 +6,8 @@ use russh_sftp::client::SftpSession;
 use crate::models::Job;
 use crate::state::AppState;
 
+use super::nxc_common::{active_engagement_id, save_loot};
+
 // Guard against accidentally pulling huge files over the wire.
 const MAX_FILE_SIZE: usize = 10 * 1024 * 1024; // 10 MB
 
@@ -88,25 +90,17 @@ impl FileSteal {
             ));
         }
 
-        // Save to data/loot/<timestamp>_<sanitised_filename>
-        let loot_dir = std::path::Path::new("data/loot");
-        tokio::fs::create_dir_all(loot_dir)
-            .await
-            .map_err(|e| format!("Cannot create loot dir: {}", e))?;
-
         let filename = std::path::Path::new(remote_path)
             .file_name()
             .and_then(|n| n.to_str())
             .unwrap_or("file");
         let safe_filename = filename.replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], "_");
-        let timestamp = chrono::Utc::now().format("%Y%m%d_%H%M%S");
-        let local_path = loot_dir.join(format!("{}_{}_{}", target.replace('.', "_"), timestamp, safe_filename));
 
-        tokio::fs::write(&local_path, &contents)
+        let eng = active_engagement_id(state).await;
+        let local_path_str = save_loot(&eng, target, &safe_filename, &contents)
             .await
             .map_err(|e| format!("Cannot write loot file: {}", e))?;
 
-        let local_path_str = local_path.to_string_lossy().to_string();
         let _ = state.broadcaster.send(format!(
             "scan_progress:{}:Saved {} bytes → {}", job.id, contents.len(), local_path_str
         ));
