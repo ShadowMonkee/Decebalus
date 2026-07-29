@@ -3,13 +3,16 @@
   import { connectionStatus } from '../stores/websocketStore';
 
   const links = [
-    { path: '/',         label: 'Dashboard' },
-    { path: '/recon',    label: 'Recon'     },
-    { path: '/logs',     label: 'Logs'      },
-    { path: '/attacks',  label: 'Attacks'   },
-    { path: '/plugins',  label: 'Modules'   },
-    { path: '/vulndb',   label: 'Vuln DB'   },
-    { path: '/settings', label: 'Settings'  },
+    { path: '/',            label: 'Dashboard'  },
+    { path: '/war',         label: 'War Table'  },
+    { path: '/engagements', label: 'Engagement' },
+    { path: '/recon',       label: 'Recon'      },
+    { path: '/logs',        label: 'Logs'       },
+    { path: '/attacks',     label: 'Attacks'    },
+    { path: '/plugins',     label: 'Modules'    },
+    { path: '/vulndb',      label: 'Vuln DB'    },
+    { path: '/history',     label: 'History'    },
+    { path: '/settings',    label: 'Settings'   },
   ];
 
   const statusLabel: Record<string, string> = {

@@ -223,62 +223,73 @@ fn parse_job_from_request(payload: &CreateJobRequest) -> Result<Job, Response>  
         // No target = scan all discovered hosts
     }
 
-    if matches!(job_type.as_str(), "ssh-brute" | "ftp-brute" | "smb-brute" | "rdp-brute") {
-        let cfg = payload.config.as_ref()
+    // Attack / exploit / AD modules: validate generically against the module's
+    // declared `required_config`, so adding a new module needs no change here.
+    if let Some(module) = crate::services::attacks::module_for(&job_type) {
+        let meta = module.meta();
+        let cfg = payload
+            .config
+            .as_ref()
             .and_then(|c| c.as_object())
-            .ok_or_else(|| (StatusCode::BAD_REQUEST, Json(json!({ "error": "config object required" }))).into_response())?;
+            .cloned()
+            .unwrap_or_default();
 
-        let target = cfg.get("target").and_then(|v| v.as_str())
-            .ok_or_else(|| (StatusCode::BAD_REQUEST, Json(json!({ "error": "config.target required" }))).into_response())?;
-        target.parse::<std::net::IpAddr>().map_err(|_| {
-            (StatusCode::BAD_REQUEST, Json(json!({ "error": format!("Invalid IP: {}", target) }))).into_response()
-        })?;
-
-        let has_inline = cfg.get("passwords").and_then(|v| v.as_array()).map(|a| !a.is_empty()).unwrap_or(false);
-        let has_path   = cfg.get("wordlist_path").and_then(|v| v.as_str()).map(|s| !s.is_empty()).unwrap_or(false);
-        if !has_inline && !has_path {
-            // Neither provided — will fall back to built-in defaults, which is fine
+        for key in &meta.required_config {
+            let present = cfg.get(key).map(|v| !is_blank(v)).unwrap_or(false);
+            if !present {
+                return Err(bad_request(format!(
+                    "config.{} is required for {}",
+                    key, job_type
+                )));
+            }
         }
 
-        job.config = payload.config.clone().unwrap();
+        // If the module operates on a target, sanity-check it (IP, CIDR, or "self").
+        if let Some(target) = cfg.get("target").and_then(|v| v.as_str()) {
+            if !is_valid_target(target) {
+                return Err(bad_request(format!("Invalid target: {}", target)));
+            }
+        }
+
+        job.config = Value::Object(cfg);
         apply_schedule(&mut job, payload);
         return Ok(job);
     }
 
-    if job_type == "file-steal" {
-        let cfg = payload.config.as_ref()
-            .and_then(|c| c.as_object())
-            .ok_or_else(|| (StatusCode::BAD_REQUEST, Json(json!({ "error": "config object required" }))).into_response())?;
-
-        for field in &["target", "username", "password", "remote_path"] {
-            cfg.get(*field).and_then(|v| v.as_str())
-                .ok_or_else(|| (StatusCode::BAD_REQUEST, Json(json!({ "error": format!("config.{} required", field) }))).into_response())?;
-        }
-
-        let target = cfg["target"].as_str().unwrap();
-        target.parse::<std::net::IpAddr>().map_err(|_| {
-            (StatusCode::BAD_REQUEST, Json(json!({ "error": format!("Invalid IP: {}", target) }))).into_response()
-        })?;
-
-        job.config = payload.config.clone().unwrap();
+    // Built-in scan + maintenance jobs use the `config` map assembled above.
+    // ("cve-sync", "export", "report" take no parameters.)
+    if matches!(
+        job_type.as_str(),
+        "discovery" | "port-scan" | "nmap-scan" | "cve-sync" | "export" | "report"
+    ) {
+        job.config = Value::Object(config);
         apply_schedule(&mut job, payload);
         return Ok(job);
     }
 
-    // "cve-sync" and "export" take no parameters — fall through as-is
-    if job_type != "discovery" && job_type != "port-scan" && job_type != "nmap-scan"
-        && job_type != "cve-sync" && job_type != "export"
-    {
-        return Err((
-            StatusCode::BAD_REQUEST,
-            Json(json!({ "error": format!("Unknown job type: {}", job_type) })),
-        )
-            .into_response());
-    }
+    Err(bad_request(format!("Unknown job type: {}", job_type)))
+}
 
-    job.config = Value::Object(config);
-    apply_schedule(&mut job, payload);
-    Ok(job)
+/// A 400 response with a JSON `{ "error": ... }` body.
+fn bad_request(msg: String) -> Response {
+    (StatusCode::BAD_REQUEST, Json(json!({ "error": msg }))).into_response()
+}
+
+/// A config value counts as "provided" unless it's null or an empty string/array.
+fn is_blank(v: &Value) -> bool {
+    match v {
+        Value::Null => true,
+        Value::String(s) => s.is_empty(),
+        Value::Array(a) => a.is_empty(),
+        _ => false,
+    }
+}
+
+/// Targets may be a single IP, a CIDR range (AD enum over a subnet), or "self".
+fn is_valid_target(target: &str) -> bool {
+    target == "self"
+        || target.parse::<std::net::IpAddr>().is_ok()
+        || target.parse::<IpNet>().is_ok()
 }
 
 /// Apply a requested `scheduled_at` timestamp to a job, if one was provided.

@@ -1,0 +1,292 @@
+{
+  "communities": {
+    "0": [
+      "lib_api_createengagement",
+      "lib_api_dismissfinding",
+      "lib_api_getactiveengagement",
+      "lib_api_getconfig",
+      "lib_api_getcredentials",
+      "lib_api_getcve",
+      "lib_api_getengagements",
+      "lib_api_getexports",
+      "lib_api_gethost",
+      "lib_api_getjob",
+      "lib_api_getlogs",
+      "lib_api_getlogsbyjob",
+      "lib_api_getmodules",
+      "lib_api_listcves",
+      "lib_api_req",
+      "lib_api_runengine",
+      "lib_api_runfinding",
+      "lib_api_saveconfig",
+      "lib_api_schedulejob",
+      "lib_api_synccves"
+    ],
+    "1": [
+      "lib_api_activateengagement",
+      "lib_api_canceljob",
+      "lib_api_createengagementbody",
+      "lib_api_credential",
+      "lib_api_cvedetail",
+      "lib_api_engagement",
+      "lib_api_exportdownloadurl",
+      "lib_api_exportfile",
+      "lib_api_finding",
+      "lib_api_getfindings",
+      "lib_api_gethistory",
+      "lib_api_host",
+      "lib_api_hostevent",
+      "lib_api_job",
+      "lib_api_log",
+      "lib_api_modulemeta",
+      "lib_api_port",
+      "lib_api_vulnerability",
+      "src_lib_api_ts"
+    ],
+    "2": [
+      "src_lib_stores_websocket_ts",
+      "src_lib_stores_websocketstore_ts",
+      "stores_websocket_websocketclient",
+      "stores_websocket_websocketclient_close",
+      "stores_websocket_websocketclient_connect",
+      "stores_websocket_websocketclient_constructor",
+      "stores_websocket_websocketclient_isopen",
+      "stores_websocket_websocketclient_readystate",
+      "stores_websocket_websocketclient_send",
+      "stores_websocket_websocketoptions",
+      "stores_websocketstore_closewebsocket",
+      "stores_websocketstore_connectionstatus",
+      "stores_websocketstore_connectwebsocket",
+      "stores_websocketstore_routemessage",
+      "stores_websocketstore_wsevent",
+      "stores_websocketstore_wsevents",
+      "stores_websocketstore_wsmessages"
+    ],
+    "3": [
+      "lib_api_createattackjob",
+      "lib_api_gethosts",
+      "lib_api_getjobs",
+      "pages_attacks_handlecancel",
+      "pages_attacks_idx",
+      "pages_attacks_jobid",
+      "pages_attacks_launch",
+      "pages_attacks_parseresult",
+      "pages_attacks_refresh",
+      "pages_attacks_rest",
+      "pages_attacks_result",
+      "pages_attacks_text",
+      "src_lib_pages_attacks_svelte"
+    ],
+    "4": [
+      "pages_engagements_scope_cidrs",
+      "src_lib_pages_engagements_svelte",
+      "src_lib_pages_plugins_svelte",
+      "src_lib_pages_settings_svelte",
+      "svelte",
+      "users_narcis_programming_decebalus_decebalus_frontend_src_lib_api"
+    ],
+    "5": [
+      "pages_vulndb_cvssdisplay",
+      "pages_vulndb_for",
+      "pages_vulndb_number",
+      "pages_vulndb_q",
+      "pages_vulndb_switch",
+      "src_lib_pages_vulndb_svelte"
+    ],
+    "6": [
+      "src_app_svelte",
+      "src_lib_components_navbar_svelte",
+      "src_lib_pages_wartable_svelte",
+      "svelte_routing",
+      "users_narcis_programming_decebalus_decebalus_frontend_src_lib_stores_websocketstore"
+    ],
+    "7": [
+      "pages_logs_string",
+      "src_lib_pages_history_svelte",
+      "src_lib_pages_logs_svelte",
+      "users_narcis_programming_decebalus_decebalus_frontend_src_lib_utils"
+    ],
+    "8": [
+      "lib_utils_fmtdate",
+      "lib_utils_fmtresults",
+      "lib_utils_fmtunixts",
+      "src_lib_utils_ts"
+    ],
+    "9": [
+      "pages_dashboard_if",
+      "pages_dashboard_string",
+      "src_lib_pages_dashboard_svelte"
+    ],
+    "10": [
+      "pages_reconnaissance_if",
+      "pages_reconnaissance_refresh",
+      "src_lib_pages_reconnaissance_svelte"
+    ],
+    "11": [
+      "lib_api_createjob",
+      "lib_api_triggerexport",
+      "lib_api_triggerreport"
+    ],
+    "12": [
+      "src_main_app",
+      "src_main_ts"
+    ],
+    "13": [
+      "svelte_config_js"
+    ],
+    "14": [
+      "vite_config_ts"
+    ],
+    "15": [
+      "src_vite_env_d_ts"
+    ]
+  },
+  "cohesion": {
+    "0": 0.1,
+    "1": 0.11,
+    "2": 0.12,
+    "3": 0.18,
+    "4": 0.47,
+    "5": 0.33,
+    "6": 0.7,
+    "7": 0.5,
+    "8": 0.5,
+    "9": 0.67,
+    "10": 0.67,
+    "11": 0.67,
+    "12": 1.0,
+    "13": 1.0,
+    "14": 1.0,
+    "15": 1.0
+  },
+  "gods": [
+    {
+      "id": "lib_api_req",
+      "label": "req()",
+      "degree": 28
+    },
+    {
+      "id": "stores_websocket_websocketclient",
+      "label": "WebSocketClient",
+      "degree": 8
+    },
+    {
+      "id": "pages_attacks_refresh",
+      "label": "refresh()",
+      "degree": 5
+    },
+    {
+      "id": "lib_api_createjob",
+      "label": "createJob()",
+      "degree": 4
+    },
+    {
+      "id": "lib_api_getjobs",
+      "label": "getJobs()",
+      "degree": 3
+    },
+    {
+      "id": "lib_api_gethosts",
+      "label": "getHosts()",
+      "degree": 3
+    },
+    {
+      "id": "lib_api_canceljob",
+      "label": "cancelJob()",
+      "degree": 3
+    },
+    {
+      "id": "lib_api_createattackjob",
+      "label": "createAttackJob()",
+      "degree": 3
+    },
+    {
+      "id": "pages_attacks_launch",
+      "label": "launch()",
+      "degree": 3
+    },
+    {
+      "id": "pages_attacks_handlecancel",
+      "label": "handleCancel()",
+      "degree": 3
+    }
+  ],
+  "surprises": [
+    {
+      "source": "handleCancel()",
+      "target": "cancelJob()",
+      "source_files": [
+        "src/lib/pages/Attacks.svelte",
+        "src/lib/api.ts"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities"
+    },
+    {
+      "source": "refresh()",
+      "target": "getJobs()",
+      "source_files": [
+        "src/lib/pages/Attacks.svelte",
+        "src/lib/api.ts"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source"
+    },
+    {
+      "source": "refresh()",
+      "target": "getHosts()",
+      "source_files": [
+        "src/lib/pages/Attacks.svelte",
+        "src/lib/api.ts"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source"
+    },
+    {
+      "source": "launch()",
+      "target": "createAttackJob()",
+      "source_files": [
+        "src/lib/pages/Attacks.svelte",
+        "src/lib/api.ts"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `req()` connect `Community 0` to `Community 11`, `Community 1`, `Community 3`?",
+      "why": "High betweenness centrality (0.110) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `cancelJob()` connect `Community 1` to `Community 0`, `Community 3`?",
+      "why": "High betweenness centrality (0.072) - this node is a cross-community bridge."
+    },
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `app`, `Port`, `Vulnerability` to the rest of the system?",
+      "why": "29 weakly-connected nodes found - possible documentation gaps or missing edges."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 0` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.1 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 1` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.11 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 2` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.12 - nodes in this community are weakly interconnected."
+    }
+  ]
+}

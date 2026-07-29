@@ -3,8 +3,25 @@ import { WebSocketClient } from './websocket';
 
 export const connectionStatus = writable<'connected' | 'connecting' | 'disconnected'>('disconnected');
 
-// Every incoming WS message is pushed here. Pages subscribe to this store.
-export const wsMessages = writable<string | object | null>(null);
+// Legacy colon-delimited progress strings (e.g. "job_completed:<id>"). Existing
+// pages subscribe here and pattern-match string prefixes — this stays string-only.
+export const wsMessages = writable<string | null>(null);
+
+/** A structured event envelope: { type, payload }. */
+export type WsEvent = { type: string; payload: any };
+
+// Typed JSON events (finding | cred | job | engine) for the war table. Kept
+// separate from wsMessages so string consumers never receive an object.
+export const wsEvents = writable<WsEvent | null>(null);
+
+/** Route an incoming (already JSON-parsed-or-string) message to the right store. */
+function routeMessage(data: unknown): void {
+  if (data && typeof data === 'object' && typeof (data as any).type === 'string') {
+    wsEvents.set(data as WsEvent);
+  } else if (typeof data === 'string') {
+    wsMessages.set(data);
+  }
+}
 
 let activeConnection: WebSocketClient | null = null;
 
@@ -19,7 +36,7 @@ export function connectWebSocket(): WebSocketClient {
   const ws = new WebSocketClient(wsUrl, {
     onOpen:    () => connectionStatus.set('connected'),
     onClose:   () => connectionStatus.set('disconnected'),
-    onMessage: (data) => wsMessages.set(data),
+    onMessage: (data) => routeMessage(data),
   });
 
   connectionStatus.set('connecting');

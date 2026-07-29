@@ -1,59 +1,7 @@
 {
   "directed": false,
   "multigraph": false,
-  "graph": {
-    "hyperedges": [
-      {
-        "id": "realtime_ws_update_flow",
-        "label": "Real-time WebSocket Update Flow",
-        "nodes": [
-          "websocketstore_wsmessages",
-          "dashboard_svelte",
-          "reconnaissance_svelte",
-          "logs_svelte",
-          "vulndb_svelte"
-        ],
-        "relation": "participate_in",
-        "confidence": "EXTRACTED",
-        "confidence_score": 0.95,
-        "source_file": "src/lib/stores/websocketStore.ts"
-      },
-      {
-        "id": "api_crud_pattern",
-        "label": "API CRUD Pattern via req helper",
-        "nodes": [
-          "api_req",
-          "api_getjobs",
-          "api_createjob",
-          "api_canceljob",
-          "api_schedulejob"
-        ],
-        "relation": "implement",
-        "confidence": "EXTRACTED",
-        "confidence_score": 1.0,
-        "source_file": "src/lib/api.ts"
-      },
-      {
-        "id": "app_routing_structure",
-        "label": "SPA Routing Structure",
-        "nodes": [
-          "app_svelte",
-          "navbar_svelte",
-          "dashboard_svelte",
-          "reconnaissance_svelte",
-          "logs_svelte",
-          "attacks_svelte",
-          "plugins_svelte",
-          "vulndb_svelte",
-          "settings_svelte"
-        ],
-        "relation": "form",
-        "confidence": "EXTRACTED",
-        "confidence_score": 1.0,
-        "source_file": "src/App.svelte"
-      }
-    ]
-  },
+  "graph": {},
   "nodes": [
     {
       "label": "svelte.config.js",
@@ -61,7 +9,7 @@
       "source_file": "svelte.config.js",
       "source_location": "L1",
       "id": "svelte_config_js",
-      "community": 10,
+      "community": 13,
       "norm_label": "svelte.config.js"
     },
     {
@@ -70,7 +18,7 @@
       "source_file": "vite.config.ts",
       "source_location": "L1",
       "id": "vite_config_ts",
-      "community": 11,
+      "community": 14,
       "norm_label": "vite.config.ts"
     },
     {
@@ -79,7 +27,7 @@
       "source_file": "src/main.ts",
       "source_location": "L1",
       "id": "src_main_ts",
-      "community": 1,
+      "community": 12,
       "norm_label": "main.ts"
     },
     {
@@ -88,7 +36,7 @@
       "source_file": "src/main.ts",
       "source_location": "L5",
       "id": "src_main_app",
-      "community": 1,
+      "community": 12,
       "norm_label": "app"
     },
     {
@@ -97,7 +45,7 @@
       "source_file": "src/App.svelte",
       "source_location": "L1",
       "id": "src_app_svelte",
-      "community": 1,
+      "community": 6,
       "norm_label": "app.svelte"
     },
     {
@@ -106,7 +54,7 @@
       "source_file": "svelte",
       "confidence": "EXTRACTED",
       "id": "svelte",
-      "community": 1,
+      "community": 4,
       "norm_label": "svelte"
     },
     {
@@ -115,7 +63,7 @@
       "source_file": "svelte-routing",
       "confidence": "EXTRACTED",
       "id": "svelte_routing",
-      "community": 1,
+      "community": 6,
       "norm_label": "svelte-routing"
     },
     {
@@ -124,7 +72,7 @@
       "source_file": "src/lib/stores/websocketStore",
       "confidence": "EXTRACTED",
       "id": "users_narcis_programming_decebalus_decebalus_frontend_src_lib_stores_websocketstore",
-      "community": 1,
+      "community": 6,
       "norm_label": "../stores/websocketstore"
     },
     {
@@ -134,7 +82,7 @@
       "confidence": "EXTRACTED",
       "source_location": "L1",
       "id": "src_lib_components_navbar_svelte",
-      "community": 1,
+      "community": 6,
       "norm_label": "navbar.svelte"
     },
     {
@@ -144,8 +92,28 @@
       "confidence": "EXTRACTED",
       "source_location": "L1",
       "id": "src_lib_pages_dashboard_svelte",
-      "community": 1,
+      "community": 9,
       "norm_label": "dashboard.svelte"
+    },
+    {
+      "label": "WarTable.svelte",
+      "file_type": "code",
+      "source_file": "src/lib/pages/WarTable.svelte",
+      "confidence": "EXTRACTED",
+      "source_location": "L1",
+      "id": "src_lib_pages_wartable_svelte",
+      "community": 6,
+      "norm_label": "wartable.svelte"
+    },
+    {
+      "label": "Engagements.svelte",
+      "file_type": "code",
+      "source_file": "src/lib/pages/Engagements.svelte",
+      "confidence": "EXTRACTED",
+      "source_location": "L1",
+      "id": "src_lib_pages_engagements_svelte",
+      "community": 4,
+      "norm_label": "engagements.svelte"
     },
     {
       "label": "Reconnaissance.svelte",
@@ -154,7 +122,7 @@
       "confidence": "EXTRACTED",
       "source_location": "L1",
       "id": "src_lib_pages_reconnaissance_svelte",
-      "community": 1,
+      "community": 10,
       "norm_label": "reconnaissance.svelte"
     },
     {
@@ -164,7 +132,7 @@
       "confidence": "EXTRACTED",
       "source_location": "L1",
       "id": "src_lib_pages_attacks_svelte",
-      "community": 1,
+      "community": 3,
       "norm_label": "attacks.svelte"
     },
     {
@@ -174,7 +142,7 @@
       "confidence": "EXTRACTED",
       "source_location": "L1",
       "id": "src_lib_pages_plugins_svelte",
-      "community": 1,
+      "community": 4,
       "norm_label": "plugins.svelte"
     },
     {
@@ -184,7 +152,7 @@
       "confidence": "EXTRACTED",
       "source_location": "L1",
       "id": "src_lib_pages_logs_svelte",
-      "community": 1,
+      "community": 7,
       "norm_label": "logs.svelte"
     },
     {
@@ -194,8 +162,18 @@
       "confidence": "EXTRACTED",
       "source_location": "L1",
       "id": "src_lib_pages_vulndb_svelte",
-      "community": 1,
+      "community": 5,
       "norm_label": "vulndb.svelte"
+    },
+    {
+      "label": "History.svelte",
+      "file_type": "code",
+      "source_file": "src/lib/pages/History.svelte",
+      "confidence": "EXTRACTED",
+      "source_location": "L1",
+      "id": "src_lib_pages_history_svelte",
+      "community": 7,
+      "norm_label": "history.svelte"
     },
     {
       "label": "Settings.svelte",
@@ -204,7 +182,7 @@
       "confidence": "EXTRACTED",
       "source_location": "L1",
       "id": "src_lib_pages_settings_svelte",
-      "community": 1,
+      "community": 4,
       "norm_label": "settings.svelte"
     },
     {
@@ -213,7 +191,7 @@
       "source_file": "src/vite-env.d.ts",
       "source_location": "L1",
       "id": "src_vite_env_d_ts",
-      "community": 12,
+      "community": 15,
       "norm_label": "vite-env.d.ts"
     },
     {
@@ -222,7 +200,7 @@
       "source_file": "src/lib/utils.ts",
       "source_location": "L1",
       "id": "src_lib_utils_ts",
-      "community": 7,
+      "community": 8,
       "norm_label": "utils.ts"
     },
     {
@@ -231,7 +209,7 @@
       "source_file": "src/lib/utils.ts",
       "source_location": "L1",
       "id": "lib_utils_fmtdate",
-      "community": 7,
+      "community": 8,
       "norm_label": "fmtdate()"
     },
     {
@@ -240,7 +218,7 @@
       "source_file": "src/lib/utils.ts",
       "source_location": "L10",
       "id": "lib_utils_fmtunixts",
-      "community": 7,
+      "community": 8,
       "norm_label": "fmtunixts()"
     },
     {
@@ -249,7 +227,7 @@
       "source_file": "src/lib/utils.ts",
       "source_location": "L14",
       "id": "lib_utils_fmtresults",
-      "community": 7,
+      "community": 8,
       "norm_label": "fmtresults()"
     },
     {
@@ -258,7 +236,7 @@
       "source_file": "src/lib/api.ts",
       "source_location": "L1",
       "id": "src_lib_api_ts",
-      "community": 0,
+      "community": 1,
       "norm_label": "api.ts"
     },
     {
@@ -267,7 +245,7 @@
       "source_file": "src/lib/api.ts",
       "source_location": "L3",
       "id": "lib_api_port",
-      "community": 0,
+      "community": 1,
       "norm_label": "port"
     },
     {
@@ -276,32 +254,32 @@
       "source_file": "src/lib/api.ts",
       "source_location": "L12",
       "id": "lib_api_vulnerability",
-      "community": 0,
+      "community": 1,
       "norm_label": "vulnerability"
     },
     {
       "label": "Host",
       "file_type": "code",
       "source_file": "src/lib/api.ts",
-      "source_location": "L18",
+      "source_location": "L20",
       "id": "lib_api_host",
-      "community": 0,
+      "community": 1,
       "norm_label": "host"
     },
     {
       "label": "Job",
       "file_type": "code",
       "source_file": "src/lib/api.ts",
-      "source_location": "L32",
+      "source_location": "L34",
       "id": "lib_api_job",
-      "community": 0,
+      "community": 1,
       "norm_label": "job"
     },
     {
       "label": "req()",
       "file_type": "code",
       "source_file": "src/lib/api.ts",
-      "source_location": "L42",
+      "source_location": "L44",
       "id": "lib_api_req",
       "community": 0,
       "norm_label": "req()"
@@ -310,16 +288,16 @@
       "label": "Log",
       "file_type": "code",
       "source_file": "src/lib/api.ts",
-      "source_location": "L60",
+      "source_location": "L62",
       "id": "lib_api_log",
-      "community": 0,
+      "community": 1,
       "norm_label": "log"
     },
     {
       "label": "getLogs()",
       "file_type": "code",
       "source_file": "src/lib/api.ts",
-      "source_location": "L70",
+      "source_location": "L72",
       "id": "lib_api_getlogs",
       "community": 0,
       "norm_label": "getlogs()"
@@ -328,7 +306,7 @@
       "label": "getLogsByJob()",
       "file_type": "code",
       "source_file": "src/lib/api.ts",
-      "source_location": "L71",
+      "source_location": "L73",
       "id": "lib_api_getlogsbyjob",
       "community": 0,
       "norm_label": "getlogsbyjob()"
@@ -337,16 +315,16 @@
       "label": "getJobs()",
       "file_type": "code",
       "source_file": "src/lib/api.ts",
-      "source_location": "L73",
+      "source_location": "L75",
       "id": "lib_api_getjobs",
-      "community": 0,
+      "community": 3,
       "norm_label": "getjobs()"
     },
     {
       "label": "getJob()",
       "file_type": "code",
       "source_file": "src/lib/api.ts",
-      "source_location": "L74",
+      "source_location": "L76",
       "id": "lib_api_getjob",
       "community": 0,
       "norm_label": "getjob()"
@@ -355,16 +333,16 @@
       "label": "getHosts()",
       "file_type": "code",
       "source_file": "src/lib/api.ts",
-      "source_location": "L75",
+      "source_location": "L77",
       "id": "lib_api_gethosts",
-      "community": 0,
+      "community": 3,
       "norm_label": "gethosts()"
     },
     {
       "label": "getHost()",
       "file_type": "code",
       "source_file": "src/lib/api.ts",
-      "source_location": "L76",
+      "source_location": "L78",
       "id": "lib_api_gethost",
       "community": 0,
       "norm_label": "gethost()"
@@ -373,7 +351,7 @@
       "label": "getConfig()",
       "file_type": "code",
       "source_file": "src/lib/api.ts",
-      "source_location": "L77",
+      "source_location": "L79",
       "id": "lib_api_getconfig",
       "community": 0,
       "norm_label": "getconfig()"
@@ -382,25 +360,34 @@
       "label": "createJob()",
       "file_type": "code",
       "source_file": "src/lib/api.ts",
-      "source_location": "L79",
+      "source_location": "L81",
       "id": "lib_api_createjob",
-      "community": 0,
+      "community": 11,
       "norm_label": "createjob()"
     },
     {
       "label": "cancelJob()",
       "file_type": "code",
       "source_file": "src/lib/api.ts",
-      "source_location": "L89",
+      "source_location": "L91",
       "id": "lib_api_canceljob",
-      "community": 0,
+      "community": 1,
       "norm_label": "canceljob()"
+    },
+    {
+      "label": "createAttackJob()",
+      "file_type": "code",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L94",
+      "id": "lib_api_createattackjob",
+      "community": 3,
+      "norm_label": "createattackjob()"
     },
     {
       "label": "scheduleJob()",
       "file_type": "code",
       "source_file": "src/lib/api.ts",
-      "source_location": "L92",
+      "source_location": "L102",
       "id": "lib_api_schedulejob",
       "community": 0,
       "norm_label": "schedulejob()"
@@ -409,7 +396,7 @@
       "label": "saveConfig()",
       "file_type": "code",
       "source_file": "src/lib/api.ts",
-      "source_location": "L102",
+      "source_location": "L112",
       "id": "lib_api_saveconfig",
       "community": 0,
       "norm_label": "saveconfig()"
@@ -418,16 +405,16 @@
       "label": "CveDetail",
       "file_type": "code",
       "source_file": "src/lib/api.ts",
-      "source_location": "L109",
+      "source_location": "L119",
       "id": "lib_api_cvedetail",
-      "community": 0,
+      "community": 1,
       "norm_label": "cvedetail"
     },
     {
       "label": "listCves()",
       "file_type": "code",
       "source_file": "src/lib/api.ts",
-      "source_location": "L121",
+      "source_location": "L131",
       "id": "lib_api_listcves",
       "community": 0,
       "norm_label": "listcves()"
@@ -436,7 +423,7 @@
       "label": "getCve()",
       "file_type": "code",
       "source_file": "src/lib/api.ts",
-      "source_location": "L122",
+      "source_location": "L132",
       "id": "lib_api_getcve",
       "community": 0,
       "norm_label": "getcve()"
@@ -445,7 +432,7 @@
       "label": "syncCves()",
       "file_type": "code",
       "source_file": "src/lib/api.ts",
-      "source_location": "L123",
+      "source_location": "L133",
       "id": "lib_api_synccves",
       "community": 0,
       "norm_label": "synccves()"
@@ -454,16 +441,16 @@
       "label": "ExportFile",
       "file_type": "code",
       "source_file": "src/lib/api.ts",
-      "source_location": "L125",
+      "source_location": "L135",
       "id": "lib_api_exportfile",
-      "community": 0,
+      "community": 1,
       "norm_label": "exportfile"
     },
     {
       "label": "getExports()",
       "file_type": "code",
       "source_file": "src/lib/api.ts",
-      "source_location": "L131",
+      "source_location": "L141",
       "id": "lib_api_getexports",
       "community": 0,
       "norm_label": "getexports()"
@@ -472,19 +459,181 @@
       "label": "triggerExport()",
       "file_type": "code",
       "source_file": "src/lib/api.ts",
-      "source_location": "L132",
+      "source_location": "L142",
       "id": "lib_api_triggerexport",
-      "community": 0,
+      "community": 11,
       "norm_label": "triggerexport()"
+    },
+    {
+      "label": "triggerReport()",
+      "file_type": "code",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L143",
+      "id": "lib_api_triggerreport",
+      "community": 11,
+      "norm_label": "triggerreport()"
     },
     {
       "label": "exportDownloadUrl()",
       "file_type": "code",
       "source_file": "src/lib/api.ts",
-      "source_location": "L134",
+      "source_location": "L145",
       "id": "lib_api_exportdownloadurl",
-      "community": 0,
+      "community": 1,
       "norm_label": "exportdownloadurl()"
+    },
+    {
+      "label": "ModuleMeta",
+      "file_type": "code",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L148",
+      "id": "lib_api_modulemeta",
+      "community": 1,
+      "norm_label": "modulemeta"
+    },
+    {
+      "label": "getModules()",
+      "file_type": "code",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L164",
+      "id": "lib_api_getmodules",
+      "community": 0,
+      "norm_label": "getmodules()"
+    },
+    {
+      "label": "Engagement",
+      "file_type": "code",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L168",
+      "id": "lib_api_engagement",
+      "community": 1,
+      "norm_label": "engagement"
+    },
+    {
+      "label": "Credential",
+      "file_type": "code",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L178",
+      "id": "lib_api_credential",
+      "community": 1,
+      "norm_label": "credential"
+    },
+    {
+      "label": "Finding",
+      "file_type": "code",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L192",
+      "id": "lib_api_finding",
+      "community": 1,
+      "norm_label": "finding"
+    },
+    {
+      "label": "getFindings()",
+      "file_type": "code",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L210",
+      "id": "lib_api_getfindings",
+      "community": 1,
+      "norm_label": "getfindings()"
+    },
+    {
+      "label": "runFinding()",
+      "file_type": "code",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L211",
+      "id": "lib_api_runfinding",
+      "community": 0,
+      "norm_label": "runfinding()"
+    },
+    {
+      "label": "dismissFinding()",
+      "file_type": "code",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L212",
+      "id": "lib_api_dismissfinding",
+      "community": 0,
+      "norm_label": "dismissfinding()"
+    },
+    {
+      "label": "runEngine()",
+      "file_type": "code",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L213",
+      "id": "lib_api_runengine",
+      "community": 0,
+      "norm_label": "runengine()"
+    },
+    {
+      "label": "getEngagements()",
+      "file_type": "code",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L215",
+      "id": "lib_api_getengagements",
+      "community": 0,
+      "norm_label": "getengagements()"
+    },
+    {
+      "label": "getActiveEngagement()",
+      "file_type": "code",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L216",
+      "id": "lib_api_getactiveengagement",
+      "community": 0,
+      "norm_label": "getactiveengagement()"
+    },
+    {
+      "label": "activateEngagement()",
+      "file_type": "code",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L217",
+      "id": "lib_api_activateengagement",
+      "community": 1,
+      "norm_label": "activateengagement()"
+    },
+    {
+      "label": "getCredentials()",
+      "file_type": "code",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L218",
+      "id": "lib_api_getcredentials",
+      "community": 0,
+      "norm_label": "getcredentials()"
+    },
+    {
+      "label": "CreateEngagementBody",
+      "file_type": "code",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L220",
+      "id": "lib_api_createengagementbody",
+      "community": 1,
+      "norm_label": "createengagementbody"
+    },
+    {
+      "label": "createEngagement()",
+      "file_type": "code",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L229",
+      "id": "lib_api_createengagement",
+      "community": 0,
+      "norm_label": "createengagement()"
+    },
+    {
+      "label": "HostEvent",
+      "file_type": "code",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L236",
+      "id": "lib_api_hostevent",
+      "community": 1,
+      "norm_label": "hostevent"
+    },
+    {
+      "label": "getHistory()",
+      "file_type": "code",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L245",
+      "id": "lib_api_gethistory",
+      "community": 1,
+      "norm_label": "gethistory()"
     },
     {
       "label": "websocket.ts",
@@ -589,16 +738,43 @@
       "label": "wsMessages",
       "file_type": "code",
       "source_file": "src/lib/stores/websocketStore.ts",
-      "source_location": "L7",
+      "source_location": "L8",
       "id": "stores_websocketstore_wsmessages",
       "community": 2,
       "norm_label": "wsmessages"
     },
     {
-      "label": "connectWebSocket()",
+      "label": "WsEvent",
       "file_type": "code",
       "source_file": "src/lib/stores/websocketStore.ts",
       "source_location": "L11",
+      "id": "stores_websocketstore_wsevent",
+      "community": 2,
+      "norm_label": "wsevent"
+    },
+    {
+      "label": "wsEvents",
+      "file_type": "code",
+      "source_file": "src/lib/stores/websocketStore.ts",
+      "source_location": "L15",
+      "id": "stores_websocketstore_wsevents",
+      "community": 2,
+      "norm_label": "wsevents"
+    },
+    {
+      "label": "routeMessage()",
+      "file_type": "code",
+      "source_file": "src/lib/stores/websocketStore.ts",
+      "source_location": "L18",
+      "id": "stores_websocketstore_routemessage",
+      "community": 2,
+      "norm_label": "routemessage()"
+    },
+    {
+      "label": "connectWebSocket()",
+      "file_type": "code",
+      "source_file": "src/lib/stores/websocketStore.ts",
+      "source_location": "L28",
       "id": "stores_websocketstore_connectwebsocket",
       "community": 2,
       "norm_label": "connectwebsocket()"
@@ -607,10 +783,28 @@
       "label": "closeWebSocket()",
       "file_type": "code",
       "source_file": "src/lib/stores/websocketStore.ts",
-      "source_location": "L31",
+      "source_location": "L48",
       "id": "stores_websocketstore_closewebsocket",
       "community": 2,
       "norm_label": "closewebsocket()"
+    },
+    {
+      "label": "scope_cidrs",
+      "file_type": "code",
+      "source_file": "src/lib/pages/Engagements.svelte",
+      "source_location": "L34",
+      "id": "pages_engagements_scope_cidrs",
+      "community": 4,
+      "norm_label": "scope_cidrs"
+    },
+    {
+      "label": "../api",
+      "file_type": "code",
+      "source_file": "src/lib/api",
+      "confidence": "EXTRACTED",
+      "id": "users_narcis_programming_decebalus_decebalus_frontend_src_lib_api",
+      "community": 4,
+      "norm_label": "../api"
     },
     {
       "label": "for()",
@@ -618,7 +812,7 @@
       "source_file": "src/lib/pages/VulnDb.svelte",
       "source_location": "L39",
       "id": "pages_vulndb_for",
-      "community": 1,
+      "community": 5,
       "norm_label": "for()"
     },
     {
@@ -627,7 +821,7 @@
       "source_file": "src/lib/pages/VulnDb.svelte",
       "source_location": "L97",
       "id": "pages_vulndb_number",
-      "community": 1,
+      "community": 5,
       "norm_label": "number"
     },
     {
@@ -636,7 +830,7 @@
       "source_file": "src/lib/pages/VulnDb.svelte",
       "source_location": "L101",
       "id": "pages_vulndb_cvssdisplay",
-      "community": 1,
+      "community": 5,
       "norm_label": "cvssdisplay()"
     },
     {
@@ -645,7 +839,7 @@
       "source_file": "src/lib/pages/VulnDb.svelte",
       "source_location": "L106",
       "id": "pages_vulndb_switch",
-      "community": 1,
+      "community": 5,
       "norm_label": "switch()"
     },
     {
@@ -654,17 +848,8 @@
       "source_file": "src/lib/pages/VulnDb.svelte",
       "source_location": "L118",
       "id": "pages_vulndb_q",
-      "community": 1,
+      "community": 5,
       "norm_label": "q"
-    },
-    {
-      "label": "../api",
-      "file_type": "code",
-      "source_file": "src/lib/api",
-      "confidence": "EXTRACTED",
-      "id": "users_narcis_programming_decebalus_decebalus_frontend_src_lib_api",
-      "community": 1,
-      "norm_label": "../api"
     },
     {
       "label": "../utils",
@@ -672,7 +857,7 @@
       "source_file": "src/lib/utils",
       "confidence": "EXTRACTED",
       "id": "users_narcis_programming_decebalus_decebalus_frontend_src_lib_utils",
-      "community": 1,
+      "community": 7,
       "norm_label": "../utils"
     },
     {
@@ -681,674 +866,125 @@
       "source_file": "src/lib/pages/Logs.svelte",
       "source_location": "L59",
       "id": "pages_logs_string",
-      "community": 1,
+      "community": 7,
       "norm_label": "string"
+    },
+    {
+      "label": "refresh()",
+      "file_type": "code",
+      "source_file": "src/lib/pages/Attacks.svelte",
+      "source_location": "L42",
+      "id": "pages_attacks_refresh",
+      "community": 3,
+      "norm_label": "refresh()"
+    },
+    {
+      "label": "launch()",
+      "file_type": "code",
+      "source_file": "src/lib/pages/Attacks.svelte",
+      "source_location": "L46",
+      "id": "pages_attacks_launch",
+      "community": 3,
+      "norm_label": "launch()"
+    },
+    {
+      "label": "handleCancel()",
+      "file_type": "code",
+      "source_file": "src/lib/pages/Attacks.svelte",
+      "source_location": "L82",
+      "id": "pages_attacks_handlecancel",
+      "community": 3,
+      "norm_label": "handlecancel()"
+    },
+    {
+      "label": "parseResult()",
+      "file_type": "code",
+      "source_file": "src/lib/pages/Attacks.svelte",
+      "source_location": "L86",
+      "id": "pages_attacks_parseresult",
+      "community": 3,
+      "norm_label": "parseresult()"
+    },
+    {
+      "label": "rest",
+      "file_type": "code",
+      "source_file": "src/lib/pages/Attacks.svelte",
+      "source_location": "L100",
+      "id": "pages_attacks_rest",
+      "community": 3,
+      "norm_label": "rest"
+    },
+    {
+      "label": "idx",
+      "file_type": "code",
+      "source_file": "src/lib/pages/Attacks.svelte",
+      "source_location": "L101",
+      "id": "pages_attacks_idx",
+      "community": 3,
+      "norm_label": "idx"
+    },
+    {
+      "label": "jobId",
+      "file_type": "code",
+      "source_file": "src/lib/pages/Attacks.svelte",
+      "source_location": "L103",
+      "id": "pages_attacks_jobid",
+      "community": 3,
+      "norm_label": "jobid"
+    },
+    {
+      "label": "text",
+      "file_type": "code",
+      "source_file": "src/lib/pages/Attacks.svelte",
+      "source_location": "L104",
+      "id": "pages_attacks_text",
+      "community": 3,
+      "norm_label": "text"
+    },
+    {
+      "label": "result",
+      "file_type": "code",
+      "source_file": "src/lib/pages/Attacks.svelte",
+      "source_location": "L228",
+      "id": "pages_attacks_result",
+      "community": 3,
+      "norm_label": "result"
     },
     {
       "label": "if()",
       "file_type": "code",
       "source_file": "src/lib/pages/Reconnaissance.svelte",
-      "source_location": "L46",
+      "source_location": "L61",
       "id": "pages_reconnaissance_if",
-      "community": 1,
+      "community": 10,
       "norm_label": "if()"
     },
     {
       "label": "refresh()",
       "file_type": "code",
-      "source_file": "src/lib/pages/Dashboard.svelte",
-      "source_location": "L85",
-      "id": "pages_dashboard_refresh",
-      "community": 1,
+      "source_file": "src/lib/pages/Reconnaissance.svelte",
+      "source_location": "L77",
+      "id": "pages_reconnaissance_refresh",
+      "community": 10,
       "norm_label": "refresh()"
+    },
+    {
+      "label": "if()",
+      "file_type": "code",
+      "source_file": "src/lib/pages/Dashboard.svelte",
+      "source_location": "L102",
+      "id": "pages_dashboard_if",
+      "community": 9,
+      "norm_label": "if()"
     },
     {
       "label": "string",
       "file_type": "code",
       "source_file": "src/lib/pages/Dashboard.svelte",
-      "source_location": "L120",
+      "source_location": "L141",
       "id": "pages_dashboard_string",
-      "community": 1,
+      "community": 9,
       "norm_label": "string"
-    },
-    {
-      "label": "Svelte Config",
-      "file_type": "code",
-      "source_file": "svelte.config.js",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "svelte_config",
-      "community": 13,
-      "norm_label": "svelte config"
-    },
-    {
-      "label": "Vite Config",
-      "file_type": "code",
-      "source_file": "vite.config.ts",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "vite_config",
-      "community": 9,
-      "norm_label": "vite config"
-    },
-    {
-      "label": "Main Entry Point",
-      "file_type": "code",
-      "source_file": "src/main.ts",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "main_entrypoint",
-      "community": 4,
-      "norm_label": "main entry point"
-    },
-    {
-      "label": "App Root Component",
-      "file_type": "code",
-      "source_file": "src/App.svelte",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "app_svelte",
-      "community": 4,
-      "norm_label": "app root component"
-    },
-    {
-      "label": "fmtDate",
-      "file_type": "code",
-      "source_file": "src/lib/utils.ts",
-      "source_location": "1",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "utils_fmtdate",
-      "community": 5,
-      "norm_label": "fmtdate"
-    },
-    {
-      "label": "fmtUnixTs",
-      "file_type": "code",
-      "source_file": "src/lib/utils.ts",
-      "source_location": "10",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "utils_fmtunixts",
-      "community": 5,
-      "norm_label": "fmtunixts"
-    },
-    {
-      "label": "fmtResults",
-      "file_type": "code",
-      "source_file": "src/lib/utils.ts",
-      "source_location": "14",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "utils_fmtresults",
-      "community": 5,
-      "norm_label": "fmtresults"
-    },
-    {
-      "label": "Port Interface",
-      "file_type": "code",
-      "source_file": "src/lib/api.ts",
-      "source_location": "3",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "api_port_interface",
-      "community": 8,
-      "norm_label": "port interface"
-    },
-    {
-      "label": "Vulnerability Interface",
-      "file_type": "code",
-      "source_file": "src/lib/api.ts",
-      "source_location": "12",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "api_vulnerability_interface",
-      "community": 8,
-      "norm_label": "vulnerability interface"
-    },
-    {
-      "label": "Host Interface",
-      "file_type": "code",
-      "source_file": "src/lib/api.ts",
-      "source_location": "18",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "api_host_interface",
-      "community": 8,
-      "norm_label": "host interface"
-    },
-    {
-      "label": "Job Interface",
-      "file_type": "code",
-      "source_file": "src/lib/api.ts",
-      "source_location": "32",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "api_job_interface",
-      "community": 14,
-      "norm_label": "job interface"
-    },
-    {
-      "label": "Log Interface",
-      "file_type": "code",
-      "source_file": "src/lib/api.ts",
-      "source_location": "60",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "api_log_interface",
-      "community": 15,
-      "norm_label": "log interface"
-    },
-    {
-      "label": "CveDetail Interface",
-      "file_type": "code",
-      "source_file": "src/lib/api.ts",
-      "source_location": "109",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "api_cvedetail_interface",
-      "community": 16,
-      "norm_label": "cvedetail interface"
-    },
-    {
-      "label": "ExportFile Interface",
-      "file_type": "code",
-      "source_file": "src/lib/api.ts",
-      "source_location": "125",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "api_exportfile_interface",
-      "community": 17,
-      "norm_label": "exportfile interface"
-    },
-    {
-      "label": "req (HTTP helper)",
-      "file_type": "code",
-      "source_file": "src/lib/api.ts",
-      "source_location": "42",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "api_req",
-      "community": 3,
-      "norm_label": "req (http helper)"
-    },
-    {
-      "label": "getLogs",
-      "file_type": "code",
-      "source_file": "src/lib/api.ts",
-      "source_location": "70",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "api_getlogs",
-      "community": 5,
-      "norm_label": "getlogs"
-    },
-    {
-      "label": "getLogsByJob",
-      "file_type": "code",
-      "source_file": "src/lib/api.ts",
-      "source_location": "71",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "api_getlogsbyjob",
-      "community": 3,
-      "norm_label": "getlogsbyjob"
-    },
-    {
-      "label": "getJobs",
-      "file_type": "code",
-      "source_file": "src/lib/api.ts",
-      "source_location": "73",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "api_getjobs",
-      "community": 5,
-      "norm_label": "getjobs"
-    },
-    {
-      "label": "getJob",
-      "file_type": "code",
-      "source_file": "src/lib/api.ts",
-      "source_location": "74",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "api_getjob",
-      "community": 3,
-      "norm_label": "getjob"
-    },
-    {
-      "label": "getHosts",
-      "file_type": "code",
-      "source_file": "src/lib/api.ts",
-      "source_location": "75",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "api_gethosts",
-      "community": 3,
-      "norm_label": "gethosts"
-    },
-    {
-      "label": "getHost",
-      "file_type": "code",
-      "source_file": "src/lib/api.ts",
-      "source_location": "76",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "api_gethost",
-      "community": 3,
-      "norm_label": "gethost"
-    },
-    {
-      "label": "getConfig",
-      "file_type": "code",
-      "source_file": "src/lib/api.ts",
-      "source_location": "77",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "api_getconfig",
-      "community": 3,
-      "norm_label": "getconfig"
-    },
-    {
-      "label": "createJob",
-      "file_type": "code",
-      "source_file": "src/lib/api.ts",
-      "source_location": "79",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "api_createjob",
-      "community": 6,
-      "norm_label": "createjob"
-    },
-    {
-      "label": "cancelJob",
-      "file_type": "code",
-      "source_file": "src/lib/api.ts",
-      "source_location": "89",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "api_canceljob",
-      "community": 6,
-      "norm_label": "canceljob"
-    },
-    {
-      "label": "scheduleJob",
-      "file_type": "code",
-      "source_file": "src/lib/api.ts",
-      "source_location": "92",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "api_schedulejob",
-      "community": 6,
-      "norm_label": "schedulejob"
-    },
-    {
-      "label": "saveConfig",
-      "file_type": "code",
-      "source_file": "src/lib/api.ts",
-      "source_location": "102",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "api_saveconfig",
-      "community": 3,
-      "norm_label": "saveconfig"
-    },
-    {
-      "label": "listCves",
-      "file_type": "code",
-      "source_file": "src/lib/api.ts",
-      "source_location": "121",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "api_listcves",
-      "community": 3,
-      "norm_label": "listcves"
-    },
-    {
-      "label": "getCve",
-      "file_type": "code",
-      "source_file": "src/lib/api.ts",
-      "source_location": "122",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "api_getcve",
-      "community": 3,
-      "norm_label": "getcve"
-    },
-    {
-      "label": "syncCves",
-      "file_type": "code",
-      "source_file": "src/lib/api.ts",
-      "source_location": "123",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "api_synccves",
-      "community": 3,
-      "norm_label": "synccves"
-    },
-    {
-      "label": "getExports",
-      "file_type": "code",
-      "source_file": "src/lib/api.ts",
-      "source_location": "131",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "api_getexports",
-      "community": 5,
-      "norm_label": "getexports"
-    },
-    {
-      "label": "triggerExport",
-      "file_type": "code",
-      "source_file": "src/lib/api.ts",
-      "source_location": "132",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "api_triggerexport",
-      "community": 6,
-      "norm_label": "triggerexport"
-    },
-    {
-      "label": "exportDownloadUrl",
-      "file_type": "code",
-      "source_file": "src/lib/api.ts",
-      "source_location": "134",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "api_exportdownloadurl",
-      "community": 5,
-      "norm_label": "exportdownloadurl"
-    },
-    {
-      "label": "WebSocketClient",
-      "file_type": "code",
-      "source_file": "src/lib/stores/websocket.ts",
-      "source_location": "12",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "websocket_websocketclient",
-      "community": 4,
-      "norm_label": "websocketclient"
-    },
-    {
-      "label": "WebSocketOptions Interface",
-      "file_type": "code",
-      "source_file": "src/lib/stores/websocket.ts",
-      "source_location": "1",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "websocket_websocketoptions",
-      "community": 18,
-      "norm_label": "websocketoptions interface"
-    },
-    {
-      "label": "connectionStatus Store",
-      "file_type": "code",
-      "source_file": "src/lib/stores/websocketStore.ts",
-      "source_location": "4",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "websocketstore_connectionstatus",
-      "community": 4,
-      "norm_label": "connectionstatus store"
-    },
-    {
-      "label": "wsMessages Store",
-      "file_type": "code",
-      "source_file": "src/lib/stores/websocketStore.ts",
-      "source_location": "7",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "websocketstore_wsmessages",
-      "community": 4,
-      "norm_label": "wsmessages store"
-    },
-    {
-      "label": "connectWebSocket",
-      "file_type": "code",
-      "source_file": "src/lib/stores/websocketStore.ts",
-      "source_location": "11",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "websocketstore_connectwebsocket",
-      "community": 4,
-      "norm_label": "connectwebsocket"
-    },
-    {
-      "label": "closeWebSocket",
-      "file_type": "code",
-      "source_file": "src/lib/stores/websocketStore.ts",
-      "source_location": "31",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "websocketstore_closewebsocket",
-      "community": 4,
-      "norm_label": "closewebsocket"
-    },
-    {
-      "label": "Navbar Component",
-      "file_type": "code",
-      "source_file": "src/lib/components/Navbar.svelte",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "navbar_svelte",
-      "community": 4,
-      "norm_label": "navbar component"
-    },
-    {
-      "label": "Dashboard Page",
-      "file_type": "code",
-      "source_file": "src/lib/pages/Dashboard.svelte",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "dashboard_svelte",
-      "community": 5,
-      "norm_label": "dashboard page"
-    },
-    {
-      "label": "Reconnaissance Page",
-      "file_type": "code",
-      "source_file": "src/lib/pages/Reconnaissance.svelte",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "reconnaissance_svelte",
-      "community": 6,
-      "norm_label": "reconnaissance page"
-    },
-    {
-      "label": "Logs Page",
-      "file_type": "code",
-      "source_file": "src/lib/pages/Logs.svelte",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "logs_svelte",
-      "community": 5,
-      "norm_label": "logs page"
-    },
-    {
-      "label": "Settings Page",
-      "file_type": "code",
-      "source_file": "src/lib/pages/Settings.svelte",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "settings_svelte",
-      "community": 3,
-      "norm_label": "settings page"
-    },
-    {
-      "label": "Attacks Page",
-      "file_type": "code",
-      "source_file": "src/lib/pages/Attacks.svelte",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "attacks_svelte",
-      "community": 4,
-      "norm_label": "attacks page"
-    },
-    {
-      "label": "Plugins Page",
-      "file_type": "code",
-      "source_file": "src/lib/pages/Plugins.svelte",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "plugins_svelte",
-      "community": 4,
-      "norm_label": "plugins page"
-    },
-    {
-      "label": "VulnDb Page",
-      "file_type": "code",
-      "source_file": "src/lib/pages/VulnDb.svelte",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "vulndb_svelte",
-      "community": 3,
-      "norm_label": "vulndb page"
-    },
-    {
-      "label": "Vite Dev Proxy Pattern",
-      "file_type": "rationale",
-      "source_file": "vite.config.ts",
-      "source_location": "6",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "rationale": "Routes /api and /ws through Vite dev proxy to backend at localhost:8080, enabling same-origin requests in development without CORS issues. In production these routes are served from the same host so the relative URLs work without changes.",
-      "id": "vite_proxy_pattern",
-      "community": 9,
-      "norm_label": "vite dev proxy pattern"
-    },
-    {
-      "label": "WebSocket Auto-Reconnect Pattern",
-      "file_type": "rationale",
-      "source_file": "src/lib/stores/websocket.ts",
-      "source_location": "43",
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "rationale": "WebSocketClient auto-reconnects after onclose by scheduling a setTimeout call back to connect(). The close() method sets reconnect=false before closing to allow intentional disconnections without triggering reconnect loop.",
-      "id": "ws_autoreconnect_pattern",
-      "community": 4,
-      "norm_label": "websocket auto-reconnect pattern"
-    },
-    {
-      "label": "Vite Logo",
-      "file_type": "image",
-      "source_file": "public/vite.svg",
-      "source_location": null,
-      "source_url": null,
-      "captured_at": null,
-      "author": null,
-      "contributor": null,
-      "id": "vite_logo",
-      "community": 19,
-      "norm_label": "vite logo"
     }
   ],
   "links": [
@@ -1429,6 +1065,22 @@
       "confidence": "EXTRACTED",
       "source_file": "src/App.svelte",
       "source": "src_app_svelte",
+      "target": "src_lib_pages_wartable_svelte",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.svelte",
+      "source": "src_app_svelte",
+      "target": "src_lib_pages_engagements_svelte",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.svelte",
+      "source": "src_app_svelte",
       "target": "src_lib_pages_reconnaissance_svelte",
       "confidence_score": 1.0
     },
@@ -1469,7 +1121,23 @@
       "confidence": "EXTRACTED",
       "source_file": "src/App.svelte",
       "source": "src_app_svelte",
+      "target": "src_lib_pages_history_svelte",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.svelte",
+      "source": "src_app_svelte",
       "target": "src_lib_pages_settings_svelte",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/pages/Engagements.svelte",
+      "source": "src_lib_pages_engagements_svelte",
+      "target": "svelte",
       "confidence_score": 1.0
     },
     {
@@ -1477,6 +1145,22 @@
       "confidence": "EXTRACTED",
       "source_file": "src/lib/pages/VulnDb.svelte",
       "source": "src_lib_pages_vulndb_svelte",
+      "target": "svelte",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/pages/WarTable.svelte",
+      "source": "src_lib_pages_wartable_svelte",
+      "target": "svelte",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/pages/History.svelte",
+      "source": "src_lib_pages_history_svelte",
       "target": "svelte",
       "confidence_score": 1.0
     },
@@ -1493,6 +1177,22 @@
       "confidence": "EXTRACTED",
       "source_file": "src/lib/pages/Settings.svelte",
       "source": "src_lib_pages_settings_svelte",
+      "target": "svelte",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/pages/Attacks.svelte",
+      "source": "src_lib_pages_attacks_svelte",
+      "target": "svelte",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/pages/Plugins.svelte",
+      "source": "src_lib_pages_plugins_svelte",
       "target": "svelte",
       "confidence_score": 1.0
     },
@@ -1539,8 +1239,32 @@
     {
       "relation": "imports_from",
       "confidence": "EXTRACTED",
+      "source_file": "src/lib/pages/WarTable.svelte",
+      "source": "src_lib_pages_wartable_svelte",
+      "target": "users_narcis_programming_decebalus_decebalus_frontend_src_lib_stores_websocketstore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/pages/History.svelte",
+      "source": "src_lib_pages_history_svelte",
+      "target": "users_narcis_programming_decebalus_decebalus_frontend_src_lib_stores_websocketstore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
       "source_file": "src/lib/pages/Logs.svelte",
       "source": "src_lib_pages_logs_svelte",
+      "target": "users_narcis_programming_decebalus_decebalus_frontend_src_lib_stores_websocketstore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/pages/Attacks.svelte",
+      "source": "src_lib_pages_attacks_svelte",
       "target": "users_narcis_programming_decebalus_decebalus_frontend_src_lib_stores_websocketstore",
       "confidence_score": 1.0
     },
@@ -1564,17 +1288,17 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/pages/Dashboard.svelte",
-      "source_location": "L85",
+      "source_location": "L102",
       "weight": 1.0,
       "source": "src_lib_pages_dashboard_svelte",
-      "target": "pages_dashboard_refresh",
+      "target": "pages_dashboard_if",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/pages/Dashboard.svelte",
-      "source_location": "L120",
+      "source_location": "L141",
       "weight": 1.0,
       "source": "src_lib_pages_dashboard_svelte",
       "target": "pages_dashboard_string",
@@ -1597,13 +1321,49 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/pages/WarTable.svelte",
+      "source": "src_lib_pages_wartable_svelte",
+      "target": "users_narcis_programming_decebalus_decebalus_frontend_src_lib_api",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/pages/Engagements.svelte",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "src_lib_pages_engagements_svelte",
+      "target": "pages_engagements_scope_cidrs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/pages/Engagements.svelte",
+      "source": "src_lib_pages_engagements_svelte",
+      "target": "users_narcis_programming_decebalus_decebalus_frontend_src_lib_api",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/pages/Reconnaissance.svelte",
-      "source_location": "L73",
+      "source_location": "L90",
       "weight": 1.0,
       "source": "src_lib_pages_reconnaissance_svelte",
       "target": "pages_reconnaissance_if",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/pages/Reconnaissance.svelte",
+      "source_location": "L77",
+      "weight": 1.0,
+      "source": "src_lib_pages_reconnaissance_svelte",
+      "target": "pages_reconnaissance_refresh",
       "confidence_score": 1.0
     },
     {
@@ -1620,6 +1380,112 @@
       "source_file": "src/lib/pages/Reconnaissance.svelte",
       "source": "src_lib_pages_reconnaissance_svelte",
       "target": "users_narcis_programming_decebalus_decebalus_frontend_src_lib_utils",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/pages/Attacks.svelte",
+      "source_location": "L42",
+      "weight": 1.0,
+      "source": "src_lib_pages_attacks_svelte",
+      "target": "pages_attacks_refresh",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/pages/Attacks.svelte",
+      "source_location": "L46",
+      "weight": 1.0,
+      "source": "src_lib_pages_attacks_svelte",
+      "target": "pages_attacks_launch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/pages/Attacks.svelte",
+      "source_location": "L82",
+      "weight": 1.0,
+      "source": "src_lib_pages_attacks_svelte",
+      "target": "pages_attacks_handlecancel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/pages/Attacks.svelte",
+      "source_location": "L86",
+      "weight": 1.0,
+      "source": "src_lib_pages_attacks_svelte",
+      "target": "pages_attacks_parseresult",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/pages/Attacks.svelte",
+      "source_location": "L100",
+      "weight": 1.0,
+      "source": "src_lib_pages_attacks_svelte",
+      "target": "pages_attacks_rest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/pages/Attacks.svelte",
+      "source_location": "L101",
+      "weight": 1.0,
+      "source": "src_lib_pages_attacks_svelte",
+      "target": "pages_attacks_idx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/pages/Attacks.svelte",
+      "source_location": "L103",
+      "weight": 1.0,
+      "source": "src_lib_pages_attacks_svelte",
+      "target": "pages_attacks_jobid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/pages/Attacks.svelte",
+      "source_location": "L104",
+      "weight": 1.0,
+      "source": "src_lib_pages_attacks_svelte",
+      "target": "pages_attacks_text",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/pages/Attacks.svelte",
+      "source_location": "L228",
+      "weight": 1.0,
+      "source": "src_lib_pages_attacks_svelte",
+      "target": "pages_attacks_result",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/pages/Attacks.svelte",
+      "source": "src_lib_pages_attacks_svelte",
+      "target": "users_narcis_programming_decebalus_decebalus_frontend_src_lib_api",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/pages/Plugins.svelte",
+      "source": "src_lib_pages_plugins_svelte",
+      "target": "users_narcis_programming_decebalus_decebalus_frontend_src_lib_api",
       "confidence_score": 1.0
     },
     {
@@ -1717,6 +1583,22 @@
     {
       "relation": "imports_from",
       "confidence": "EXTRACTED",
+      "source_file": "src/lib/pages/History.svelte",
+      "source": "src_lib_pages_history_svelte",
+      "target": "users_narcis_programming_decebalus_decebalus_frontend_src_lib_api",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/pages/History.svelte",
+      "source": "src_lib_pages_history_svelte",
+      "target": "users_narcis_programming_decebalus_decebalus_frontend_src_lib_utils",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
       "source_file": "src/lib/pages/Settings.svelte",
       "source": "src_lib_pages_settings_svelte",
       "target": "users_narcis_programming_decebalus_decebalus_frontend_src_lib_api",
@@ -1776,7 +1658,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L18",
+      "source_location": "L20",
       "weight": 1.0,
       "source": "src_lib_api_ts",
       "target": "lib_api_host",
@@ -1786,7 +1668,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L32",
+      "source_location": "L34",
       "weight": 1.0,
       "source": "src_lib_api_ts",
       "target": "lib_api_job",
@@ -1796,7 +1678,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L42",
+      "source_location": "L44",
       "weight": 1.0,
       "source": "src_lib_api_ts",
       "target": "lib_api_req",
@@ -1806,7 +1688,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L60",
+      "source_location": "L62",
       "weight": 1.0,
       "source": "src_lib_api_ts",
       "target": "lib_api_log",
@@ -1816,7 +1698,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L70",
+      "source_location": "L72",
       "weight": 1.0,
       "source": "src_lib_api_ts",
       "target": "lib_api_getlogs",
@@ -1826,7 +1708,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L71",
+      "source_location": "L73",
       "weight": 1.0,
       "source": "src_lib_api_ts",
       "target": "lib_api_getlogsbyjob",
@@ -1836,7 +1718,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L73",
+      "source_location": "L75",
       "weight": 1.0,
       "source": "src_lib_api_ts",
       "target": "lib_api_getjobs",
@@ -1846,7 +1728,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L74",
+      "source_location": "L76",
       "weight": 1.0,
       "source": "src_lib_api_ts",
       "target": "lib_api_getjob",
@@ -1856,7 +1738,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L75",
+      "source_location": "L77",
       "weight": 1.0,
       "source": "src_lib_api_ts",
       "target": "lib_api_gethosts",
@@ -1866,7 +1748,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L76",
+      "source_location": "L78",
       "weight": 1.0,
       "source": "src_lib_api_ts",
       "target": "lib_api_gethost",
@@ -1876,7 +1758,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L77",
+      "source_location": "L79",
       "weight": 1.0,
       "source": "src_lib_api_ts",
       "target": "lib_api_getconfig",
@@ -1886,7 +1768,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L79",
+      "source_location": "L81",
       "weight": 1.0,
       "source": "src_lib_api_ts",
       "target": "lib_api_createjob",
@@ -1896,7 +1778,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L89",
+      "source_location": "L91",
       "weight": 1.0,
       "source": "src_lib_api_ts",
       "target": "lib_api_canceljob",
@@ -1906,10 +1788,10 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L92",
+      "source_location": "L94",
       "weight": 1.0,
       "source": "src_lib_api_ts",
-      "target": "lib_api_schedulejob",
+      "target": "lib_api_createattackjob",
       "confidence_score": 1.0
     },
     {
@@ -1919,6 +1801,16 @@
       "source_location": "L102",
       "weight": 1.0,
       "source": "src_lib_api_ts",
+      "target": "lib_api_schedulejob",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L112",
+      "weight": 1.0,
+      "source": "src_lib_api_ts",
       "target": "lib_api_saveconfig",
       "confidence_score": 1.0
     },
@@ -1926,7 +1818,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L109",
+      "source_location": "L119",
       "weight": 1.0,
       "source": "src_lib_api_ts",
       "target": "lib_api_cvedetail",
@@ -1936,7 +1828,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L121",
+      "source_location": "L131",
       "weight": 1.0,
       "source": "src_lib_api_ts",
       "target": "lib_api_listcves",
@@ -1946,7 +1838,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L122",
+      "source_location": "L132",
       "weight": 1.0,
       "source": "src_lib_api_ts",
       "target": "lib_api_getcve",
@@ -1956,7 +1848,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L123",
+      "source_location": "L133",
       "weight": 1.0,
       "source": "src_lib_api_ts",
       "target": "lib_api_synccves",
@@ -1966,7 +1858,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L125",
+      "source_location": "L135",
       "weight": 1.0,
       "source": "src_lib_api_ts",
       "target": "lib_api_exportfile",
@@ -1976,7 +1868,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L131",
+      "source_location": "L141",
       "weight": 1.0,
       "source": "src_lib_api_ts",
       "target": "lib_api_getexports",
@@ -1986,7 +1878,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L132",
+      "source_location": "L142",
       "weight": 1.0,
       "source": "src_lib_api_ts",
       "target": "lib_api_triggerexport",
@@ -1996,10 +1888,190 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L134",
+      "source_location": "L143",
+      "weight": 1.0,
+      "source": "src_lib_api_ts",
+      "target": "lib_api_triggerreport",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L145",
       "weight": 1.0,
       "source": "src_lib_api_ts",
       "target": "lib_api_exportdownloadurl",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L148",
+      "weight": 1.0,
+      "source": "src_lib_api_ts",
+      "target": "lib_api_modulemeta",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L164",
+      "weight": 1.0,
+      "source": "src_lib_api_ts",
+      "target": "lib_api_getmodules",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L168",
+      "weight": 1.0,
+      "source": "src_lib_api_ts",
+      "target": "lib_api_engagement",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L178",
+      "weight": 1.0,
+      "source": "src_lib_api_ts",
+      "target": "lib_api_credential",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L192",
+      "weight": 1.0,
+      "source": "src_lib_api_ts",
+      "target": "lib_api_finding",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L210",
+      "weight": 1.0,
+      "source": "src_lib_api_ts",
+      "target": "lib_api_getfindings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L211",
+      "weight": 1.0,
+      "source": "src_lib_api_ts",
+      "target": "lib_api_runfinding",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L212",
+      "weight": 1.0,
+      "source": "src_lib_api_ts",
+      "target": "lib_api_dismissfinding",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L213",
+      "weight": 1.0,
+      "source": "src_lib_api_ts",
+      "target": "lib_api_runengine",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L215",
+      "weight": 1.0,
+      "source": "src_lib_api_ts",
+      "target": "lib_api_getengagements",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L216",
+      "weight": 1.0,
+      "source": "src_lib_api_ts",
+      "target": "lib_api_getactiveengagement",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L217",
+      "weight": 1.0,
+      "source": "src_lib_api_ts",
+      "target": "lib_api_activateengagement",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L218",
+      "weight": 1.0,
+      "source": "src_lib_api_ts",
+      "target": "lib_api_getcredentials",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L220",
+      "weight": 1.0,
+      "source": "src_lib_api_ts",
+      "target": "lib_api_createengagementbody",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L229",
+      "weight": 1.0,
+      "source": "src_lib_api_ts",
+      "target": "lib_api_createengagement",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L236",
+      "weight": 1.0,
+      "source": "src_lib_api_ts",
+      "target": "lib_api_hostevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L245",
+      "weight": 1.0,
+      "source": "src_lib_api_ts",
+      "target": "lib_api_gethistory",
       "confidence_score": 1.0
     },
     {
@@ -2007,7 +2079,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L70",
+      "source_location": "L72",
       "weight": 1.0,
       "source": "lib_api_getlogs",
       "target": "lib_api_req",
@@ -2018,7 +2090,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L71",
+      "source_location": "L73",
       "weight": 1.0,
       "source": "lib_api_getlogsbyjob",
       "target": "lib_api_req",
@@ -2029,7 +2101,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L73",
+      "source_location": "L75",
       "weight": 1.0,
       "source": "lib_api_getjobs",
       "target": "lib_api_req",
@@ -2040,7 +2112,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L74",
+      "source_location": "L76",
       "weight": 1.0,
       "source": "lib_api_getjob",
       "target": "lib_api_req",
@@ -2051,7 +2123,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L75",
+      "source_location": "L77",
       "weight": 1.0,
       "source": "lib_api_gethosts",
       "target": "lib_api_req",
@@ -2062,7 +2134,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L76",
+      "source_location": "L78",
       "weight": 1.0,
       "source": "lib_api_gethost",
       "target": "lib_api_req",
@@ -2073,7 +2145,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L77",
+      "source_location": "L79",
       "weight": 1.0,
       "source": "lib_api_getconfig",
       "target": "lib_api_req",
@@ -2084,7 +2156,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L82",
+      "source_location": "L84",
       "weight": 1.0,
       "source": "lib_api_createjob",
       "target": "lib_api_req",
@@ -2095,7 +2167,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L90",
+      "source_location": "L92",
       "weight": 1.0,
       "source": "lib_api_canceljob",
       "target": "lib_api_req",
@@ -2108,6 +2180,17 @@
       "source_file": "src/lib/api.ts",
       "source_location": "L95",
       "weight": 1.0,
+      "source": "lib_api_createattackjob",
+      "target": "lib_api_req",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L105",
+      "weight": 1.0,
       "source": "lib_api_schedulejob",
       "target": "lib_api_req",
       "confidence_score": 1.0
@@ -2117,7 +2200,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L103",
+      "source_location": "L113",
       "weight": 1.0,
       "source": "lib_api_saveconfig",
       "target": "lib_api_req",
@@ -2128,7 +2211,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L121",
+      "source_location": "L131",
       "weight": 1.0,
       "source": "lib_api_listcves",
       "target": "lib_api_req",
@@ -2139,7 +2222,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L122",
+      "source_location": "L132",
       "weight": 1.0,
       "source": "lib_api_getcve",
       "target": "lib_api_req",
@@ -2150,7 +2233,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L123",
+      "source_location": "L133",
       "weight": 1.0,
       "source": "lib_api_synccves",
       "target": "lib_api_req",
@@ -2161,7 +2244,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L131",
+      "source_location": "L141",
       "weight": 1.0,
       "source": "lib_api_getexports",
       "target": "lib_api_req",
@@ -2172,11 +2255,187 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/api.ts",
-      "source_location": "L132",
+      "source_location": "L164",
+      "weight": 1.0,
+      "source": "lib_api_getmodules",
+      "target": "lib_api_req",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L210",
+      "weight": 1.0,
+      "source": "lib_api_getfindings",
+      "target": "lib_api_req",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L211",
+      "weight": 1.0,
+      "source": "lib_api_runfinding",
+      "target": "lib_api_req",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L212",
+      "weight": 1.0,
+      "source": "lib_api_dismissfinding",
+      "target": "lib_api_req",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L213",
+      "weight": 1.0,
+      "source": "lib_api_runengine",
+      "target": "lib_api_req",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L215",
+      "weight": 1.0,
+      "source": "lib_api_getengagements",
+      "target": "lib_api_req",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L216",
+      "weight": 1.0,
+      "source": "lib_api_getactiveengagement",
+      "target": "lib_api_req",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L217",
+      "weight": 1.0,
+      "source": "lib_api_activateengagement",
+      "target": "lib_api_req",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L218",
+      "weight": 1.0,
+      "source": "lib_api_getcredentials",
+      "target": "lib_api_req",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L230",
+      "weight": 1.0,
+      "source": "lib_api_createengagement",
+      "target": "lib_api_req",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L245",
+      "weight": 1.0,
+      "source": "lib_api_gethistory",
+      "target": "lib_api_req",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/lib/pages/Attacks.svelte",
+      "source_location": "L43",
+      "weight": 1.0,
+      "source": "pages_attacks_refresh",
+      "target": "lib_api_getjobs"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/lib/pages/Attacks.svelte",
+      "source_location": "L43",
+      "weight": 1.0,
+      "source": "pages_attacks_refresh",
+      "target": "lib_api_gethosts"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L142",
       "weight": 1.0,
       "source": "lib_api_triggerexport",
       "target": "lib_api_createjob",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/api.ts",
+      "source_location": "L143",
+      "weight": 1.0,
+      "source": "lib_api_triggerreport",
+      "target": "lib_api_createjob",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/lib/pages/Attacks.svelte",
+      "source_location": "L83",
+      "weight": 1.0,
+      "source": "pages_attacks_handlecancel",
+      "target": "lib_api_canceljob"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/lib/pages/Attacks.svelte",
+      "source_location": "L73",
+      "weight": 1.0,
+      "source": "pages_attacks_launch",
+      "target": "lib_api_createattackjob"
     },
     {
       "relation": "contains",
@@ -2294,7 +2553,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/stores/websocketStore.ts",
-      "source_location": "L7",
+      "source_location": "L8",
       "weight": 1.0,
       "source": "src_lib_stores_websocketstore_ts",
       "target": "stores_websocketstore_wsmessages",
@@ -2307,6 +2566,36 @@
       "source_location": "L11",
       "weight": 1.0,
       "source": "src_lib_stores_websocketstore_ts",
+      "target": "stores_websocketstore_wsevent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/stores/websocketStore.ts",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "src_lib_stores_websocketstore_ts",
+      "target": "stores_websocketstore_wsevents",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/stores/websocketStore.ts",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "src_lib_stores_websocketstore_ts",
+      "target": "stores_websocketstore_routemessage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/stores/websocketStore.ts",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "src_lib_stores_websocketstore_ts",
       "target": "stores_websocketstore_connectwebsocket",
       "confidence_score": 1.0
     },
@@ -2314,763 +2603,35 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/stores/websocketStore.ts",
-      "source_location": "L31",
+      "source_location": "L48",
       "weight": 1.0,
       "source": "src_lib_stores_websocketstore_ts",
       "target": "stores_websocketstore_closewebsocket",
       "confidence_score": 1.0
     },
     {
-      "relation": "rationale_for",
-      "confidence": "INFERRED",
-      "confidence_score": 0.95,
-      "source_file": "vite.config.ts",
-      "source_location": "6",
-      "weight": 1.0,
-      "source": "vite_proxy_pattern",
-      "target": "vite_config"
-    },
-    {
-      "relation": "references",
+      "relation": "calls",
+      "context": "call",
       "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/main.ts",
-      "source_location": "3",
+      "source_file": "src/lib/pages/Attacks.svelte",
+      "source_location": "L74",
       "weight": 1.0,
-      "source": "main_entrypoint",
-      "target": "app_svelte"
+      "source": "pages_attacks_launch",
+      "target": "pages_attacks_refresh",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
+      "context": "call",
       "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/App.svelte",
-      "source_location": "14",
+      "source_file": "src/lib/pages/Attacks.svelte",
+      "source_location": "L83",
       "weight": 1.0,
-      "source": "app_svelte",
-      "target": "websocketstore_connectwebsocket"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/App.svelte",
-      "source_location": "16",
-      "weight": 1.0,
-      "source": "app_svelte",
-      "target": "websocketstore_closewebsocket"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/App.svelte",
-      "source_location": "21",
-      "weight": 1.0,
-      "source": "app_svelte",
-      "target": "navbar_svelte"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/App.svelte",
-      "source_location": "23",
-      "weight": 1.0,
-      "source": "app_svelte",
-      "target": "dashboard_svelte"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/App.svelte",
-      "source_location": "24",
-      "weight": 1.0,
-      "source": "app_svelte",
-      "target": "reconnaissance_svelte"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/App.svelte",
-      "source_location": "25",
-      "weight": 1.0,
-      "source": "app_svelte",
-      "target": "attacks_svelte"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/App.svelte",
-      "source_location": "26",
-      "weight": 1.0,
-      "source": "app_svelte",
-      "target": "plugins_svelte"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/App.svelte",
-      "source_location": "27",
-      "weight": 1.0,
-      "source": "app_svelte",
-      "target": "logs_svelte"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/App.svelte",
-      "source_location": "28",
-      "weight": 1.0,
-      "source": "app_svelte",
-      "target": "vulndb_svelte"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/App.svelte",
-      "source_location": "29",
-      "weight": 1.0,
-      "source": "app_svelte",
-      "target": "settings_svelte"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/pages/Dashboard.svelte",
-      "source_location": "5",
-      "weight": 1.0,
-      "source": "dashboard_svelte",
-      "target": "utils_fmtdate"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/pages/Reconnaissance.svelte",
-      "source_location": "5",
-      "weight": 1.0,
-      "source": "reconnaissance_svelte",
-      "target": "utils_fmtdate"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/pages/Logs.svelte",
-      "source_location": "5",
-      "weight": 1.0,
-      "source": "logs_svelte",
-      "target": "utils_fmtdate"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/pages/VulnDb.svelte",
-      "source_location": "5",
-      "weight": 1.0,
-      "source": "vulndb_svelte",
-      "target": "utils_fmtdate"
-    },
-    {
-      "relation": "semantically_similar_to",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "source_file": "src/lib/utils.ts",
-      "source_location": null,
-      "weight": 0.85,
-      "source": "utils_fmtdate",
-      "target": "utils_fmtunixts"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/pages/Dashboard.svelte",
-      "source_location": "5",
-      "weight": 1.0,
-      "source": "dashboard_svelte",
-      "target": "utils_fmtunixts"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/pages/Dashboard.svelte",
-      "source_location": "5",
-      "weight": 1.0,
-      "source": "dashboard_svelte",
-      "target": "utils_fmtresults"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/api.ts",
-      "source_location": "25",
-      "weight": 1.0,
-      "source": "api_host_interface",
-      "target": "api_port_interface"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/api.ts",
-      "source_location": "29",
-      "weight": 1.0,
-      "source": "api_host_interface",
-      "target": "api_vulnerability_interface"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/api.ts",
-      "source_location": "70",
-      "weight": 1.0,
-      "source": "api_getlogs",
-      "target": "api_req"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/api.ts",
-      "source_location": "71",
-      "weight": 1.0,
-      "source": "api_getlogsbyjob",
-      "target": "api_req"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/api.ts",
-      "source_location": "73",
-      "weight": 1.0,
-      "source": "api_getjobs",
-      "target": "api_req"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/api.ts",
-      "source_location": "74",
-      "weight": 1.0,
-      "source": "api_getjob",
-      "target": "api_req"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/api.ts",
-      "source_location": "75",
-      "weight": 1.0,
-      "source": "api_gethosts",
-      "target": "api_req"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/api.ts",
-      "source_location": "76",
-      "weight": 1.0,
-      "source": "api_gethost",
-      "target": "api_req"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/api.ts",
-      "source_location": "77",
-      "weight": 1.0,
-      "source": "api_getconfig",
-      "target": "api_req"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/api.ts",
-      "source_location": "82",
-      "weight": 1.0,
-      "source": "api_createjob",
-      "target": "api_req"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/api.ts",
-      "source_location": "90",
-      "weight": 1.0,
-      "source": "api_canceljob",
-      "target": "api_req"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/api.ts",
-      "source_location": "95",
-      "weight": 1.0,
-      "source": "api_schedulejob",
-      "target": "api_req"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/api.ts",
-      "source_location": "103",
-      "weight": 1.0,
-      "source": "api_saveconfig",
-      "target": "api_req"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/api.ts",
-      "source_location": "121",
-      "weight": 1.0,
-      "source": "api_listcves",
-      "target": "api_req"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/api.ts",
-      "source_location": "122",
-      "weight": 1.0,
-      "source": "api_getcve",
-      "target": "api_req"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/api.ts",
-      "source_location": "123",
-      "weight": 1.0,
-      "source": "api_synccves",
-      "target": "api_req"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/api.ts",
-      "source_location": "131",
-      "weight": 1.0,
-      "source": "api_getexports",
-      "target": "api_req"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/pages/Logs.svelte",
-      "source_location": "4",
-      "weight": 1.0,
-      "source": "logs_svelte",
-      "target": "api_getlogs"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/pages/Dashboard.svelte",
-      "source_location": "45",
-      "weight": 1.0,
-      "source": "dashboard_svelte",
-      "target": "api_getjobs"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/pages/Reconnaissance.svelte",
-      "source_location": "4",
-      "weight": 1.0,
-      "source": "reconnaissance_svelte",
-      "target": "api_getjobs"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/pages/Logs.svelte",
-      "source_location": "4",
-      "weight": 1.0,
-      "source": "logs_svelte",
-      "target": "api_getjobs"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/pages/Dashboard.svelte",
-      "source_location": "45",
-      "weight": 1.0,
-      "source": "dashboard_svelte",
-      "target": "api_gethosts"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/pages/Reconnaissance.svelte",
-      "source_location": "4",
-      "weight": 1.0,
-      "source": "reconnaissance_svelte",
-      "target": "api_gethosts"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/pages/VulnDb.svelte",
-      "source_location": "4",
-      "weight": 1.0,
-      "source": "vulndb_svelte",
-      "target": "api_gethosts"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/pages/Settings.svelte",
-      "source_location": "3",
-      "weight": 1.0,
-      "source": "settings_svelte",
-      "target": "api_getconfig"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/api.ts",
-      "source_location": "132",
-      "weight": 1.0,
-      "source": "api_triggerexport",
-      "target": "api_createjob"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/pages/Reconnaissance.svelte",
-      "source_location": "4",
-      "weight": 1.0,
-      "source": "reconnaissance_svelte",
-      "target": "api_createjob"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/pages/Dashboard.svelte",
-      "source_location": "94",
-      "weight": 1.0,
-      "source": "dashboard_svelte",
-      "target": "api_canceljob"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/pages/Reconnaissance.svelte",
-      "source_location": "4",
-      "weight": 1.0,
-      "source": "reconnaissance_svelte",
-      "target": "api_canceljob"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/pages/Reconnaissance.svelte",
-      "source_location": "4",
-      "weight": 1.0,
-      "source": "reconnaissance_svelte",
-      "target": "api_schedulejob"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/pages/Settings.svelte",
-      "source_location": "3",
-      "weight": 1.0,
-      "source": "settings_svelte",
-      "target": "api_saveconfig"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/pages/VulnDb.svelte",
-      "source_location": "4",
-      "weight": 1.0,
-      "source": "vulndb_svelte",
-      "target": "api_listcves"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/pages/Reconnaissance.svelte",
-      "source_location": "4",
-      "weight": 1.0,
-      "source": "reconnaissance_svelte",
-      "target": "api_getcve"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/pages/VulnDb.svelte",
-      "source_location": "4",
-      "weight": 1.0,
-      "source": "vulndb_svelte",
-      "target": "api_getcve"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/pages/Settings.svelte",
-      "source_location": "3",
-      "weight": 1.0,
-      "source": "settings_svelte",
-      "target": "api_synccves"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/pages/VulnDb.svelte",
-      "source_location": "4",
-      "weight": 1.0,
-      "source": "vulndb_svelte",
-      "target": "api_synccves"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/pages/Dashboard.svelte",
-      "source_location": "56",
-      "weight": 1.0,
-      "source": "dashboard_svelte",
-      "target": "api_getexports"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/pages/Dashboard.svelte",
-      "source_location": "67",
-      "weight": 1.0,
-      "source": "dashboard_svelte",
-      "target": "api_triggerexport"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/pages/Dashboard.svelte",
-      "source_location": "347",
-      "weight": 1.0,
-      "source": "dashboard_svelte",
-      "target": "api_exportdownloadurl"
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/stores/websocketStore.ts",
-      "source_location": "19",
-      "weight": 1.0,
-      "source": "websocketstore_connectwebsocket",
-      "target": "websocket_websocketclient"
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "INFERRED",
-      "confidence_score": 0.95,
-      "source_file": "src/lib/stores/websocket.ts",
-      "source_location": "43",
-      "weight": 1.0,
-      "source": "ws_autoreconnect_pattern",
-      "target": "websocket_websocketclient"
-    },
-    {
-      "relation": "shares_data_with",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/stores/websocketStore.ts",
-      "source_location": "20",
-      "weight": 1.0,
-      "source": "websocketstore_connectwebsocket",
-      "target": "websocketstore_connectionstatus"
-    },
-    {
-      "relation": "shares_data_with",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/stores/websocketStore.ts",
-      "source_location": "34",
-      "weight": 1.0,
-      "source": "websocketstore_closewebsocket",
-      "target": "websocketstore_connectionstatus"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/components/Navbar.svelte",
-      "source_location": "3",
-      "weight": 1.0,
-      "source": "navbar_svelte",
-      "target": "websocketstore_connectionstatus"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/pages/Dashboard.svelte",
-      "source_location": "3",
-      "weight": 1.0,
-      "source": "dashboard_svelte",
-      "target": "websocketstore_connectionstatus"
-    },
-    {
-      "relation": "shares_data_with",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/stores/websocketStore.ts",
-      "source_location": "22",
-      "weight": 1.0,
-      "source": "websocketstore_connectwebsocket",
-      "target": "websocketstore_wsmessages"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/pages/Dashboard.svelte",
-      "source_location": "3",
-      "weight": 1.0,
-      "source": "dashboard_svelte",
-      "target": "websocketstore_wsmessages"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/pages/Reconnaissance.svelte",
-      "source_location": "3",
-      "weight": 1.0,
-      "source": "reconnaissance_svelte",
-      "target": "websocketstore_wsmessages"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/pages/Logs.svelte",
-      "source_location": "3",
-      "weight": 1.0,
-      "source": "logs_svelte",
-      "target": "websocketstore_wsmessages"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/pages/VulnDb.svelte",
-      "source_location": "3",
-      "weight": 1.0,
-      "source": "vulndb_svelte",
-      "target": "websocketstore_wsmessages"
-    },
-    {
-      "relation": "semantically_similar_to",
-      "confidence": "INFERRED",
-      "confidence_score": 0.65,
-      "source_file": "src/lib/pages/VulnDb.svelte",
-      "source_location": null,
-      "weight": 0.65,
-      "source": "vulndb_svelte",
-      "target": "settings_svelte"
+      "source": "pages_attacks_handlecancel",
+      "target": "pages_attacks_refresh",
+      "confidence_score": 1.0
     }
   ],
-  "hyperedges": [
-    {
-      "id": "realtime_ws_update_flow",
-      "label": "Real-time WebSocket Update Flow",
-      "nodes": [
-        "websocketstore_wsmessages",
-        "dashboard_svelte",
-        "reconnaissance_svelte",
-        "logs_svelte",
-        "vulndb_svelte"
-      ],
-      "relation": "participate_in",
-      "confidence": "EXTRACTED",
-      "confidence_score": 0.95,
-      "source_file": "src/lib/stores/websocketStore.ts"
-    },
-    {
-      "id": "api_crud_pattern",
-      "label": "API CRUD Pattern via req helper",
-      "nodes": [
-        "api_req",
-        "api_getjobs",
-        "api_createjob",
-        "api_canceljob",
-        "api_schedulejob"
-      ],
-      "relation": "implement",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/api.ts"
-    },
-    {
-      "id": "app_routing_structure",
-      "label": "SPA Routing Structure",
-      "nodes": [
-        "app_svelte",
-        "navbar_svelte",
-        "dashboard_svelte",
-        "reconnaissance_svelte",
-        "logs_svelte",
-        "attacks_svelte",
-        "plugins_svelte",
-        "vulndb_svelte",
-        "settings_svelte"
-      ],
-      "relation": "form",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/App.svelte"
-    }
-  ],
-  "built_at_commit": "59205eced7f59a093a7da9c2650162190bff83a5"
+  "hyperedges": [],
+  "built_at_commit": "cc18c92481217feb1be674a44f7f5ce0d2dd4772"
 }

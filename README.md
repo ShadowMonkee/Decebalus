@@ -1,46 +1,42 @@
 
 # Decebalus
 
-> A network reconnaissance and security assessment tool built in Rust, inspired by the legendary [Bjorn](https://github.com/infinition/Bjorn) project. Name is inspired by the legendary Dacian king.
+> A deterministic, OPSEC-aware **assumed-breach orchestrator** you run from your own attack box. Inspired by the approachable, autonomous feel of [Bjorn](https://github.com/infinition/Bjorn) — but built for real internal engagements on a laptop instead of a Pi. Name is inspired by the legendary Dacian king.
 
 ## Overview
 
-Decebalus is a network scanning and vulnerability assessment tool designed to run on a Raspberry Pi Zero 2 W. It scans your network to discover hosts with open ports, detects services running on those ports, and flags potential vulnerabilities. It can provide real-time status updates on a physical HAT display where we can keep track of important information. It also has a web interface to control its functionalities and see the results of the background processes.
+Decebalus is a **quick-win orchestrator for the opening hour of an internal / assumed-breach engagement**. You run it from your Kali (or any Linux) box, feed it scope — a subnet, and optionally one low-privilege credential — and it drives the standard opening playbook deterministically: host discovery, service enumeration, vulnerability matching, and the AD/network quick-wins that red teamers check by hand every single engagement.
 
-Think of it as a lightweight, portable alternative to enterprise security tools like Nessus, but built for learning, experimentation, and deep understanding of how network reconnaissance and exploitation works.
+Instead of leaving you at a raw CLI, it maintains live engagement **state** and presents a glanceable **war table**: what's been found, what's high-value, and the **ranked next moves** — each with a copy-paste command. It orchestrates the tools you already trust (nmap, NetExec, smbclient, and friends) rather than reinventing them, and it stays **deterministic and rule-based** so you always know exactly what it will do to a client network.
+
+Think of it as the friendly conductor for the first hour of a pentest: the operator just got a foothold credential and wants the canonical checklist run for them — while they think about the next step.
+
+## Where Decebalus fits
+
+The autonomous-orchestration space has split into two extremes and skipped the useful middle:
+
+- **Hardware toys** (Bjorn, pwnagotchi, ESP32 Marauder) — great UX, autonomous, gamified — but locked to Pi/ESP hardware and Wi-Fi / opportunistic attacks, not internal AD engagements.
+- **LLM agents** (Strix, PentestGPT, CAI) — flexible, but heavy, non-deterministic, and genuinely risky to point at a production client network.
+
+Nothing occupies the middle: a **deterministic, rule-based, OPSEC-aware orchestrator** with Bjorn's approachable feel, wrapping the tools red teamers already rely on. NetExec is a superb engine but it's a raw CLI — no orchestration, no state, no "what next." BloodHound maps AD paths but doesn't drive the opening moves. Commercial platforms (Pentera and friends) do this but are expensive, closed, and enterprise-only.
+
+Decebalus aims to be the free, scriptable, self-hosted **"first hour" conductor** with a genuinely nice interface and a real next-move engine.
 
 ## Project Purpose
 
-This project exists for three main reasons:
+This is a personal project with three goals:
 
-### 1. **Learn Rust in Depth**
+### 1. Master Rust in depth
 
-For me personally Decebalus is a vehicle for mastering Rust and learning its quirks:
-- Ownership and borrowing system
-- Async/await with Tokio
-- Error handling with `Result` and `Option`
-- Systems programming concepts (sockets, threads, memory management)
-- Building production-grade web services with Axum
-- etc...
-I had been looking for a practical way to learn rust. I learn best when applying the knowledge in the real world, so this is the perfect chance for me to get my hands dirty and add a new tool to my belt.
-### 2. **Understand Offensive Cyber Security**
+Decebalus is my vehicle for learning Rust for real — ownership/borrowing, async with Tokio, `Result`/`Option` error handling, sockets and concurrency, and production-grade services with Axum. I learn best by building something real, so this is the sandbox.
 
-By building some of the reconnaissance tools myself instead of relying on existing tools, I'm learning:
-- How network scanning actually works under the hood
-- Host discovery techniques (ARP, ICMP, TCP)
-- Port scanning methodologies
-- Service fingerprinting and banner grabbing
-- Vulnerability identification and risk assessment
-- How attackers map networks and identify targets
-### 3. **Curiosity-Driven Learning**
+### 2. Understand offensive security tradecraft
 
-This is a sandbox project to explore:
+By orchestrating (and in places implementing) the opening moves of an engagement, I'm internalizing the canonical assumed-breach playbook: what you check first, why, in what order, and how to do it without tripping lockouts or making noise.
 
-- What's actually possible in offensive security
-- How these techniques fit together in a real workflow
-- The difference between theory and practical implementation
-- Building tools from scratch rather than just using existing ones
-- Having fun working on real-life applications
+### 3. Build something genuinely useful and free
+
+A strong, free, open core is a reputation play in the AD / red-team world. The unserved slice is an opinionated, free, scriptable opener with a clean UI and a next-move engine — and that's what this is aimed at.
 
 ## What Decebalus Does
 
@@ -51,19 +47,34 @@ This is a sandbox project to explore:
 - **Nmap Integration**: Full nmap scan with service/version detection, OS fingerprinting, and UDP scanning (see [Nmap Capabilities](#nmap-capabilities))
 - **Service Detection**: Banner grabbing + heuristic fingerprinting fallback when nmap is unavailable
 - **OS Detection**: Inferred from SSH banners, HTTP headers, and nmap extrainfo
-- **Job Management**: Queue, schedule, cancel, and track scans as background jobs with priority ordering
-- **Real-time Updates**: WebSocket for live scan progress and phase messages
-- **Scan Logging**: Per-job structured logs visible in the web UI, filterable by severity and job type
-- **REST API**: Full API for programmatic control
-- **Persistent Storage**: SQLite database for scan results, job history, and logs
-- **Web Dashboard**: Svelte SPA with host detail view, port/service table, job history, and log browser
+- **CVE matching**: Vulnerability detection via nmap vulners, enriched from the NVD API (CVSS/severity), surfaced in host detail and the Vuln DB
+- **Attack modules**: SSH, FTP, SMB, RDP brute force, plus SFTP file exfiltration — dispatched through a **pluggable module registry** (add a module by implementing one trait)
+- **Autonomous operation**: A background loop that continuously discovers → scans → fingerprints → enriches (attacks strictly opt-in), Bjorn-style
+- **Suggestion seed**: Maps a host's open ports to the relevant attack modules — the first step toward a full next-move engine
+- **Job Management**: Queue, schedule, cancel, and track everything as background jobs with priority ordering
+- **Real-time Updates**: WebSocket for live progress and phase messages
+- **Historical tracking**: A timeline of new hosts, status changes, newly opened ports, and new vulnerabilities — your engagement's running state
+- **Reporting**: Self-contained HTML security reports
+- **Web Dashboard**: Svelte SPA with host detail, port/service table, job history, and log browser
+- **REST API**: Full API for programmatic control and scripting
+- **Persistent Storage**: SQLite for results, job history, and logs
 
-### Planned Capabilities
+### The Direction — Assumed-Breach Opening Playbook
 
-- CVE matching and vulnerability assessment
-- Brute force attacks (SSH, FTP, SMB, RDP)
-- E-Paper display for standalone monitoring
-- Historical tracking and change detection
+This is where Decebalus is headed, and where the effort is now focused. The goal is to codify the canonical opening loop into a friendly, deterministic runner:
+
+- **Credentialed engagement model** — hand Decebalus one validated credential (user/pass/hash + domain) and thread it through every module, instead of only guessing from wordlists
+- **NetExec-backed AD quick-wins** — SMB signing checks, null-session / guest enumeration, share hunting, and password-policy discovery, by wrapping and parsing `nxc`
+- **Credential spraying** — first-class, **lockout-aware** spray (one password across many users, throttled to policy) as distinct from loud brute force
+- **ADCS misconfiguration checks** (Certipy — ESC1–8)
+- **LLMNR/NBT-NS/mDNS + NTLM relay** opportunity detection
+- **Kerberoasting / AS-REP roasting** and **BloodHound-style path awareness**
+- **The next-move engine** — a rule set over engagement *facts* (signing state, valid creds, readable shares, roastable SPNs …) that emits **ranked findings, each with a copy-paste command** and a "war table" view of high-value targets
+- **OPSEC posture** — a quiet mode, explicit lockout guards, and noise-aware scan choices
+
+### Legacy / Optional Hardware Mode
+
+Decebalus started life targeting a Raspberry Pi Zero 2 W with a Waveshare e-paper HAT, and that path still exists behind the `--features hardware` flag (mock renderer by default; on-device validation pending). It is no longer the primary target — Decebalus is now built to run from your own machine — but the display abstraction remains for anyone who wants the Pi appliance form factor.
 
 ## Architecture
 
@@ -73,11 +84,13 @@ Decebalus is built with a modular architecture designed for clarity and extensib
 src/
 ├── main.rs           # Entry point and routing
 ├── api/              # HTTP endpoints
-├── services/         # Business logic (scanning, job execution)
+├── services/         # Business logic (scanning, jobs, orchestration, attacks)
 ├── models/           # Data structures
 ├── db/               # Database layer
 └── state.rs          # Shared application state
 ```
+
+Adding a new capability means implementing the `AttackModule` trait and registering it — the orchestrator, job queue, dashboard, and suggestion engine pick it up automatically. This is the extension point the AD playbook above is being built on.
 
 **Tech Stack:**
 
@@ -89,13 +102,11 @@ src/
 
 ## Why Rust?
 
-Rust is the ideal language for this project because:
-
-- **Safety**: Memory safety without garbage collection is critical for security tools
-- **Performance**: Network scanning is I/O-bound but benefits from efficient async handling
-- **Concurrency**: Tokio makes parallel scanning straightforward
-- **Reliability**: The compiler catches many bugs before runtime
-- **Learning Curve**: Challenging enough to be educational, powerful enough to build real tools
+- **Safety**: Memory safety without garbage collection is valuable for security tooling
+- **Performance**: Scanning is I/O-bound but benefits from efficient async handling
+- **Concurrency**: Tokio makes parallel scanning and orchestration straightforward
+- **Reliability**: The compiler catches many bugs before they reach a client network
+- **Learning Curve**: Challenging enough to be educational, powerful enough to build a real tool
 
 ## Getting Started
 
@@ -104,7 +115,8 @@ Rust is the ideal language for this project because:
 - Rust 1.75+
 - SQLite
 - nmap
-- Linux/macOS/WSL (for network access)
+- Linux/macOS/WSL (a Kali VM is the intended home)
+- *(for AD modules, as they land)* NetExec (`nxc`), smbclient, and friends on `$PATH`
 
 ### Installation
 
@@ -182,50 +194,34 @@ websocat ws://localhost:8080/ws
 Through building Decebalus, I'm developing expertise in:
 
 ### Rust
-
-- Systems-level programming
-- Async Rust patterns
-- Web framework development
-- Database integration
-- Error handling and custom types
+- Systems-level programming, async Rust patterns, web framework development, database integration, custom error types
 
 ### Cybersecurity
-
-- TCP/IP networking fundamentals
-- Host discovery and enumeration
-- Port scanning techniques
-- Service identification
-- Vulnerability assessment
-- Attack surface mapping
+- TCP/IP fundamentals, host discovery and enumeration, port scanning, service identification, vulnerability assessment, and the canonical assumed-breach opening playbook (AD quick-wins, credential spraying, relay/roasting opportunities)
 
 ### Software Engineering
-
-- Modular architecture design
-- API design and RESTful principles
-- Real-time data streaming
-- Concurrent task management
-- Testing and benchmarking
+- Modular architecture, API design, real-time data streaming, concurrent task management, deterministic orchestration, testing
 
 ## Ethical Considerations
 
 This tool is designed for:
 
-- ✅ Authorized security testing
+- ✅ Authorized security testing and sanctioned red-team engagements
 - ✅ Personal network monitoring
-- ✅ Educational purposes
+- ✅ Educational purposes (CRTP/CRTE/OSEP-style learning of the canonical opening sequence)
 - ✅ Learning and experimentation
 
 This tool should **NOT** be used for:
 
 - ❌ Unauthorized network scanning
-- ❌ Attacking systems you don't own
+- ❌ Attacking systems you don't own or lack written authorization to test
 - ❌ Illegal activities
 
-Always ensure you have explicit permission before scanning any network.
+Decebalus is deterministic and scope-driven by design specifically so an operator always stays in control of what touches a client network. Always ensure you have explicit, written permission before scanning or attacking any network.
 
 ## Project Status
 
-**Current Phase**: Foundation & Core Services
+**Current Phase**: Recon + orchestration engine working; pivoting toward the assumed-breach AD playbook and next-move engine.
 
 - [x] API structure and routing
 - [x] Database integration (SQLite)
@@ -236,41 +232,81 @@ Always ensure you have explicit permission before scanning any network.
 - [x] Service fingerprinting and banner grabbing fallback
 - [x] WebSocket real-time progress streaming
 - [x] Web dashboard (host detail, job history, log browser)
-- [ ] Vulnerability matching / CVE lookup
-- [ ] E-Paper display integration
-- [ ] Attack modules (brute force, etc.)
+- [x] Vulnerability matching / CVE lookup (nmap vulners + NVD enrichment)
+- [x] Attack modules — SSH, FTP, SMB, RDP brute force + SFTP file steal
+- [x] Pluggable attack-module registry (trait-based extension point)
+- [x] Autonomous operation loop (recon-only by default)
+- [x] Port → attack-module suggestion seed
+- [x] Historical tracking / change-detection timeline
+- [x] HTML report export
+- [x] Credentialed engagement model (engagements + credential store, threaded through modules)
+- [x] NetExec-backed AD quick-wins (SMB signing, null-session, share hunting, password policy)
+- [x] Lockout-aware credential spraying
+- [x] ADCS (Certipy) + relay/roasting (Kerberoast/AS-REP) + BloodHound collection
+- [x] Next-move rule engine + "war table" view with copy-paste commands
+- [x] OPSEC / quiet mode + jitter + scope-lock + lockout guards
+- [x] Structured real-time events, native TUI, dependency doctor, optional token auth
+- [ ] Secrets-at-rest encryption for the credential store + loot
+- [ ] Single-binary frontend embedding + broader on-device validation
 
 ## Roadmap
 
-### Phase 1 (Current)
+### Phase 1 — Recon foundation *(done)*
+Network utilities, host discovery, parallel port scanning, service detection.
 
-Build the scanning foundation with proper network utilities, enhanced host discovery, parallel port scanning, and service detection.
+### Phase 2 — Enrichment *(done)*
+Vulnerability assessment, OS fingerprinting, nmap integration, autonomous loop.
 
-### Phase 2 (Next)
+### Phase 3 — Assumed-breach opener *(done)*
+Credentialed model, NetExec-backed AD quick-wins, lockout-aware spraying, ADCS/roasting/BloodHound, and the tool-wrapping module layer.
 
-Implement vulnerability assessment, OS fingerprinting, and Nmap integration.
+### Phase 4 — The next-move engine *(done)*
+A deterministic rule engine over engagement facts that produces ranked, copy-paste next moves, surfaced in a glanceable web war table and a native TUI.
 
-### Phase 3 (Future)
+### Phase 5 — Hardening & team *(current)*
+Secrets-at-rest encryption, single-binary packaging, then shared engagement state, multi-operator deconfliction, and richer client-ready reporting.
 
-Add offensive capabilities (brute force, exfiltration) and advanced features (scheduling, reporting, visualization).
+## Assumed-Breach Quickstart
 
-### Phase 4 (Ultimate)
+The opening hour of an internal engagement, driven from the web **War Table** (or the terminal one):
 
-Full Raspberry Pi integration with e-Paper display, autonomous operation, and production-ready reliability.
+1. **Check tooling** — `cargo run -- doctor` reports which external tools are present and how to install the missing ones.
+2. **Create an engagement** — on the *Engagement* page, enter your scope CIDRs (this enables scope-lock) and, if you have one, a starting low-priv credential. It becomes the active engagement.
+3. **Discover + enumerate** — kick off discovery/port-scan; the read-only AD enum modules (`ad-smb-enum`, `ad-null-session`, `ad-password-policy`) record facts (signing state, users, shares, lockout policy).
+4. **Read the war table** — the rule engine ranks the next moves. Read-only moves auto-run (in autonomous mode); risky ones appear as ranked findings with a **copy-paste command** and a one-click **Run**.
+5. **Escalate** — validated credentials unlock the credentialed playbook (Kerberoast, AS-REP, ADCS/Certipy, BloodHound). Spraying is **lockout-aware** — it refuses if the discovered policy makes a single attempt unsafe (override with `force`).
+
+Everything stays **deterministic and scope-locked**: a module refuses any target outside the engagement's declared CIDRs.
+
+### Tool Dependencies
+
+Decebalus orchestrates tools you already trust rather than reimplementing them. Run `cargo run -- doctor` to see live status.
+
+| Tool | Used for | Install |
+|------|----------|---------|
+| `nmap` | port/service/OS/vuln scanning | `apt install nmap` |
+| `nxc` (NetExec) | AD enum, spray, roasting, BloodHound | `pipx install netexec` |
+| `certipy` | ADCS ESC1–ESC8 checks | `pipx install certipy-ad` |
+| `smbclient` | SMB brute-force fallback | `apt install smbclient` |
+| `xfreerdp` | RDP brute force | `apt install freerdp2-x11` |
+| `hashcat` | cracking roasted hashes (offline) | `apt install hashcat` |
+| `impacket` / `responder` | operator-run relay/poisoning (surfaced as findings) | `pipx install impacket` |
+
+### Operating It
+
+- **Web war table** — `npm run dev` in `decebalus-frontend/` (or build it and serve statically), then visit the War Table and Engagement pages.
+- **Terminal war table** — `cargo run --features tui --bin decebalus-tui` (point it at a running server via `DECEBALUS_URL`). Keys: `⏎` run, `d` dismiss, `e` re-evaluate, `r` refresh, `q` quit.
+- **Optional auth** — set `DECEBALUS_TOKEN` to require `Authorization: Bearer <token>` on every request (the server now holds credentials and loot). The TUI reads the same variable.
+- **OPSEC** — `opsec_quiet` adds jitter and prefers stealthier options; `spray_lockout_buffer` tunes the spray safety margin. Both are runtime settings (hot-reloaded).
 
 ## Contributing
 
-This is a personal learning project, but feedback and discussions are welcome! If you're interested in:
-
-- Rust best practices
-- Network security techniques
-- System design advice
-
-Feel free to open issues or reach out.
+This is a personal learning project, but feedback and discussions are welcome — especially from anyone with deep AD / red-team tradecraft. If you're interested in Rust best practices, the assumed-breach playbook, or system design, feel free to open issues or reach out.
 
 ## Resources & Inspiration
 
-- [Bjorn](https://github.com/infinition/Bjorn) - The original inspiration
+- [Bjorn](https://github.com/infinition/Bjorn) — the original inspiration for the approachable, autonomous feel
+- [NetExec](https://github.com/Pennyw0rth/NetExec) — the AD engine Decebalus orchestrates
 - [The Rust Book](https://doc.rust-lang.org/book/)
 - [Tokio Documentation](https://tokio.rs/)
 - [Network Scanning with Nmap](https://nmap.org/book/)
@@ -285,4 +321,6 @@ ShadowMonkee
 
 ---
 
-	**Remember what Iron Man said in The Justice League**: With great power comes great responsibility. Use this tool ethically and **legally**.
+  **Remember what Uncle Ben said**: With great power comes great responsibility. Use this tool ethically and **legally**.
+</content>
+</invoke>

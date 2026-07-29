@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { wsMessages, connectionStatus } from '../stores/websocketStore';
-  import { getJobs, getHosts, cancelJob, getExports, triggerExport, exportDownloadUrl, type Job, type Host, type ExportFile } from '../api';
+  import { getJobs, getHosts, cancelJob, getExports, triggerExport, triggerReport, exportDownloadUrl, type Job, type Host, type ExportFile } from '../api';
   import { fmtDate, fmtUnixTs, fmtResults } from '../utils';
 
   const PER_PAGE = 15;
@@ -73,19 +73,40 @@
     }
   }
 
+  let reporting = false;
+  async function handleReport() {
+    reporting = true;
+    exportError = '';
+    try {
+      await triggerReport();
+      await refresh();
+    } catch (e: any) {
+      exportError = e.message;
+    } finally {
+      reporting = false;
+    }
+  }
+
   function fmtBytes(n: number): string {
     if (n < 1024) return `${n} B`;
     if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
     return `${(n / (1024 * 1024)).toFixed(1)} MB`;
   }
 
+  let autonomousPhase = '';
+  $: autonomousActive = autonomousPhase !== '' && !autonomousPhase.startsWith('idle');
+
   $: if ($wsMessages) {
     const msg = $wsMessages;
-    if (typeof msg === 'string' && msg.startsWith('job_')) {
-      refresh();
-      // Refresh export list whenever an export job finishes
-      if (msg.startsWith('job_completed:') || msg.startsWith('job_failed:')) {
-        refreshExports();
+    if (typeof msg === 'string') {
+      if (msg.startsWith('job_')) {
+        refresh();
+        // Refresh export list whenever an export job finishes
+        if (msg.startsWith('job_completed:') || msg.startsWith('job_failed:')) {
+          refreshExports();
+        }
+      } else if (msg.startsWith('autonomous:')) {
+        autonomousPhase = msg.slice('autonomous:'.length);
       }
     }
   }
@@ -139,6 +160,14 @@
     </h1>
     <p>Monitor Decebalus activity</p>
   </hgroup>
+
+  {#if autonomousPhase}
+    <div class="autonomous-banner" class:active={autonomousActive}>
+      <span class="auto-dot" aria-hidden="true"></span>
+      <strong>Autonomous</strong>
+      <span class="auto-phase">{autonomousPhase}</span>
+    </div>
+  {/if}
 
   <div class="stats-grid">
     <article class="stat-card">
@@ -308,13 +337,14 @@
   <article>
     <header>
       <strong>Data Export</strong>
-      <button
-        on:click={handleExport}
-        disabled={exporting}
-        aria-busy={exporting}
-      >
-        {exporting ? 'Queuing…' : 'Export Now'}
-      </button>
+      <div class="export-actions">
+        <button class="outline" on:click={handleReport} disabled={reporting} aria-busy={reporting}>
+          {reporting ? 'Queuing…' : 'Generate Report'}
+        </button>
+        <button on:click={handleExport} disabled={exporting} aria-busy={exporting}>
+          {exporting ? 'Queuing…' : 'Export Now'}
+        </button>
+      </div>
     </header>
 
     {#if exportError}<p class="error" role="alert">{exportError}</p>{/if}
@@ -360,6 +390,48 @@
 {/if}
 
 <style>
+  /* ── Autonomous banner ─────────────────────── */
+  .autonomous-banner {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem 0.9rem;
+    margin-bottom: 1rem;
+    border-radius: 6px;
+    border: 1px solid var(--border-bronze-subtle);
+    background: var(--surface-raised);
+    font-size: 0.88rem;
+  }
+
+  .autonomous-banner strong {
+    color: var(--color-bronze-bright);
+    letter-spacing: 0.03em;
+  }
+
+  .auto-phase {
+    color: var(--color-ash-light);
+    font-family: monospace;
+  }
+
+  .auto-dot {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    background: var(--color-ash);
+    flex-shrink: 0;
+  }
+
+  .autonomous-banner.active .auto-dot {
+    background: var(--color-bronze-bright, #e5c07b);
+    box-shadow: 0 0 6px var(--color-bronze-glow, rgba(229,192,123,0.6));
+    animation: auto-pulse 1.4s ease-in-out infinite;
+  }
+
+  @keyframes auto-pulse {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.35; }
+  }
+
   /* ── Stats grid ────────────────────────────── */
   .stats-grid {
     display: grid;
@@ -458,6 +530,16 @@
   }
 
   /* ── Export table ──────────────────────────── */
+  .export-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .export-actions button {
+    width: auto;
+    margin: 0;
+  }
+
   .export-filename {
     font-family: monospace;
     font-size: 0.82rem;

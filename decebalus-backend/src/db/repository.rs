@@ -1,6 +1,6 @@
 use chrono::{DateTime, Duration, Utc};
 use sqlx::{Row, SqlitePool, sqlite::SqliteRow};
-use crate::models::{Config, CveDetail, DisplayStatus, Host, Job, JobPriority, Log};
+use crate::models::{Config, Credential, CveDetail, DisplayStatus, Engagement, Fact, Finding, Host, HostEvent, HostStatus, Job, JobPriority, Log};
 
 // ==================== JOB REPOSITORY ====================
 
@@ -440,25 +440,6 @@ pub async fn get_logs(pool: &SqlitePool) -> Result<Vec<Log>, sqlx::Error> {
     Ok(logs)
 }
 
-pub async fn get_log(pool: &SqlitePool, id: String) -> Result<Option<Log>, sqlx::Error> {
-    let row = sqlx::query(
-        "SELECT id, created_at, severity, service, module, job_id, content FROM logs WHERE id = ?1"
-    )
-    .bind(id)
-    .fetch_optional(pool)
-    .await?;
-
-    Ok(row.map(|r| Log {
-        id: r.get("id"),
-        created_at: r.get("created_at"),
-        severity: r.get("severity"),
-        service: r.get("service"),
-        module: r.try_get("module").ok().flatten(),
-        job_id: r.try_get("job_id").ok().flatten(),
-        content: r.get("content"),
-    }))
-}
-
 pub async fn get_logs_by_job_id(pool: &SqlitePool, job_id: String) -> Result<Vec<Log>, sqlx::Error> {
     let rows = sqlx::query(
         r#"
@@ -610,4 +591,456 @@ pub async fn get_unenriched_cve_ids(pool: &SqlitePool) -> Result<Vec<String>, sq
         .collect();
 
     Ok(all_ids.difference(&cached).cloned().collect())
+}
+
+// ==================== HOST EVENTS (change detection) ====================
+
+fn host_event_from_row(r: &SqliteRow) -> HostEvent {
+    HostEvent {
+        id: r.get("id"),
+        created_at: r.get("created_at"),
+        host_ip: r.get("host_ip"),
+        event_type: r.get("event_type"),
+        detail: r.try_get("detail").ok().flatten(),
+        severity: r.try_get("severity").ok().flatten(),
+    }
+}
+
+/// Record a single change event for a host.
+pub async fn add_host_event(
+    pool: &SqlitePool,
+    host_ip: &str,
+    event_type: &str,
+    detail: Option<&str>,
+    severity: Option<&str>,
+) -> Result<(), sqlx::Error> {
+    sqlx::query(
+        "INSERT INTO host_events (host_ip, event_type, detail, severity) VALUES (?1, ?2, ?3, ?4)",
+    )
+    .bind(host_ip)
+    .bind(event_type)
+    .bind(detail)
+    .bind(severity)
+    .execute(pool)
+    .await?;
+    Ok(())
+}
+
+/// Most recent change events, newest first.
+pub async fn list_host_events(pool: &SqlitePool, limit: i64) -> Result<Vec<HostEvent>, sqlx::Error> {
+    let rows = sqlx::query(
+        "SELECT id, created_at, host_ip, event_type, detail, severity \
+         FROM host_events ORDER BY id DESC LIMIT ?1",
+    )
+    .bind(limit)
+    .fetch_all(pool)
+    .await?;
+    Ok(rows.iter().map(host_event_from_row).collect())
+}
+
+/// Upsert a host, first recording any detected changes against its previous state.
+/// This is the change-detection entry point used by the scanner and port scanner.
+pub async fn upsert_host_tracked(pool: &SqlitePool, host: &Host) -> Result<(), sqlx::Error> {
+    let previous = get_host(pool, &host.ip).await.ok().flatten();
+    record_host_changes(pool, previous.as_ref(), host).await;
+    upsert_host(pool, host).await
+}
+
+async fn record_host_changes(pool: &SqlitePool, old: Option<&Host>, new: &Host) {
+    use std::collections::HashSet;
+
+    let Some(old) = old else {
+        let _ = add_host_event(pool, &new.ip, "host_new", new.hostname.as_deref(), None).await;
+        return;
+    };
+
+    // Status transitions.
+    if old.status != new.status {
+        match new.status {
+            HostStatus::Up => {
+                let _ = add_host_event(pool, &new.ip, "host_up", new.hostname.as_deref(), None).await;
+            }
+            HostStatus::Down => {
+                let _ = add_host_event(pool, &new.ip, "host_down", None, None).await;
+            }
+            HostStatus::Unknown => {}
+        }
+    }
+
+    // Newly opened ports.
+    let old_open: HashSet<u16> = old
+        .ports
+        .iter()
+        .filter(|p| p.status == "open")
+        .map(|p| p.number)
+        .collect();
+    for p in new.ports.iter().filter(|p| p.status == "open") {
+        if !old_open.contains(&p.number) {
+            let detail = match &p.service {
+                Some(s) => format!("{}/{}", p.number, s),
+                None => p.number.to_string(),
+            };
+            let _ = add_host_event(pool, &new.ip, "port_opened", Some(detail.as_str()), None).await;
+        }
+    }
+
+    // Newly detected vulnerabilities.
+    let old_vulns: HashSet<&str> = old.vulnerabilities.iter().map(|v| v.id.as_str()).collect();
+    for v in &new.vulnerabilities {
+        if !old_vulns.contains(v.id.as_str()) {
+            let _ = add_host_event(
+                pool,
+                &new.ip,
+                "vuln_new",
+                Some(v.id.as_str()),
+                Some(v.severity.as_str()),
+            )
+            .await;
+        }
+    }
+}
+
+// ==================== ENGAGEMENT REPOSITORY ====================
+
+fn engagement_from_row(r: &SqliteRow) -> Engagement {
+    let scope_cidrs: Vec<String> = r
+        .try_get::<String, _>("scope_cidrs")
+        .ok()
+        .and_then(|s| serde_json::from_str(&s).ok())
+        .unwrap_or_default();
+    Engagement {
+        id: r.get("id"),
+        name: r.get("name"),
+        scope_cidrs,
+        domain: r.try_get("domain").ok().flatten(),
+        dc_ip: r.try_get("dc_ip").ok().flatten(),
+        status: r.get("status"),
+        created_at: r.get("created_at"),
+    }
+}
+
+/// Create a new engagement.
+pub async fn create_engagement(pool: &SqlitePool, e: &Engagement) -> Result<(), sqlx::Error> {
+    let scope_json = serde_json::to_string(&e.scope_cidrs).unwrap_or_else(|_| "[]".to_string());
+    sqlx::query(
+        "INSERT INTO engagements (id, name, scope_cidrs, domain, dc_ip, status) VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
+    )
+    .bind(&e.id)
+    .bind(&e.name)
+    .bind(scope_json)
+    .bind(&e.domain)
+    .bind(&e.dc_ip)
+    .bind(&e.status)
+    .execute(pool)
+    .await?;
+    Ok(())
+}
+
+/// Get an engagement by ID.
+pub async fn get_engagement(pool: &SqlitePool, id: &str) -> Result<Option<Engagement>, sqlx::Error> {
+    let row = sqlx::query(
+        "SELECT id, name, scope_cidrs, domain, dc_ip, status, created_at FROM engagements WHERE id = ?1",
+    )
+    .bind(id)
+    .fetch_optional(pool)
+    .await?;
+    Ok(row.map(|r| engagement_from_row(&r)))
+}
+
+/// List all engagements, newest first.
+pub async fn list_engagements(pool: &SqlitePool) -> Result<Vec<Engagement>, sqlx::Error> {
+    let rows = sqlx::query(
+        "SELECT id, name, scope_cidrs, domain, dc_ip, status, created_at FROM engagements ORDER BY created_at DESC",
+    )
+    .fetch_all(pool)
+    .await?;
+    Ok(rows.iter().map(engagement_from_row).collect())
+}
+
+/// The most recently created active engagement, if any. Anchors scope-lock and
+/// is the default owner for facts/credentials/findings produced by modules.
+pub async fn get_active_engagement(pool: &SqlitePool) -> Result<Option<Engagement>, sqlx::Error> {
+    let row = sqlx::query(
+        "SELECT id, name, scope_cidrs, domain, dc_ip, status, created_at FROM engagements WHERE status = 'active' ORDER BY created_at DESC LIMIT 1",
+    )
+    .fetch_optional(pool)
+    .await?;
+    Ok(row.map(|r| engagement_from_row(&r)))
+}
+
+/// Update an engagement's status (active | archived).
+pub async fn set_engagement_status(pool: &SqlitePool, id: &str, status: &str) -> Result<(), sqlx::Error> {
+    sqlx::query("UPDATE engagements SET status = ?2 WHERE id = ?1")
+        .bind(id)
+        .bind(status)
+        .execute(pool)
+        .await?;
+    Ok(())
+}
+
+/// Make exactly one engagement active, archiving any others. Ensures a
+/// deterministic active engagement for scope-lock and fact/finding ownership.
+pub async fn set_active_engagement(pool: &SqlitePool, id: &str) -> Result<(), sqlx::Error> {
+    sqlx::query("UPDATE engagements SET status = 'archived' WHERE status = 'active'")
+        .execute(pool)
+        .await?;
+    sqlx::query("UPDATE engagements SET status = 'active' WHERE id = ?1")
+        .bind(id)
+        .execute(pool)
+        .await?;
+    Ok(())
+}
+
+// ==================== CREDENTIAL REPOSITORY ====================
+
+fn credential_from_row(r: &SqliteRow) -> Credential {
+    let valid_on: Vec<String> = r
+        .try_get::<String, _>("valid_on")
+        .ok()
+        .and_then(|s| serde_json::from_str(&s).ok())
+        .unwrap_or_default();
+    Credential {
+        id: r.get("id"),
+        engagement_id: r.get("engagement_id"),
+        domain: r.get("domain"),
+        username: r.get("username"),
+        secret_type: r.get("secret_type"),
+        secret: r.get("secret"),
+        source_job_id: r.try_get("source_job_id").ok().flatten(),
+        validated: r.try_get::<i64, _>("validated").unwrap_or(0) != 0,
+        valid_on,
+        privilege: r.get("privilege"),
+        created_at: r.get("created_at"),
+    }
+}
+
+/// Insert a credential, or upgrade an existing identical one (same engagement +
+/// domain + username + secret) with fresher validation/privilege info.
+pub async fn add_credential(pool: &SqlitePool, c: &Credential) -> Result<(), sqlx::Error> {
+    let valid_on_json = serde_json::to_string(&c.valid_on).unwrap_or_else(|_| "[]".to_string());
+    sqlx::query(
+        r#"
+        INSERT INTO credentials
+            (id, engagement_id, domain, username, secret_type, secret, source_job_id, validated, valid_on, privilege)
+        VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)
+        ON CONFLICT(engagement_id, domain, username, secret) DO UPDATE SET
+            validated = MAX(validated, ?8),
+            valid_on = ?9,
+            privilege = ?10,
+            source_job_id = COALESCE(?7, source_job_id)
+        "#,
+    )
+    .bind(&c.id)
+    .bind(&c.engagement_id)
+    .bind(&c.domain)
+    .bind(&c.username)
+    .bind(&c.secret_type)
+    .bind(&c.secret)
+    .bind(&c.source_job_id)
+    .bind(if c.validated { 1_i64 } else { 0 })
+    .bind(valid_on_json)
+    .bind(&c.privilege)
+    .execute(pool)
+    .await?;
+    Ok(())
+}
+
+/// List credentials for an engagement (pass "" for the global engagement).
+pub async fn list_credentials(pool: &SqlitePool, engagement_id: &str) -> Result<Vec<Credential>, sqlx::Error> {
+    let rows = sqlx::query(
+        "SELECT id, engagement_id, domain, username, secret_type, secret, source_job_id, validated, valid_on, privilege, created_at \
+         FROM credentials WHERE engagement_id = ?1 ORDER BY validated DESC, created_at DESC",
+    )
+    .bind(engagement_id)
+    .fetch_all(pool)
+    .await?;
+    Ok(rows.iter().map(credential_from_row).collect())
+}
+
+// ==================== FACT REPOSITORY ====================
+
+fn fact_from_row(r: &SqliteRow) -> Fact {
+    let value: serde_json::Value = r
+        .try_get::<String, _>("value")
+        .ok()
+        .and_then(|s| serde_json::from_str(&s).ok())
+        .unwrap_or(serde_json::Value::Null);
+    Fact {
+        id: r.try_get("id").unwrap_or(0),
+        engagement_id: r.get("engagement_id"),
+        subject_type: r.get("subject_type"),
+        subject_id: r.get("subject_id"),
+        key: r.get("key"),
+        value,
+        source_job_id: r.try_get("source_job_id").ok().flatten(),
+        created_at: r.get("created_at"),
+    }
+}
+
+/// Record (or replace) a fact about a subject. Deduped on
+/// (engagement_id, subject_type, subject_id, key) so the latest value wins.
+pub async fn upsert_fact(pool: &SqlitePool, f: &Fact) -> Result<(), sqlx::Error> {
+    let value_json = serde_json::to_string(&f.value).unwrap_or_else(|_| "null".to_string());
+    sqlx::query(
+        r#"
+        INSERT INTO facts (engagement_id, subject_type, subject_id, key, value, source_job_id)
+        VALUES (?1, ?2, ?3, ?4, ?5, ?6)
+        ON CONFLICT(engagement_id, subject_type, subject_id, key) DO UPDATE SET
+            value = ?5,
+            source_job_id = COALESCE(?6, source_job_id)
+        "#,
+    )
+    .bind(&f.engagement_id)
+    .bind(&f.subject_type)
+    .bind(&f.subject_id)
+    .bind(&f.key)
+    .bind(value_json)
+    .bind(&f.source_job_id)
+    .execute(pool)
+    .await?;
+    Ok(())
+}
+
+/// All facts for an engagement (pass "" for the global engagement).
+pub async fn list_facts(pool: &SqlitePool, engagement_id: &str) -> Result<Vec<Fact>, sqlx::Error> {
+    let rows = sqlx::query(
+        "SELECT id, engagement_id, subject_type, subject_id, key, value, source_job_id, created_at \
+         FROM facts WHERE engagement_id = ?1 ORDER BY id DESC",
+    )
+    .bind(engagement_id)
+    .fetch_all(pool)
+    .await?;
+    Ok(rows.iter().map(fact_from_row).collect())
+}
+
+/// Facts about a specific subject within an engagement.
+pub async fn get_facts_for_subject(
+    pool: &SqlitePool,
+    engagement_id: &str,
+    subject_type: &str,
+    subject_id: &str,
+) -> Result<Vec<Fact>, sqlx::Error> {
+    let rows = sqlx::query(
+        "SELECT id, engagement_id, subject_type, subject_id, key, value, source_job_id, created_at \
+         FROM facts WHERE engagement_id = ?1 AND subject_type = ?2 AND subject_id = ?3 ORDER BY key",
+    )
+    .bind(engagement_id)
+    .bind(subject_type)
+    .bind(subject_id)
+    .fetch_all(pool)
+    .await?;
+    Ok(rows.iter().map(fact_from_row).collect())
+}
+
+// ==================== FINDING REPOSITORY ====================
+
+fn finding_from_row(r: &SqliteRow) -> Finding {
+    let job_config: serde_json::Value = r
+        .try_get::<String, _>("job_config")
+        .ok()
+        .and_then(|s| serde_json::from_str(&s).ok())
+        .unwrap_or_else(|| serde_json::json!({}));
+    let evidence: serde_json::Value = r
+        .try_get::<String, _>("evidence")
+        .ok()
+        .and_then(|s| serde_json::from_str(&s).ok())
+        .unwrap_or_else(|| serde_json::json!({}));
+    Finding {
+        id: r.get("id"),
+        engagement_id: r.get("engagement_id"),
+        dedup_key: r.get("dedup_key"),
+        title: r.get("title"),
+        category: r.get("category"),
+        value_score: r.try_get("value_score").unwrap_or(0),
+        severity: r.get("severity"),
+        rationale: r.get("rationale"),
+        suggested_command: r.try_get("suggested_command").ok().flatten(),
+        auto_runnable: r.try_get::<i64, _>("auto_runnable").unwrap_or(0) != 0,
+        job_type: r.try_get("job_type").ok().flatten(),
+        job_config,
+        status: r.get("status"),
+        evidence,
+        created_at: r.get("created_at"),
+    }
+}
+
+/// Insert or update a finding, deduped on (engagement_id, dedup_key). Re-running
+/// the rule engine refreshes an existing finding rather than duplicating it, but
+/// never resurrects one the operator dismissed or that already ran.
+pub async fn upsert_finding(pool: &SqlitePool, f: &Finding) -> Result<(), sqlx::Error> {
+    let job_config_json = serde_json::to_string(&f.job_config).unwrap_or_else(|_| "{}".to_string());
+    let evidence_json = serde_json::to_string(&f.evidence).unwrap_or_else(|_| "{}".to_string());
+    sqlx::query(
+        r#"
+        INSERT INTO findings
+            (id, engagement_id, dedup_key, title, category, value_score, severity, rationale,
+             suggested_command, auto_runnable, job_type, job_config, status, evidence)
+        VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14)
+        ON CONFLICT(engagement_id, dedup_key) DO UPDATE SET
+            title = ?4,
+            category = ?5,
+            value_score = ?6,
+            severity = ?7,
+            rationale = ?8,
+            suggested_command = ?9,
+            auto_runnable = ?10,
+            job_type = ?11,
+            job_config = ?12,
+            evidence = ?14
+        WHERE findings.status NOT IN ('dismissed', 'done', 'running', 'queued')
+        "#,
+    )
+    .bind(&f.id)
+    .bind(&f.engagement_id)
+    .bind(&f.dedup_key)
+    .bind(&f.title)
+    .bind(&f.category)
+    .bind(f.value_score)
+    .bind(&f.severity)
+    .bind(&f.rationale)
+    .bind(&f.suggested_command)
+    .bind(if f.auto_runnable { 1_i64 } else { 0 })
+    .bind(&f.job_type)
+    .bind(job_config_json)
+    .bind(&f.status)
+    .bind(evidence_json)
+    .execute(pool)
+    .await?;
+    Ok(())
+}
+
+/// Findings for an engagement, highest value first.
+pub async fn list_findings(pool: &SqlitePool, engagement_id: &str) -> Result<Vec<Finding>, sqlx::Error> {
+    let rows = sqlx::query(
+        "SELECT id, engagement_id, dedup_key, title, category, value_score, severity, rationale, \
+         suggested_command, auto_runnable, job_type, job_config, status, evidence, created_at \
+         FROM findings WHERE engagement_id = ?1 ORDER BY value_score DESC, created_at DESC",
+    )
+    .bind(engagement_id)
+    .fetch_all(pool)
+    .await?;
+    Ok(rows.iter().map(finding_from_row).collect())
+}
+
+/// Get a finding by ID.
+pub async fn get_finding(pool: &SqlitePool, id: &str) -> Result<Option<Finding>, sqlx::Error> {
+    let row = sqlx::query(
+        "SELECT id, engagement_id, dedup_key, title, category, value_score, severity, rationale, \
+         suggested_command, auto_runnable, job_type, job_config, status, evidence, created_at \
+         FROM findings WHERE id = ?1",
+    )
+    .bind(id)
+    .fetch_optional(pool)
+    .await?;
+    Ok(row.map(|r| finding_from_row(&r)))
+}
+
+/// Update a finding's lifecycle status (suggested | queued | running | done | dismissed).
+pub async fn update_finding_status(pool: &SqlitePool, id: &str, status: &str) -> Result<(), sqlx::Error> {
+    sqlx::query("UPDATE findings SET status = ?2 WHERE id = ?1")
+        .bind(id)
+        .bind(status)
+        .execute(pool)
+        .await?;
+    Ok(())
 }

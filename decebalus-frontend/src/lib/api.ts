@@ -140,6 +140,7 @@ export interface ExportFile {
 
 export const getExports   = () => req<ExportFile[]>('/exports');
 export const triggerExport = () => createJob('export');
+export const triggerReport = () => createJob('report');
 /** Returns the URL to download a specific export file. */
 export const exportDownloadUrl = (filename: string) =>
   `${BASE}/exports/${encodeURIComponent(filename)}`;
@@ -153,6 +154,92 @@ export interface ModuleMeta {
   optional_config: string[];
   default_port:    number | null;
   trigger_ports:   number[];
+  safety?:         string;
+  opsec_noise?:    string;
+  produces_facts?: string[];
+  requires_cred?:  boolean;
+  trigger_facts?:  string[];
 }
 
 export const getModules = () => req<ModuleMeta[]>('/modules');
+
+// ── Assumed-breach: engagements, credentials, findings (the war table) ──────
+
+export interface Engagement {
+  id:          string;
+  name:        string;
+  scope_cidrs: string[];
+  domain:      string | null;
+  dc_ip:       string | null;
+  status:      string;
+  created_at:  string;
+}
+
+export interface Credential {
+  id:            string;
+  engagement_id: string;
+  domain:        string;
+  username:      string;
+  secret_type:   string;
+  secret:        string;
+  source_job_id: string | null;
+  validated:     boolean;
+  valid_on:      string[];
+  privilege:     string;
+  created_at:    string;
+}
+
+export interface Finding {
+  id:                string;
+  engagement_id:     string;
+  dedup_key:         string;
+  title:             string;
+  category:          string;
+  value_score:       number;
+  severity:          string;
+  rationale:         string;
+  suggested_command: string | null;
+  auto_runnable:     boolean;
+  job_type:          string | null;
+  job_config:        Record<string, any>;
+  status:            string;
+  evidence:          Record<string, any>;
+  created_at:        string;
+}
+
+export const getFindings    = ()           => req<Finding[]>('/findings');
+export const runFinding     = (id: string) => req<Job>(`/findings/${id}/run`, { method: 'POST' });
+export const dismissFinding = (id: string) => req<{ message: string }>(`/findings/${id}/dismiss`, { method: 'POST' });
+export const runEngine      = ()           => req<{ findings: number }>('/engine/run', { method: 'POST' });
+
+export const getEngagements      = ()           => req<Engagement[]>('/engagements');
+export const getActiveEngagement = ()           => req<Engagement | null>('/engagements/active');
+export const activateEngagement  = (id: string) => req<{ message: string }>(`/engagements/${id}/activate`, { method: 'POST' });
+export const getCredentials      = ()           => req<Credential[]>('/credentials');
+
+export interface CreateEngagementBody {
+  name:         string;
+  scope_cidrs?: string[];
+  domain?:      string;
+  dc_ip?:       string;
+  username?:    string;
+  password?:    string;
+}
+
+export const createEngagement = (body: CreateEngagementBody) =>
+  req<Engagement>('/engagements', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+
+export interface HostEvent {
+  id:         number;
+  created_at: string;
+  host_ip:    string;
+  event_type: string;
+  detail:     string | null;
+  severity:   string | null;
+}
+
+export const getHistory = (limit = 100) => req<HostEvent[]>(`/history?limit=${limit}`);

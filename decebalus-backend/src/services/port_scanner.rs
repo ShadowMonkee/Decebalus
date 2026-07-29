@@ -994,7 +994,7 @@ impl PortScanner {
 
         host.update_last_seen();
 
-        if let Err(e) = repository::upsert_host(&state.db, &host).await {
+        if let Err(e) = repository::upsert_host_tracked(&state.db, &host).await {
             tracing::error!("Failed to update scan results for {}: {}", ip, e);
         }
     }
@@ -1209,5 +1209,54 @@ impl PortScanner {
             }
             _ => None,
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parse_nmap_xml_extracts_ports_services_host_and_mac() {
+        let xml = r#"<?xml version="1.0"?>
+<nmaprun>
+  <host>
+    <address addr="192.168.1.10" addrtype="ipv4"/>
+    <address addr="00:11:22:33:44:55" addrtype="mac" vendor="TestVendor"/>
+    <hostnames><hostname name="testhost.local" type="PTR"/></hostnames>
+    <ports>
+      <port protocol="tcp" portid="22"><state state="open"/><service name="ssh" product="OpenSSH" version="8.2"/></port>
+      <port protocol="tcp" portid="80"><state state="open"/><service name="http" product="nginx"/></port>
+    </ports>
+  </host>
+</nmaprun>"#;
+        let r = PortScanner::parse_nmap_xml(xml);
+
+        let ports: Vec<u16> = r.services.iter().map(|s| s.port).collect();
+        assert!(ports.contains(&22), "expected port 22, got {:?}", ports);
+        assert!(ports.contains(&80), "expected port 80, got {:?}", ports);
+
+        let ssh = r.services.iter().find(|s| s.port == 22).unwrap();
+        assert_eq!(ssh.name, "ssh");
+        assert_eq!(ssh.product.as_deref(), Some("OpenSSH"));
+        assert_eq!(ssh.version.as_deref(), Some("8.2"));
+
+        assert_eq!(r.hostname.as_deref(), Some("testhost.local"));
+        assert_eq!(r.mac_address.as_deref(), Some("00:11:22:33:44:55"));
+        assert_eq!(r.mac_vendor.as_deref(), Some("TestVendor"));
+    }
+
+    #[test]
+    fn parse_vulners_output_extracts_cves() {
+        let output = "  cpe:/a:openbsd:openssh:8.2p1:\n\
+                       \x20\x20\x20\x20CVE-2023-38408\t10.0\thttps://vulners.com/cve/CVE-2023-38408\n\
+                       \x20\x20\x20\x20CVE-2021-36368\t5.3\thttps://vulners.com/cve/CVE-2021-36368";
+        let v = PortScanner::parse_vulners_output("vulners", output);
+        assert_eq!(v.len(), 2);
+        assert!(v.iter().any(|x| x.id == "CVE-2023-38408"));
+        assert!(v.iter().any(|x| x.id == "CVE-2021-36368"));
+        // 10.0 → CRITICAL severity mapping
+        let crit = v.iter().find(|x| x.id == "CVE-2023-38408").unwrap();
+        assert_eq!(crit.severity, "CRITICAL");
     }
 }

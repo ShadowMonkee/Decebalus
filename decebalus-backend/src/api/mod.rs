@@ -7,3 +7,7 @@ pub mod logs;
 pub mod exports;
 pub mod cve;
 pub mod modules;
+pub mod history;
+pub mod findings;
+pub mod engagements;
+pub mod auth;

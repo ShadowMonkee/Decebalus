@@ -149,7 +149,7 @@ impl NetworkScanner {
                 if let Ok(Some(mut host)) = repository::get_host(&state.db, &ip_str).await {
                     host.status = HostStatus::Up;
                     host.update_last_seen();
-                    let _ = repository::upsert_host(&state.db, &host).await;
+                    let _ = repository::upsert_host_tracked(&state.db, &host).await;
                     let _ = state.broadcaster.send(format!("host_found:{}", ip_str));
                 }
                 recovered.insert(ip);
@@ -393,7 +393,7 @@ impl NetworkScanner {
             host.hostname = hostname;
             host.status = HostStatus::Up;
             host.update_last_seen();
-            if let Err(e) = repository::upsert_host(&state.db, &host).await {
+            if let Err(e) = repository::upsert_host_tracked(&state.db, &host).await {
                 tracing::error!("Failed to save host {}: {}", ip_str, e);
             } else {
                 let _ = state.broadcaster.send(format!("host_found:{}", ip_str));
@@ -415,7 +415,7 @@ impl NetworkScanner {
             host.hostname = hostname;
             host.status = HostStatus::Up;
             host.update_last_seen();
-            if let Err(e) = repository::upsert_host(&state.db, &host).await {
+            if let Err(e) = repository::upsert_host_tracked(&state.db, &host).await {
                 tracing::error!("Failed to save host {}: {}", ip_str, e);
             } else {
                 let _ = state.broadcaster.send(format!("host_found:{}", ip_str));
@@ -425,7 +425,7 @@ impl NetworkScanner {
         count
     }
 
-    async fn tcp_discover(ips: &[Ipv4Addr], job_id: &str, state: &Arc<AppState>) -> HashSet<Ipv4Addr> {
+    async fn tcp_discover(ips: &[Ipv4Addr], _job_id: &str, state: &Arc<AppState>) -> HashSet<Ipv4Addr> {
         let found: Arc<tokio::sync::Mutex<HashSet<Ipv4Addr>>> =
             Arc::new(tokio::sync::Mutex::new(HashSet::new()));
         let max_threads = crate::settings::current().max_discover_threads;
@@ -450,7 +450,7 @@ impl NetworkScanner {
                     host.hostname = hostname;
                     host.status = HostStatus::Up;
                     host.update_last_seen();
-                    if let Err(e) = repository::upsert_host(&state_clone.db, &host).await {
+                    if let Err(e) = repository::upsert_host_tracked(&state_clone.db, &host).await {
                         tracing::error!("Failed to save host {}: {}", ip_str, e);
                     } else {
                         let _ = state_clone.broadcaster.send(format!("host_found:{}", ip_str));
@@ -493,7 +493,7 @@ impl NetworkScanner {
 
             if should_mark_down && host.status != HostStatus::Down {
                 host.status = HostStatus::Down;
-                if let Err(e) = repository::upsert_host(&state.db, &host).await {
+                if let Err(e) = repository::upsert_host_tracked(&state.db, &host).await {
                     tracing::error!("Failed to mark {} as down: {}", host.ip, e);
                 } else {
                     tracing::info!("Host {} marked as down (not seen in scan)", host.ip);
@@ -576,6 +576,11 @@ impl NetworkScanner {
         Self::detect_local_interface_info()
             .map(|(_, _, _, net)| IpNet::V4(net))
             .ok_or_else(|| "No suitable local network interface found".to_string())
+    }
+
+    /// Best-effort local IPv4 of the active interface (used by the status display).
+    pub fn local_ipv4() -> Option<Ipv4Addr> {
+        Self::detect_local_interface_info().map(|(_, ip, _, _)| ip)
     }
 
     // Returns true as soon as any probe port connects. Drops the remaining

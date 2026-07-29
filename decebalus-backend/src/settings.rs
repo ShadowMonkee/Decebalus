@@ -50,6 +50,10 @@ pub struct Settings {
     pub autonomous_enabled: bool,
     pub autonomous_attacks_enabled: bool,
     pub autonomous_interval_secs: u64,
+    // OPSEC — keep engagements quiet and lockout-safe
+    pub opsec_quiet: bool,
+    pub opsec_jitter_ms: u64,
+    pub spray_lockout_buffer: u64,
     // Identity
     pub device_name: String,
 }
@@ -69,6 +73,9 @@ impl Default for Settings {
             autonomous_enabled: false,
             autonomous_attacks_enabled: false,
             autonomous_interval_secs: 900,
+            opsec_quiet: false,
+            opsec_jitter_ms: 0,
+            spray_lockout_buffer: 1,
             device_name: "decebalus-01".to_string(),
         }
     }
@@ -139,6 +146,14 @@ impl Settings {
                 "autonomous_interval_secs",
                 "AUTONOMOUS_INTERVAL_SECS",
                 d.autonomous_interval_secs,
+            ),
+            opsec_quiet: get_bool(stored, "opsec_quiet", "OPSEC_QUIET", d.opsec_quiet),
+            opsec_jitter_ms: get_u64(stored, "opsec_jitter_ms", "OPSEC_JITTER_MS", d.opsec_jitter_ms),
+            spray_lockout_buffer: get_u64(
+                stored,
+                "spray_lockout_buffer",
+                "SPRAY_LOCKOUT_BUFFER",
+                d.spray_lockout_buffer,
             ),
             device_name: get_string(stored, "device_name", "DEVICE_NAME", &d.device_name),
         }
@@ -275,5 +290,39 @@ fn get_ports(stored: &Value, key: &str, default: Vec<u16>) -> Vec<u16> {
             if ports.is_empty() { default } else { ports }
         }
         _ => default,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+
+    #[test]
+    fn from_stored_overrides_defaults_and_coerces_types() {
+        // Values may arrive as numbers, strings, or bools from the key-value table.
+        let stored = json!({
+            "max_scan_concurrency": 123,
+            "port_scan_timeout_ms": "350",
+            "autonomous_enabled": true,
+            "log_level": "debug",
+            "fallback_ports": [22, 80, 443]
+        });
+        let s = Settings::from_stored(&stored);
+
+        assert_eq!(s.max_scan_concurrency, 123);
+        assert_eq!(s.port_scan_timeout_ms, 350); // string coerced to number
+        assert!(s.autonomous_enabled);
+        assert_eq!(s.log_level, "debug");
+        assert_eq!(s.fallback_ports, vec![22, 80, 443]);
+    }
+
+    #[test]
+    fn from_stored_falls_back_to_defaults_when_absent() {
+        let s = Settings::from_stored(&json!({}));
+        let d = Settings::default();
+        assert_eq!(s.max_discover_threads, d.max_discover_threads);
+        assert!(!s.autonomous_enabled);
+        assert_eq!(s.fallback_ports, d.fallback_ports);
     }
 }

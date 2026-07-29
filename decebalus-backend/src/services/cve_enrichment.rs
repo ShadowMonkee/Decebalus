@@ -267,3 +267,49 @@ impl CveEnrichment {
         })
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+
+    #[test]
+    fn parse_nvd_response_extracts_v3_score_desc_and_refs() {
+        let body = json!({
+            "vulnerabilities": [{
+                "cve": {
+                    "id": "CVE-2021-1234",
+                    "descriptions": [
+                        { "lang": "es", "value": "Una vulnerabilidad." },
+                        { "lang": "en", "value": "A test vulnerability." }
+                    ],
+                    "metrics": {
+                        "cvssMetricV31": [{
+                            "cvssData": { "baseScore": 9.8, "baseSeverity": "CRITICAL" }
+                        }]
+                    },
+                    "published": "2021-01-01T00:00:00.000",
+                    "references": [
+                        { "url": "https://example.com/a" },
+                        { "url": "https://example.com/b" }
+                    ]
+                }
+            }]
+        });
+
+        let d = CveEnrichment::parse_nvd_response("CVE-2021-1234", &body)
+            .expect("should parse");
+        assert_eq!(d.cve_id, "CVE-2021-1234");
+        assert_eq!(d.description, "A test vulnerability."); // English preferred
+        assert_eq!(d.cvss_v3_score, Some(9.8));
+        assert_eq!(d.cvss_v3_severity.as_deref(), Some("CRITICAL"));
+        assert_eq!(d.references.len(), 2);
+        assert_eq!(d.published_at.as_deref(), Some("2021-01-01T00:00:00.000"));
+    }
+
+    #[test]
+    fn parse_nvd_response_none_on_unexpected_shape() {
+        let body = json!({ "unexpected": true });
+        assert!(CveEnrichment::parse_nvd_response("CVE-0000-0000", &body).is_none());
+    }
+}

@@ -2,6 +2,7 @@
 name = "decebalus-backend"
 version = "0.1.0"
 edition = "2024"
+default-run = "decebalus-backend"
 
 [dependencies]
 tokio = { version = "1.48.0", features = ["full"] }
@@ -28,3 +29,29 @@ quick-xml = "0.37"
 reqwest = { version = "0.12", features = ["json", "rustls-tls"], default-features = false }
 russh = "0.60"
 russh-sftp = "2.1"
+tower-http = { version = "0.6", features = ["fs"] }
+
+# ── Physical e-paper display (Raspberry Pi only) ─────────────────────────────
+# Compiled only with `--features hardware`; these crates are Linux/Pi-specific so
+# the default build (and CI/dev on macOS) never touches them.
+embedded-graphics = { version = "0.8", optional = true }
+epd-waveshare = { version = "0.6", optional = true }
+linux-embedded-hal = { version = "0.4", optional = true }
+
+# ── Native TUI war table (operator terminal client) ──────────────────────────
+# Compiled only with `--features tui`; a thin REST client over the running server.
+ratatui = { version = "0.29", optional = true }
+crossterm = { version = "0.28", optional = true }
+
+[features]
+# Enable on the Raspberry Pi to drive the Waveshare e-paper HAT:
+#   cargo build --release --features hardware
+hardware = ["dep:embedded-graphics", "dep:epd-waveshare", "dep:linux-embedded-hal"]
+# Build the terminal war table:
+#   cargo build --release --features tui --bin decebalus-tui
+tui = ["dep:ratatui", "dep:crossterm"]
+
+[[bin]]
+name = "decebalus-tui"
+path = "src/bin/tui.rs"
+required-features = ["tui"]

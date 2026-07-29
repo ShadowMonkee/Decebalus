@@ -1,10 +1,5 @@
-mod api;
-mod db;
-mod models;
-mod services;
-mod settings;
-mod state;
-
+// Thin binary over the `decebalus_backend` library crate (which holds all the
+// modules). This avoids compiling the whole crate twice.
 use axum::{
     routing::{get, post},
     Router,
@@ -13,9 +8,10 @@ use std::{net::SocketAddr, sync::Arc};
 use tracing_subscriber::filter::LevelFilter;
 use tracing_subscriber::prelude::*;
 
-pub use state::AppState;
-
-use crate::{db::repository, services::JobExecutor};
+use decebalus_backend::db::repository;
+use decebalus_backend::services::{DisplayService, JobExecutor, Orchestrator};
+use decebalus_backend::state::AppState;
+use decebalus_backend::{api, db, settings};
 
 async fn shutdown_signal() {
     tokio::signal::ctrl_c()
@@ -27,6 +23,12 @@ async fn shutdown_signal() {
 #[tokio::main]
 async fn main() {
     dotenvy::dotenv().ok();
+
+    // `decebalus-backend doctor` → report on external tool dependencies and exit.
+    if std::env::args().nth(1).as_deref() == Some("doctor") {
+        decebalus_backend::doctor::print_report();
+        return;
+    }
 
     // Tracing with a reload handle so the Settings UI can change log level at runtime.
     let initial_level = std::env::var("RUST_LOG")
@@ -70,6 +72,18 @@ async fn main() {
         JobExecutor::check_and_run_scheduled_jobs(scheduler_state).await;
     });
 
+    // Autonomous operation loop (gated by the autonomous_* settings; recon-only by default).
+    let orchestrator_state = Arc::clone(&state);
+    tokio::spawn(async move {
+        Orchestrator::run(orchestrator_state).await;
+    });
+
+    // Status display service (mock renderer by default; e-paper with `--features hardware`).
+    let display_state = Arc::clone(&state);
+    tokio::spawn(async move {
+        DisplayService::run(display_state).await;
+    });
+
     // On startup, clean up logs older than the configured retention window.
     let retention_days = settings::current().log_retention_days;
     let _ = repository::cleanup_old_logs(&state.db, retention_days).await;
@@ -77,6 +91,11 @@ async fn main() {
 
     // Handle unfinished jobs in case of previously closed app without finalising all jobs:
     JobExecutor::resume_incomplete_jobs(state.clone()).await;
+
+    // Directory of the built web UI (Vite `dist`). Served as a fallback so one
+    // process hosts both API and UI; override with FRONTEND_DIR.
+    let frontend_dir = std::env::var("FRONTEND_DIR")
+        .unwrap_or_else(|_| "../decebalus-frontend/dist".to_string());
 
     let app = Router::new()
         // Job routes
@@ -104,8 +123,29 @@ async fn main() {
         .route("/api/cve/{id}", get(api::cve::get_cve))
         // Attack/exploit module registry
         .route("/api/modules", get(api::modules::list_modules))
+        // Change-detection history
+        .route("/api/history", get(api::history::list_history))
+        // Next-move rule engine + findings (the "war table")
+        .route("/api/findings", get(api::findings::list_findings))
+        .route("/api/findings/{id}/run", post(api::findings::run_finding))
+        .route("/api/findings/{id}/dismiss", post(api::findings::dismiss_finding))
+        .route("/api/engine/run", post(api::findings::run_engine))
+        // Engagements (scope + starting credential) and the credential vault
+        .route("/api/engagements", get(api::engagements::list_engagements).post(api::engagements::create_engagement))
+        .route("/api/engagements/active", get(api::engagements::active_engagement))
+        .route("/api/engagements/{id}/activate", post(api::engagements::activate_engagement))
+        .route("/api/credentials", get(api::engagements::list_credentials))
         // WebSocket route
         .route("/ws", get(api::websocket::ws_handler))
+        // Serve the built web UI (if present) so a single process hosts everything.
+        // Deep links fall back to index.html for the SPA router. In dev, run Vite
+        // instead and this simply 404s.
+        .fallback_service(
+            tower_http::services::ServeDir::new(&frontend_dir)
+                .not_found_service(tower_http::services::ServeFile::new(format!("{frontend_dir}/index.html"))),
+        )
+        // Optional bearer-token gate (active only when DECEBALUS_TOKEN is set).
+        .layer(axum::middleware::from_fn(api::auth::require_token))
         .with_state(state);
 
     // Bind to address

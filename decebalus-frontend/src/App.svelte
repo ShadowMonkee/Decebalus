@@ -4,11 +4,14 @@
   import { connectWebSocket, closeWebSocket } from './lib/stores/websocketStore';
   import Navbar from './lib/components/Navbar.svelte';
   import Dashboard from './lib/pages/Dashboard.svelte';
+  import WarTable from './lib/pages/WarTable.svelte';
+  import Engagements from './lib/pages/Engagements.svelte';
   import Reconnaissance from './lib/pages/Reconnaissance.svelte';
   import Attacks from './lib/pages/Attacks.svelte';
   import Plugins from './lib/pages/Plugins.svelte';
   import Logs from './lib/pages/Logs.svelte';
   import VulnDb from './lib/pages/VulnDb.svelte';
+  import History from './lib/pages/History.svelte';
   import Settings from './lib/pages/Settings.svelte';
 
   onMount(() => {
@@ -21,11 +24,14 @@
   <Navbar />
   <main>
     <Route path="/"><Dashboard /></Route>
+    <Route path="/war"><WarTable /></Route>
+    <Route path="/engagements"><Engagements /></Route>
     <Route path="/recon"><Reconnaissance /></Route>
     <Route path="/attacks"><Attacks /></Route>
     <Route path="/plugins"><Plugins /></Route>
     <Route path="/logs"><Logs /></Route>
     <Route path="/vulndb"><VulnDb /></Route>
+    <Route path="/history"><History /></Route>
     <Route path="/settings"><Settings /></Route>
     <Route path="*"><p>404 — Page not found.</p></Route>
   </main>

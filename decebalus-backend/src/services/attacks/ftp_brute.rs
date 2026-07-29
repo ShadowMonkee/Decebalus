@@ -149,7 +149,6 @@ async fn try_ftp_login(
 /// Read a complete FTP response (handles multi-line `NNN-...\r\nNNN ...\r\n`).
 /// Returns the final status line.
 async fn read_ftp_response<R: AsyncBufReadExt + Unpin>(reader: &mut R) -> Result<String, String> {
-    let mut last_line = String::new();
     loop {
         let mut line = String::new();
         let n = tokio::time::timeout(Duration::from_secs(5), reader.read_line(&mut line))
@@ -161,13 +160,10 @@ async fn read_ftp_response<R: AsyncBufReadExt + Unpin>(reader: &mut R) -> Result
             return Err("connection closed".to_string());
         }
 
-        last_line = line.clone();
-
-        // Multi-line response: `NNN-text` continues until `NNN text` (space after code)
+        // Multi-line response: `NNN-text` continues until `NNN text` (space after code).
         if line.len() >= 4 && line.as_bytes()[3] == b'-' {
             continue;
         }
-        break;
+        return Ok(line); // final status line
     }
-    Ok(last_line)
 }

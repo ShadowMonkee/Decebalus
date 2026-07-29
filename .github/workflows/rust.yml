@@ -66,6 +66,27 @@ jobs:
           MAX_DISCOVER_THREADS: 256
           MAX_SCAN_CONCURRENCY: 500
 
+      - name: Build terminal war table (TUI)
+        run: cargo build --features tui --bin decebalus-tui --verbose
+
+  frontend:
+    runs-on: ubuntu-latest
+    if: github.ref_type != 'tag'
+    defaults:
+      run:
+        working-directory: decebalus-frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install dependencies
+        run: npm ci
+      - name: Type-check
+        run: npm run check
+      - name: Build
+        run: npm run build
+
   release:
     runs-on: ubuntu-latest
     if: github.ref_type == 'tag'

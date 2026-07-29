@@ -25,6 +25,18 @@ impl JobExecutor {
         match repository::get_job(&state.db, &job.id).await {
             Ok(Some(job)) => {
                 if job.is_queued() || job.is_scheduled() {
+                    // Scope-lock: refuse targeted jobs outside the active engagement.
+                    if let Some(target) = job.config.get("target").and_then(|v| v.as_str()) {
+                        if !crate::services::scope::target_in_scope(&state, target).await {
+                            let error = format!("Refused: target {} is outside the engagement scope", target);
+                            let _ = repository::add_log(&state.db, "WARN", "scanner", Some("scope"), Some(&job.id), &error).await;
+                            Self::update_job_status(&state, &job.id, "failed").await;
+                            Self::update_job_results(&state, &job.id, Some(error.clone())).await;
+                            let _ = state.broadcaster.send(format!("job_failed:{}:{}", job.id, error));
+                            return;
+                        }
+                    }
+
                     // Update job status to running
                     Self::update_job_status(&state, &job.id, "running").await;
                     // Broadcast that job started
@@ -38,6 +50,7 @@ impl JobExecutor {
                         "port-scan"  => Self::run_port_scan(&state, &job).await,
                         "nmap-scan"  => Self::run_nmap_scan(&state, &job).await,
                         "export"     => Self::run_export(&state, &job).await,
+                        "report"     => Self::run_report(&state, &job).await,
                         "cve-sync"   => Self::run_cve_sync(&state, &job).await,
                         other => {
                             if let Some(module) = attacks::module_for(other) {
@@ -55,12 +68,18 @@ impl JobExecutor {
                             Self::update_job_status(&state, &job.id, "completed").await;
                             Self::update_job_results(&state, &job.id, Some(results)).await;
                             let _ = state.broadcaster.send(format!("job_completed:{}", job.id));
+                            crate::services::events::emit(&state, "job", serde_json::json!({
+                                "id": job.id, "job_type": job.job_type, "status": "completed"
+                            }));
                             tracing::info!("Job completed successfully: {}", job.id);
                         }
                         Err(error) => {
                             Self::update_job_status(&state, &job.id, "failed").await;
                             Self::update_job_results(&state, &job.id, Some(error.clone())).await;
                             let _ = state.broadcaster.send(format!("job_failed:{}:{}", job.id, error));
+                            crate::services::events::emit(&state, "job", serde_json::json!({
+                                "id": job.id, "job_type": job.job_type, "status": "failed"
+                            }));
                             tracing::error!("Job failed: {} - {}", job.id, error);
                         }
                     }
@@ -369,7 +388,57 @@ impl JobExecutor {
         });
         Ok(result.to_string())
     }
-    
+
+    /// Generate a self-contained HTML security report under data/exports/.
+    async fn run_report(state: &Arc<AppState>, job: &Job) -> Result<String, String> {
+        let hosts = repository::list_hosts(&state.db).await
+            .map_err(|e| format!("Failed to list hosts: {}", e))?;
+
+        // Merge cached CVE detail so the report shows CVSS/severity.
+        let cves: std::collections::HashMap<String, crate::models::CveDetail> =
+            repository::list_cve_details(&state.db).await
+                .unwrap_or_default()
+                .into_iter()
+                .map(|c| (c.cve_id.clone(), c))
+                .collect();
+        let events = repository::list_host_events(&state.db, 100).await.unwrap_or_default();
+
+        // Engagement-scoped findings + credentials (empty for the global engagement).
+        let engagement_id = repository::get_active_engagement(&state.db)
+            .await
+            .ok()
+            .flatten()
+            .map(|e| e.id)
+            .unwrap_or_default();
+        let findings = repository::list_findings(&state.db, &engagement_id).await.unwrap_or_default();
+        let creds = repository::list_credentials(&state.db, &engagement_id).await.unwrap_or_default();
+
+        let now = Utc::now();
+        let generated_at = now.to_rfc3339();
+        let device_name = crate::settings::current().device_name;
+        let html = crate::services::report::render_html(&hosts, &cves, &events, &findings, &creds, &device_name, &generated_at);
+
+        let export_dir = std::env::var("EXPORT_DIR").unwrap_or_else(|_| "data/exports".to_string());
+        tokio::fs::create_dir_all(&export_dir).await
+            .map_err(|e| format!("Failed to create export directory '{}': {}", export_dir, e))?;
+
+        let timestamp = now.format("%Y-%m-%dT%H-%M-%S").to_string();
+        let file_path = format!("{}/report_{}.html", export_dir, timestamp);
+        tokio::fs::write(&file_path, html.as_bytes()).await
+            .map_err(|e| format!("Failed to write report file '{}': {}", file_path, e))?;
+
+        let msg = format!("Report written to {} ({} hosts)", file_path, hosts.len());
+        tracing::info!("{}", msg);
+        let _ = repository::add_log(&state.db, "INFO", THIS_SERVICE, Some("run_report"), Some(&job.id), &msg).await;
+
+        let result = serde_json::json!({
+            "file_path":    file_path,
+            "generated_at": generated_at,
+            "hosts_count":  hosts.len(),
+        });
+        Ok(result.to_string())
+    }
+
     /// Run a dedicated CVE enrichment pass, linked to a job record for visibility.
     async fn run_cve_sync(state: &Arc<AppState>, job: &Job) -> Result<String, String> {
         let msg = format!("Starting CVE enrichment job {}", job.id);
