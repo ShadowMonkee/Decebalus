@@ -11,3 +11,4 @@ pub mod history;
 pub mod findings;
 pub mod engagements;
 pub mod auth;
+pub mod wordlists;

@@ -18,76 +18,89 @@ impl JobExecutor {
     /// Execute a job based on its type
     /// This runs in a separate tokio task (background worker)
     pub async fn execute_job(job: Job, state: Arc<AppState>, _permit: OwnedSemaphorePermit) {
+        // Atomically claim the job: flip queued/scheduled → running in a single UPDATE.
+        // If a concurrent run_queue pass already claimed it (or it was cancelled between
+        // being queued and picked up), bail out so the same job never runs twice.
+        match repository::claim_job(&state.db, &job.id).await {
+            Ok(true) => {}
+            Ok(false) => {
+                tracing::debug!("Job {} already claimed or no longer startable; skipping", job.id);
+                return;
+            }
+            Err(e) => {
+                tracing::error!("Failed to claim job {}: {}", job.id, e);
+                return;
+            }
+        }
+
         tracing::info!("Starting job execution: {} (type: {})", &job.id, job.job_type);
         let _ = repository::add_log(&state.db, "INFO", "scanner", Some("job_executor"), Some(&job.id), "Starting job execution").await;
         let _ = state.broadcaster.send(format!("Starting job execution: {} (type: {})", &job.id, job.job_type));
-        // Double-check that the job hasn't already been picked up
-        match repository::get_job(&state.db, &job.id).await {
-            Ok(Some(job)) => {
-                if job.is_queued() || job.is_scheduled() {
-                    // Scope-lock: refuse targeted jobs outside the active engagement.
-                    if let Some(target) = job.config.get("target").and_then(|v| v.as_str()) {
-                        if !crate::services::scope::target_in_scope(&state, target).await {
-                            let error = format!("Refused: target {} is outside the engagement scope", target);
-                            let _ = repository::add_log(&state.db, "WARN", "scanner", Some("scope"), Some(&job.id), &error).await;
-                            Self::update_job_status(&state, &job.id, "failed").await;
-                            Self::update_job_results(&state, &job.id, Some(error.clone())).await;
-                            let _ = state.broadcaster.send(format!("job_failed:{}:{}", job.id, error));
-                            return;
-                        }
-                    }
 
-                    // Update job status to running
-                    Self::update_job_status(&state, &job.id, "running").await;
-                    // Broadcast that job started
-                    let _ = state.broadcaster.send(format!("job_running:{}", job.id));
-
-                    // Execute based on job type. Scan/maintenance jobs are handled
-                    // inline; attack/exploit jobs are dispatched through the module
-                    // registry so new modules are picked up without touching this match.
-                    let result = match job.job_type.as_str() {
-                        "discovery"  => Self::run_discovery(&state, &job).await,
-                        "port-scan"  => Self::run_port_scan(&state, &job).await,
-                        "nmap-scan"  => Self::run_nmap_scan(&state, &job).await,
-                        "export"     => Self::run_export(&state, &job).await,
-                        "report"     => Self::run_report(&state, &job).await,
-                        "cve-sync"   => Self::run_cve_sync(&state, &job).await,
-                        other => {
-                            if let Some(module) = attacks::module_for(other) {
-                                module.execute(&job, &state).await
-                            } else {
-                                tracing::warn!("Unknown job type: {}", other);
-                                Err(format!("Unknown job type: {}", other))
-                            }
-                        }
-                    };
-
-                    // Update job with results
-                    match result {
-                        Ok(results) => {
-                            Self::update_job_status(&state, &job.id, "completed").await;
-                            Self::update_job_results(&state, &job.id, Some(results)).await;
-                            let _ = state.broadcaster.send(format!("job_completed:{}", job.id));
-                            crate::services::events::emit(&state, "job", serde_json::json!({
-                                "id": job.id, "job_type": job.job_type, "status": "completed"
-                            }));
-                            tracing::info!("Job completed successfully: {}", job.id);
-                        }
-                        Err(error) => {
-                            Self::update_job_status(&state, &job.id, "failed").await;
-                            Self::update_job_results(&state, &job.id, Some(error.clone())).await;
-                            let _ = state.broadcaster.send(format!("job_failed:{}:{}", job.id, error));
-                            crate::services::events::emit(&state, "job", serde_json::json!({
-                                "id": job.id, "job_type": job.job_type, "status": "failed"
-                            }));
-                            tracing::error!("Job failed: {} - {}", job.id, error);
-                        }
-                    }
-                }
-            }
-            Ok(None) => (),
+        // Re-fetch to run against the freshest config (the claim only touched status).
+        let job = match repository::get_job(&state.db, &job.id).await {
+            Ok(Some(job)) => job,
+            Ok(None) => return,
             Err(e) => {
                 tracing::error!("Failed to get job: {}", e);
+                return;
+            }
+        };
+
+        // Scope-lock: refuse targeted jobs outside the active engagement.
+        if let Some(target) = job.config.get("target").and_then(|v| v.as_str()) {
+            if !crate::services::scope::target_in_scope(&state, target).await {
+                let error = format!("Refused: target {} is outside the engagement scope", target);
+                let _ = repository::add_log(&state.db, "WARN", "scanner", Some("scope"), Some(&job.id), &error).await;
+                Self::update_job_status(&state, &job.id, "failed").await;
+                Self::update_job_results(&state, &job.id, Some(error.clone())).await;
+                let _ = state.broadcaster.send(format!("job_failed:{}:{}", job.id, error));
+                return;
+            }
+        }
+
+        // Broadcast that job started
+        let _ = state.broadcaster.send(format!("job_running:{}", job.id));
+
+        // Execute based on job type. Scan/maintenance jobs are handled
+        // inline; attack/exploit jobs are dispatched through the module
+        // registry so new modules are picked up without touching this match.
+        let result = match job.job_type.as_str() {
+            "discovery"  => Self::run_discovery(&state, &job).await,
+            "port-scan"  => Self::run_port_scan(&state, &job).await,
+            "nmap-scan"  => Self::run_nmap_scan(&state, &job).await,
+            "export"     => Self::run_export(&state, &job).await,
+            "report"     => Self::run_report(&state, &job).await,
+            "cve-sync"   => Self::run_cve_sync(&state, &job).await,
+            other => {
+                if let Some(module) = attacks::module_for(other) {
+                    module.execute(&job, &state).await
+                } else {
+                    tracing::warn!("Unknown job type: {}", other);
+                    Err(format!("Unknown job type: {}", other))
+                }
+            }
+        };
+
+        // Update job with results
+        match result {
+            Ok(results) => {
+                Self::update_job_status(&state, &job.id, "completed").await;
+                Self::update_job_results(&state, &job.id, Some(results)).await;
+                let _ = state.broadcaster.send(format!("job_completed:{}", job.id));
+                crate::services::events::emit(&state, "job", serde_json::json!({
+                    "id": job.id, "job_type": job.job_type, "status": "completed"
+                }));
+                tracing::info!("Job completed successfully: {}", job.id);
+            }
+            Err(error) => {
+                Self::update_job_status(&state, &job.id, "failed").await;
+                Self::update_job_results(&state, &job.id, Some(error.clone())).await;
+                let _ = state.broadcaster.send(format!("job_failed:{}:{}", job.id, error));
+                crate::services::events::emit(&state, "job", serde_json::json!({
+                    "id": job.id, "job_type": job.job_type, "status": "failed"
+                }));
+                tracing::error!("Job failed: {} - {}", job.id, error);
             }
         }
 

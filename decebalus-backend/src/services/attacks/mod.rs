@@ -1,3 +1,4 @@
+pub mod docs;
 pub mod ssh_brute;
 pub mod ftp_brute;
 pub mod file_steal;
@@ -34,9 +35,12 @@ pub use ad_relay_recon::AdRelayRecon;
 pub use ad_bloodhound::AdBloodhound;
 
 use async_trait::async_trait;
+use futures_util::StreamExt;
 use serde::Serialize;
 use serde_json::Value;
+use sqlx::SqlitePool;
 use std::sync::Arc;
+use crate::db::repository;
 use crate::models::Job;
 use crate::state::AppState;
 
@@ -126,7 +130,7 @@ impl AttackModule for SshBruteForce {
             category: "attack".into(),
             description: "Attempts SSH logins across username/password lists.".into(),
             required_config: vec!["target".into()],
-            optional_config: vec!["port".into(), "usernames".into(), "passwords".into(), "concurrency".into()],
+            optional_config: vec!["port".into(), "usernames".into(), "passwords".into(), "usernames_wordlist_id".into(), "passwords_wordlist_id".into(), "concurrency".into()],
             default_port: Some(22),
             trigger_ports: vec![22],
             safety: "risky".into(),
@@ -150,7 +154,7 @@ impl AttackModule for FtpBruteForce {
             category: "attack".into(),
             description: "Attempts FTP logins across username/password lists.".into(),
             required_config: vec!["target".into()],
-            optional_config: vec!["port".into(), "usernames".into(), "passwords".into(), "concurrency".into()],
+            optional_config: vec!["port".into(), "usernames".into(), "passwords".into(), "usernames_wordlist_id".into(), "passwords_wordlist_id".into(), "concurrency".into()],
             default_port: Some(21),
             trigger_ports: vec![21],
             safety: "risky".into(),
@@ -174,7 +178,7 @@ impl AttackModule for SmbBruteForce {
             category: "attack".into(),
             description: "Attempts SMB logins via smbclient across username/password lists.".into(),
             required_config: vec!["target".into()],
-            optional_config: vec!["port".into(), "domain".into(), "usernames".into(), "passwords".into(), "concurrency".into()],
+            optional_config: vec!["port".into(), "domain".into(), "usernames".into(), "passwords".into(), "usernames_wordlist_id".into(), "passwords_wordlist_id".into(), "concurrency".into()],
             default_port: Some(445),
             trigger_ports: vec![445, 139],
             safety: "risky".into(),
@@ -198,7 +202,7 @@ impl AttackModule for RdpBruteForce {
             category: "attack".into(),
             description: "Attempts RDP logins via FreeRDP NLA across username/password lists.".into(),
             required_config: vec!["target".into()],
-            optional_config: vec!["port".into(), "domain".into(), "usernames".into(), "passwords".into(), "concurrency".into()],
+            optional_config: vec!["port".into(), "domain".into(), "usernames".into(), "passwords".into(), "usernames_wordlist_id".into(), "passwords_wordlist_id".into(), "concurrency".into()],
             default_port: Some(3389),
             trigger_ports: vec![3389],
             safety: "risky".into(),
@@ -505,16 +509,83 @@ impl AttackModule for AdBloodhound {
 mod tests {
     use super::*;
 
+    #[test]
+    fn clamp_concurrency_bounds_to_a_safe_range() {
+        assert_eq!(clamp_concurrency(0), 1);
+        assert_eq!(clamp_concurrency(20), 20);
+        assert_eq!(clamp_concurrency(100), 100);
+        assert_eq!(clamp_concurrency(5000), MAX_CONCURRENCY);
+    }
+
+    #[tokio::test]
+    async fn credential_pairs_streams_full_cross_product_lazily() {
+        let usernames = Arc::new(vec!["a".to_string(), "b".to_string()]);
+        let passwords = Arc::new(vec!["1".to_string(), "2".to_string(), "3".to_string()]);
+
+        let pairs: Vec<(String, String)> = credential_pairs(usernames, passwords).collect().await;
+
+        assert_eq!(
+            pairs,
+            vec![
+                ("a".to_string(), "1".to_string()),
+                ("a".to_string(), "2".to_string()),
+                ("a".to_string(), "3".to_string()),
+                ("b".to_string(), "1".to_string()),
+                ("b".to_string(), "2".to_string()),
+                ("b".to_string(), "3".to_string()),
+            ]
+        );
+    }
+
+    #[tokio::test]
+    async fn credential_pairs_handles_empty_lists_without_panicking() {
+        let usernames = Arc::new(Vec::<String>::new());
+        let passwords = Arc::new(vec!["1".to_string()]);
+        let pairs: Vec<(String, String)> = credential_pairs(usernames, passwords).collect().await;
+        assert!(pairs.is_empty());
+    }
+
     #[tokio::test]
     async fn load_wordlist_prefers_inline_then_defaults() {
+        let pool = crate::db::init_pool("sqlite::memory:").await.unwrap();
+
         let mut cfg = serde_json::Map::new();
         cfg.insert("passwords".into(), serde_json::json!(["a", "b"]));
-        let inline = load_wordlist(&cfg, "passwords", "wordlist_path", DEFAULT_PASSWORDS).await;
+        let inline = load_wordlist(&pool, &cfg, "passwords_wordlist_id", "passwords", "wordlist_path", DEFAULT_PASSWORDS).await;
         assert_eq!(inline, vec!["a".to_string(), "b".to_string()]);
 
         let empty = serde_json::Map::new();
-        let defaults = load_wordlist(&empty, "passwords", "wordlist_path", DEFAULT_PASSWORDS).await;
+        let defaults = load_wordlist(&pool, &empty, "passwords_wordlist_id", "passwords", "wordlist_path", DEFAULT_PASSWORDS).await;
         assert_eq!(defaults.len(), DEFAULT_PASSWORDS.len());
+    }
+
+    #[tokio::test]
+    async fn load_wordlist_prefers_saved_wordlist_over_inline() {
+        let pool = crate::db::init_pool("sqlite::memory:").await.unwrap();
+
+        let dir = std::env::temp_dir().join(format!("decebalus_test_wl_{}", uuid::Uuid::new_v4()));
+        tokio::fs::create_dir_all(&dir).await.unwrap();
+        let file_path = dir.join("saved.txt");
+        tokio::fs::write(&file_path, "saved-a\nsaved-b\n").await.unwrap();
+
+        let wl = crate::models::Wordlist::new(
+            "test list".into(),
+            "password".into(),
+            "custom".into(),
+            file_path.to_string_lossy().to_string(),
+            2,
+            0,
+        );
+        repository::insert_wordlist(&pool, &wl).await.unwrap();
+
+        let mut cfg = serde_json::Map::new();
+        cfg.insert("passwords_wordlist_id".into(), serde_json::json!(wl.id));
+        cfg.insert("passwords".into(), serde_json::json!(["a", "b"]));
+
+        let resolved = load_wordlist(&pool, &cfg, "passwords_wordlist_id", "passwords", "wordlist_path", DEFAULT_PASSWORDS).await;
+        assert_eq!(resolved, vec!["saved-a".to_string(), "saved-b".to_string()]);
+
+        let _ = tokio::fs::remove_dir_all(&dir).await;
     }
 
     #[test]
@@ -529,6 +600,40 @@ mod tests {
     }
 }
 
+/// Hard ceiling on brute-force concurrency, enforced server-side regardless of what a
+/// job's config requests. Each concurrent attempt holds a socket (and, for smb/rdp,
+/// a whole subprocess) open — an unbounded value can exhaust the process's file
+/// descriptors and take down the entire server (including the API listener), not
+/// just slow the job down. Clamp rather than trust the UI's own input cap, since
+/// jobs can also be created directly via the API.
+pub const MAX_CONCURRENCY: usize = 100;
+
+/// Clamp a requested concurrency value to a sane, FD-safe range.
+pub fn clamp_concurrency(requested: usize) -> usize {
+    requested.clamp(1, MAX_CONCURRENCY)
+}
+
+/// Lazily stream every (username, password) pair without ever materializing the
+/// full cross product. Wordlists can now be tens or hundreds of thousands of
+/// entries each (downloaded SecLists tiers, not just the old built-in defaults),
+/// so a naive nested loop that pushes every combo into a `FuturesUnordered` up
+/// front can allocate tens of millions of pending futures before the concurrency
+/// limit ever gets a chance to throttle anything — enough to OOM-kill the whole
+/// process. `buffer_unordered` on the returned stream keeps only `concurrency`
+/// items in flight at a time; combos are generated on demand as each slot frees up.
+pub fn credential_pairs(
+    usernames: Arc<Vec<String>>,
+    passwords: Arc<Vec<String>>,
+) -> impl futures_util::stream::Stream<Item = (String, String)> {
+    let pw_len = passwords.len().max(1);
+    let total = usernames.len() * passwords.len();
+    futures_util::stream::iter(0..total).map(move |i| {
+        let username = usernames[i / pw_len].clone();
+        let password = passwords[i % pw_len].clone();
+        (username, password)
+    })
+}
+
 // Pi-specific credential defaults — covers common factory/default credentials.
 pub const DEFAULT_USERNAMES: &[&str] = &[
     "root", "pi", "admin", "ubuntu", "user", "raspberry", "test", "guest",
@@ -539,15 +644,34 @@ pub const DEFAULT_PASSWORDS: &[&str] = &[
 ];
 
 /// Load a credential list from the job config. Resolution order:
-/// 1. Inline array at `inline_key`
-/// 2. File path at `path_key` (one entry per line, # comments stripped)
-/// 3. Built-in defaults
+/// 1. A saved wordlist referenced by `id_key` (bundled/downloaded/custom, selected in the UI)
+/// 2. Inline array at `inline_key`
+/// 3. File path at `path_key` (one entry per line, # comments stripped)
+/// 4. Built-in defaults
 pub async fn load_wordlist(
+    pool: &SqlitePool,
     config: &serde_json::Map<String, Value>,
+    id_key: &str,
     inline_key: &str,
     path_key: &str,
     defaults: &[&str],
 ) -> Vec<String> {
+    if let Some(id) = config.get(id_key).and_then(|v| v.as_str()) {
+        if let Ok(Some(wl)) = repository::get_wordlist(pool, id).await {
+            if let Ok(content) = tokio::fs::read_to_string(&wl.file_path).await {
+                let lines: Vec<String> = content
+                    .lines()
+                    .map(str::trim)
+                    .filter(|l| !l.is_empty() && !l.starts_with('#'))
+                    .map(String::from)
+                    .collect();
+                if !lines.is_empty() {
+                    return lines;
+                }
+            }
+        }
+    }
+
     if let Some(arr) = config.get(inline_key).and_then(|v| v.as_array()) {
         let items: Vec<String> = arr
             .iter()

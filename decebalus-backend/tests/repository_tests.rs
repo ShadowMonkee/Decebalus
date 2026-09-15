@@ -194,3 +194,38 @@ async fn finding_upsert_dedups_and_respects_dismissed() {
     assert_eq!(after[0].status, "dismissed", "dismissed findings stay dismissed");
     assert_eq!(after[0].value_score, 80, "no fields updated while dismissed");
 }
+
+#[tokio::test]
+async fn claim_job_only_lets_one_worker_win() {
+    use decebalus_backend::models::Job;
+    let pool = mem_pool().await;
+
+    let mut job = Job::new("discovery".into());
+    job.id = "claim-1".into();
+    repository::create_job(&pool, &job).await.unwrap();
+
+    // First claim transitions queued -> running and wins.
+    assert!(repository::claim_job(&pool, "claim-1").await.unwrap());
+    // A second, overlapping run_queue pass finds it already running and loses,
+    // so the same job can never be executed twice.
+    assert!(!repository::claim_job(&pool, "claim-1").await.unwrap());
+
+    let updated = repository::get_job(&pool, "claim-1").await.unwrap().unwrap();
+    assert_eq!(updated.status, "running");
+}
+
+#[tokio::test]
+async fn claim_job_refuses_cancelled_and_missing_jobs() {
+    use decebalus_backend::models::Job;
+    let pool = mem_pool().await;
+
+    // A job cancelled between queueing and pickup must never be started.
+    let mut job = Job::new("discovery".into());
+    job.id = "claim-2".into();
+    job.status = "cancelled".into();
+    repository::create_job(&pool, &job).await.unwrap();
+    assert!(!repository::claim_job(&pool, "claim-2").await.unwrap());
+
+    // An unknown id claims nothing rather than erroring.
+    assert!(!repository::claim_job(&pool, "does-not-exist").await.unwrap());
+}

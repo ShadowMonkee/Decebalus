@@ -145,6 +145,13 @@ export const triggerReport = () => createJob('report');
 export const exportDownloadUrl = (filename: string) =>
   `${BASE}/exports/${encodeURIComponent(filename)}`;
 
+export interface ToolReq {
+  name:    string;
+  binary:  string;
+  version: string;
+  install: string;
+}
+
 export interface ModuleMeta {
   job_type:        string;
   name:            string;
@@ -159,6 +166,12 @@ export interface ModuleMeta {
   produces_facts?: string[];
   requires_cred?:  boolean;
   trigger_facts?:  string[];
+  // Extended documentation (from the backend docs layer) for the detail view.
+  how_it_works?:    string;
+  why_it_works?:    string;
+  example_command?: string;
+  requires_tools?:  ToolReq[];
+  references?:      string[];
 }
 
 export const getModules = () => req<ModuleMeta[]>('/modules');
@@ -243,3 +256,41 @@ export interface HostEvent {
 }
 
 export const getHistory = (limit = 100) => req<HostEvent[]>(`/history?limit=${limit}`);
+
+// ── Wordlists: bundled SecLists (shipped, offline) + user-saved custom lists ────
+
+export interface WordlistMeta {
+  id:           string;
+  name:         string;
+  category:     string; // 'username' | 'password' | 'discovery'
+  source:       string; // 'bundled' | 'custom'
+  file_path:    string;
+  entry_count:  number;
+  size_bytes:   number;
+  created_at:   string;
+}
+
+export interface WordlistContent {
+  id:          string;
+  name:        string;
+  category:    string;
+  entry_count: number;
+  content:     string;
+}
+
+export const getWordlists = () => req<WordlistMeta[]>('/wordlists');
+
+/** Fetch a list's raw text so it can be loaded into an editable textarea.
+ *  Rejects (HTTP 413) for lists too large to edit in the browser. */
+export const getWordlistContent = (id: string) =>
+  req<WordlistContent>(`/wordlists/${encodeURIComponent(id)}/content`);
+
+export const saveCustomWordlist = (name: string, category: string, content: string) =>
+  req<WordlistMeta>('/wordlists/custom', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, category, content }),
+  });
+
+export const deleteWordlist = (id: string) =>
+  req<{ message: string }>(`/wordlists/${encodeURIComponent(id)}`, { method: 'DELETE' });

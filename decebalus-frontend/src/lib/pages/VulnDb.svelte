@@ -400,8 +400,8 @@
   }
 
   .stat-num.active  { color: var(--color-bronze-bright); text-shadow: 0 0 12px var(--color-bronze-glow); }
-  .stat-num.pending { color: #eab308; }
-  .stat-num.full    { color: #22c55e; }
+  .stat-num.pending { color: var(--amber); }
+  .stat-num.full    { color: var(--sage); }
 
   .stat-label {
     font-size: 0.75rem;
@@ -434,7 +434,7 @@
 
   /* ── Pending card ────────────────────────────── */
   .pending-card {
-    border-left: 3px solid #eab308;
+    border-left: 2px solid var(--amber);
   }
 
   .pending-desc {
@@ -529,10 +529,10 @@
     font-weight: 600;
     font-size: 0.9rem;
   }
-  .score.critical { color: #ef4444; }
-  .score.high     { color: #f97316; }
-  .score.medium   { color: #eab308; }
-  .score.low      { color: #22c55e; }
+  .score.critical { color: var(--clay); }
+  .score.high     { color: var(--amber); }
+  .score.medium   { color: var(--slate); }
+  .score.low      { color: var(--sage); }
 
   .date-cell {
     font-size: 0.8rem;

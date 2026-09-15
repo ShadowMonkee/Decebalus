@@ -1,6 +1,6 @@
 use chrono::{DateTime, Duration, Utc};
 use sqlx::{Row, SqlitePool, sqlite::SqliteRow};
-use crate::models::{Config, Credential, CveDetail, DisplayStatus, Engagement, Fact, Finding, Host, HostEvent, HostStatus, Job, JobPriority, Log};
+use crate::models::{Config, Credential, CveDetail, DisplayStatus, Engagement, Fact, Finding, Host, HostEvent, HostStatus, Job, JobPriority, Log, Wordlist};
 use crate::services::crypto;
 
 // ==================== JOB REPOSITORY ====================
@@ -88,8 +88,29 @@ pub async fn update_job_status(
     .bind(id)
     .execute(pool)
     .await?;
-    
+
     Ok(())
+}
+
+/// Atomically transition a job from `queued`/`scheduled` to `running`.
+///
+/// Returns `true` only if THIS call performed the transition (i.e. we now own the
+/// job's execution), and `false` if the job was already claimed by another worker or
+/// is otherwise no longer in a startable state (e.g. cancelled between queueing and
+/// pickup). This is the concurrency guard that prevents two overlapping `run_queue`
+/// passes — created quickly in succession, or a create racing the scheduler tick —
+/// from both running the same job. The check-and-set is a single UPDATE so SQLite
+/// serialises it; there is no read-then-write window for a second worker to slip into.
+pub async fn claim_job(pool: &SqlitePool, id: &str) -> Result<bool, sqlx::Error> {
+    let result = sqlx::query(
+        "UPDATE jobs SET status = 'running', updated_at = CURRENT_TIMESTAMP \
+         WHERE id = ?1 AND status IN ('queued', 'scheduled')"
+    )
+    .bind(id)
+    .execute(pool)
+    .await?;
+
+    Ok(result.rows_affected() > 0)
 }
 
 pub async fn get_running_jobs(pool: &SqlitePool) -> Result<Vec<Job>, sqlx::Error> {
@@ -1056,4 +1077,80 @@ pub async fn update_finding_status(pool: &SqlitePool, id: &str, status: &str) ->
         .execute(pool)
         .await?;
     Ok(())
+}
+
+// ==================== WORDLIST REPOSITORY ====================
+
+/// Insert a new saved wordlist record.
+pub async fn insert_wordlist(pool: &SqlitePool, w: &Wordlist) -> Result<(), sqlx::Error> {
+    sqlx::query(
+        "INSERT INTO wordlists (id, name, category, source, file_path, entry_count, size_bytes, created_at) \
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)",
+    )
+    .bind(&w.id)
+    .bind(&w.name)
+    .bind(&w.category)
+    .bind(&w.source)
+    .bind(&w.file_path)
+    .bind(w.entry_count)
+    .bind(w.size_bytes)
+    .bind(&w.created_at)
+    .execute(pool)
+    .await?;
+    Ok(())
+}
+
+/// List all saved wordlists, newest first.
+pub async fn list_wordlists(pool: &SqlitePool) -> Result<Vec<Wordlist>, sqlx::Error> {
+    let rows = sqlx::query(
+        "SELECT id, name, category, source, file_path, entry_count, size_bytes, created_at \
+         FROM wordlists ORDER BY created_at DESC",
+    )
+    .fetch_all(pool)
+    .await?;
+    Ok(rows.iter().map(wordlist_from_row).collect())
+}
+
+/// Get a single wordlist by ID.
+pub async fn get_wordlist(pool: &SqlitePool, id: &str) -> Result<Option<Wordlist>, sqlx::Error> {
+    let row = sqlx::query(
+        "SELECT id, name, category, source, file_path, entry_count, size_bytes, created_at \
+         FROM wordlists WHERE id = ?1",
+    )
+    .bind(id)
+    .fetch_optional(pool)
+    .await?;
+    Ok(row.map(|r| wordlist_from_row(&r)))
+}
+
+/// True if any wordlist rows with the given source exist (used to make bundled-seeding idempotent).
+pub async fn wordlists_exist_with_source(pool: &SqlitePool, source: &str) -> Result<bool, sqlx::Error> {
+    let count: i64 = sqlx::query_scalar("SELECT COUNT(*) FROM wordlists WHERE source = ?1")
+        .bind(source)
+        .fetch_one(pool)
+        .await?;
+    Ok(count > 0)
+}
+
+/// Delete a wordlist record by ID. Callers should refuse to delete `source = 'bundled'`
+/// rows (they're re-seeded on every boot) before calling this.
+pub async fn delete_wordlist(pool: &SqlitePool, id: &str) -> Result<(), sqlx::Error> {
+    sqlx::query("DELETE FROM wordlists WHERE id = ?1")
+        .bind(id)
+        .execute(pool)
+        .await?;
+    Ok(())
+}
+
+fn wordlist_from_row(r: &SqliteRow) -> Wordlist {
+    Wordlist {
+        id: r.get("id"),
+        name: r.get("name"),
+        category: r.get("category"),
+        source: r.get("source"),
+        file_path: r.get("file_path"),
+        entry_count: r.get("entry_count"),
+        size_bytes: r.get("size_bytes"),
+        created_at: r.get("created_at"),
+    }
 }

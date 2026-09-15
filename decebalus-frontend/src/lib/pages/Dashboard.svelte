@@ -395,11 +395,12 @@
     display: flex;
     align-items: center;
     gap: 0.6rem;
-    padding: 0.6rem 0.9rem;
+    padding: 0.7rem 1rem;
     margin-bottom: 1rem;
-    border-radius: 6px;
-    border: 1px solid var(--border-bronze-subtle);
-    background: var(--surface-raised);
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    border-left: 2px solid var(--amber);
+    background: var(--surface);
     font-size: 0.88rem;
   }
 
@@ -422,8 +423,7 @@
   }
 
   .autonomous-banner.active .auto-dot {
-    background: var(--color-bronze-bright, #e5c07b);
-    box-shadow: 0 0 6px var(--color-bronze-glow, rgba(229,192,123,0.6));
+    background: var(--amber);
     animation: auto-pulse 1.4s ease-in-out infinite;
   }
 
@@ -478,16 +478,18 @@
   }
 
   .stat-number {
-    font-size: 2rem;
-    font-weight: 700;
+    font-family: var(--font-mono);
+    font-size: 2.1rem;
+    font-weight: 300;
     line-height: 1;
-    color: var(--color-ash);
-    transition: color 0.2s ease, text-shadow 0.2s ease;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-3);
+    transition: color 0.2s ease;
   }
 
   .stat-number.active {
-    color: var(--color-bronze-bright);
-    text-shadow: 0 0 18px var(--color-bronze-glow);
+    color: var(--text);
   }
 
   .stat-number.fail {
@@ -495,9 +497,11 @@
   }
 
   .stat-label {
-    font-size: 0.8rem;
-    color: var(--color-ash);
-    letter-spacing: 0.02em;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    color: var(--text-3);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
   }
 
   /* ── Job table extras ──────────────────────── */

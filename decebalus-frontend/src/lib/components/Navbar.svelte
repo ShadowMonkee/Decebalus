@@ -26,16 +26,7 @@
   <ul>
     <li>
       <strong class="brand">
-        <!-- Targeting/crosshair mark — represents network scanning -->
-        <svg class="brand-icon" width="18" height="18" viewBox="0 0 18 18" fill="none"
-             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <circle cx="9" cy="9" r="6.5" stroke="currentColor" stroke-width="1.4"/>
-          <circle cx="9" cy="9" r="2.5" fill="currentColor"/>
-          <line x1="9" y1="1.5" x2="9" y2="4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-          <line x1="9" y1="13.5" x2="9" y2="16.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-          <line x1="1.5" y1="9" x2="4.5" y2="9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-          <line x1="13.5" y1="9" x2="16.5" y2="9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-        </svg>
+        <span class="brand-mark" aria-hidden="true">D</span>
         <span class="brand-name">DECEBALUS</span>
       </strong>
     </li>
@@ -67,74 +58,94 @@
     left: 0;
     right: 0;
     z-index: 100;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--border-bronze-subtle);
+    height: var(--nav-height);
+    padding: 0 1.5rem;
+    background: var(--nav-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
   }
 
   /* Brand */
   .brand {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    color: var(--color-bronze);
-    letter-spacing: 0.08em;
-    font-size: 0.88rem;
+    gap: 0.7rem;
+    color: var(--text);
     white-space: nowrap;
   }
 
-  .brand-icon {
-    color: var(--color-bronze);
+  .brand-mark {
+    width: 26px;
+    height: 26px;
     flex-shrink: 0;
-    transition: filter 0.2s ease;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--strong);
+    border-radius: var(--radius-sm);
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    line-height: 1;
+    transition: border-color 0.2s ease;
   }
-
-  .brand:hover .brand-icon {
-    filter: drop-shadow(0 0 4px var(--color-bronze-glow));
-  }
+  .brand:hover .brand-mark { border-color: var(--accent); }
 
   .brand-name {
-    font-weight: 700;
+    font-weight: 500;
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
   }
 
   /* Nav links */
   .nav-links {
     flex: 1;
     justify-content: center;
+    gap: 0.15rem;
+  }
+
+  :global(.nav-links a) {
+    padding: 0.35rem 0.7rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    color: var(--text-2);
+    transition: color 0.15s ease, background-color 0.15s ease;
+  }
+  :global(.nav-links a:hover) {
+    color: var(--text);
+    background: var(--raised);
   }
 
   /* Active link */
-  :global(a.active) {
-    color: var(--color-bronze-bright);
-    border-bottom: 2px solid var(--color-bronze);
-    padding-bottom: 2px;
+  :global(.nav-links a.active) {
+    color: var(--accent);
+    background: var(--accent-glow);
   }
 
   /* Connection status */
   .status-item {
     display: flex;
     align-items: center;
-    gap: 0.35rem;
+    gap: 0.5rem;
   }
 
   .status-label {
     white-space: nowrap;
-    color: var(--color-ash);
+    color: var(--text-2);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
   }
 
   .dot {
     display: inline-block;
-    width: 0.5rem;
-    height: 0.5rem;
+    width: 0.4rem;
+    height: 0.4rem;
     border-radius: 50%;
     flex-shrink: 0;
   }
-  .dot.connected    { background: #22c55e; box-shadow: 0 0 4px rgba(34,197,94,0.5); }
-  .dot.connecting   { background: #eab308; animation: blink 1s ease-in-out infinite; }
-  .dot.disconnected { background: #ef4444; }
-
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0.25; }
-  }
+  .dot.connected    { background: var(--sage); animation: live-pulse 2.4s ease-in-out infinite; }
+  .dot.connecting   { background: var(--amber); animation: blink 1s ease-in-out infinite; }
+  .dot.disconnected { background: var(--clay); }
 </style>

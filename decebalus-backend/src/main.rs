@@ -153,6 +153,16 @@ async fn main() {
     settings::init(settings::Settings::load(&db_pool).await);
     settings::set_log_level(&settings::current().log_level);
 
+    // Register the shipped SecLists wordlists in the background. The first-boot scan
+    // walks ~1 GB of lists, so spawning it keeps server startup instant; it's a cheap
+    // no-op on every subsequent boot.
+    {
+        let pool = db_pool.clone();
+        tokio::spawn(async move {
+            decebalus_backend::services::wordlists::seed_bundled(&pool).await;
+        });
+    }
+
     let state = Arc::new(AppState::new(db_pool));
 
     //Run Scheduled jobs that haven't been run yet
@@ -207,6 +217,11 @@ async fn main() {
         .route("/api/cve/{id}", get(api::cve::get_cve))
         // Attack/exploit module registry
         .route("/api/modules", get(api::modules::list_modules))
+        // Wordlists: bundled SecLists (shipped, offline) + user-saved custom lists
+        .route("/api/wordlists", get(api::wordlists::list_wordlists))
+        .route("/api/wordlists/{id}/content", get(api::wordlists::get_wordlist_content))
+        .route("/api/wordlists/custom", post(api::wordlists::save_custom_wordlist))
+        .route("/api/wordlists/{id}", axum::routing::delete(api::wordlists::delete_wordlist))
         // Change-detection history
         .route("/api/history", get(api::history::list_history))
         // Next-move rule engine + findings (the "war table")

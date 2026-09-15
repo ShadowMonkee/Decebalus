@@ -651,12 +651,14 @@
   }
 
   .suggest-chip {
-    background: rgba(92, 58, 30, 0.2);
-    border: 1px solid var(--border-bronze-subtle, #5c3a1e);
-    color: var(--color-bronze-bright, #e5c07b);
+    background: var(--accent-glow);
+    border: 1px solid var(--strong);
+    color: var(--accent);
     padding: 0.2rem 0.55rem;
-    border-radius: 4px;
-    font-size: 0.8rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.72rem;
+    font-family: var(--font-mono);
+    letter-spacing: 0.06em;
   }
 
   .suggest-chip small {

@@ -10,6 +10,7 @@ pub mod scope;
 pub mod events;
 pub mod display;
 pub mod report;
+pub mod wordlists;
 
 pub use job_executor::JobExecutor;
 pub use cve_enrichment::CveEnrichment;

@@ -1,13 +1,11 @@
 use std::process::Stdio;
 use std::sync::Arc;
 use std::time::Duration;
-use futures_util::stream::FuturesUnordered;
 use futures_util::StreamExt;
-use tokio::sync::Semaphore;
 use crate::models::Job;
 use crate::state::AppState;
 use crate::db::repository;
-use super::{DEFAULT_PASSWORDS, DEFAULT_USERNAMES, load_wordlist};
+use super::{clamp_concurrency, credential_pairs, DEFAULT_PASSWORDS, DEFAULT_USERNAMES, load_wordlist};
 
 pub struct RdpBruteForce;
 
@@ -17,8 +15,9 @@ impl RdpBruteForce {
 
         let target = cfg["target"].as_str().ok_or("Missing target")?.to_string();
         let port = cfg.get("port").and_then(|v| v.as_u64()).unwrap_or(3389) as u16;
-        // RDP NLA auth is comparatively heavy, so keep default concurrency low.
-        let concurrency = cfg.get("concurrency").and_then(|v| v.as_u64()).unwrap_or(2) as usize;
+        // Each attempt shells out to xfreerdp and does a full NLA handshake — the
+        // heaviest of the four brute modules — so keep default concurrency lower.
+        let concurrency = clamp_concurrency(cfg.get("concurrency").and_then(|v| v.as_u64()).unwrap_or(6) as usize);
         let domain = cfg.get("domain").and_then(|v| v.as_str()).unwrap_or("").to_string();
 
         // Delegate the RDP handshake to FreeRDP (same pattern as nmap/smbclient).
@@ -32,8 +31,8 @@ impl RdpBruteForce {
             }
         };
 
-        let usernames = load_wordlist(cfg, "usernames", "usernames_path", DEFAULT_USERNAMES).await;
-        let passwords = load_wordlist(cfg, "passwords", "wordlist_path", DEFAULT_PASSWORDS).await;
+        let usernames = Arc::new(load_wordlist(&state.db, cfg, "usernames_wordlist_id", "usernames", "usernames_path", DEFAULT_USERNAMES).await);
+        let passwords = Arc::new(load_wordlist(&state.db, cfg, "passwords_wordlist_id", "passwords", "wordlist_path", DEFAULT_PASSWORDS).await);
 
         let total = usernames.len() * passwords.len();
         let _ = state.broadcaster.send(format!(
@@ -41,30 +40,25 @@ impl RdpBruteForce {
             job.id, usernames.len(), passwords.len(), total, target, port
         ));
 
-        let sem = Arc::new(Semaphore::new(concurrency));
-        let mut futs = FuturesUnordered::new();
-
-        for username in &usernames {
-            for password in &passwords {
+        let target = Arc::new(target);
+        let domain = Arc::new(domain);
+        let binary = Arc::new(binary);
+        let mut attempts_stream = credential_pairs(usernames, passwords)
+            .map(|(username, password)| {
                 let target = target.clone();
                 let domain = domain.clone();
                 let binary = binary.clone();
-                let username = username.clone();
-                let password = password.clone();
-                let sem = sem.clone();
-
-                futs.push(async move {
-                    let _permit = sem.acquire_owned().await.unwrap();
+                async move {
                     let result = try_rdp_login(&binary, &target, port, &domain, &username, &password).await;
                     (username, password, result)
-                });
-            }
-        }
+                }
+            })
+            .buffer_unordered(concurrency);
 
         let mut found: Vec<String> = Vec::new();
         let mut attempted: usize = 0;
 
-        while let Some((user, pass, result)) = futs.next().await {
+        while let Some((user, pass, result)) = attempts_stream.next().await {
             attempted += 1;
 
             if attempted % 20 == 0 {

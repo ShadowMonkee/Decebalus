@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
-  import { getHosts, getJobs, createAttackJob, cancelJob, type Host, type Job } from '../api';
+  import { getHosts, getJobs, createAttackJob, cancelJob, getWordlists, getWordlistContent, saveCustomWordlist, type Host, type Job, type WordlistMeta } from '../api';
   import { wsMessages } from '../stores/websocketStore';
 
   type AttackType = 'ssh-brute' | 'ftp-brute' | 'smb-brute' | 'rdp-brute' | 'file-steal';
@@ -23,13 +23,31 @@
   let attackType: AttackType = 'ssh-brute';
   let target = '';
   let port = '';
-  let concurrency = '3';
+  let concurrency = '20';
   let usernames = '';
   let passwords = '';
   let domain = '';
   let username = '';
   let password = '';
   let remotePath = '/etc/passwd';
+
+  // Saved wordlists (bundled/downloaded/custom) — a dropdown pick takes priority
+  // over the pasted textarea for that field.
+  let wordlists: WordlistMeta[] = [];
+  let usernameWordlistId = '';
+  let passwordWordlistId = '';
+  let savingField: 'usernames' | 'passwords' | null = null;
+  let saveName = '';
+  let saveBusy = false;
+  let saveError = '';
+
+  // Load a saved list into the editable textarea (a working copy of the original).
+  let loadingField: 'usernames' | 'passwords' | null = null;
+  let loadNote: { usernames: string; passwords: string } = { usernames: '', passwords: '' };
+  let loadError: { usernames: string; passwords: string } = { usernames: '', passwords: '' };
+
+  $: usernameWordlists = wordlists.filter(w => w.category === 'username');
+  $: passwordWordlists = wordlists.filter(w => w.category === 'password');
 
   $: isBrute = attackType !== 'file-steal';
   $: usesDomain = attackType === 'smb-brute' || attackType === 'rdp-brute';
@@ -51,11 +69,13 @@
 
     if (isBrute) {
       config.port = port ? parseInt(port) : DEFAULT_PORTS[attackType];
-      config.concurrency = parseInt(concurrency) || 3;
+      config.concurrency = parseInt(concurrency) || 20;
       const userList = usernames.trim().split('\n').map(s => s.trim()).filter(Boolean);
       const passList = passwords.trim().split('\n').map(s => s.trim()).filter(Boolean);
       if (userList.length) config.usernames = userList;
       if (passList.length) config.passwords = passList;
+      if (usernameWordlistId) config.usernames_wordlist_id = usernameWordlistId;
+      if (passwordWordlistId) config.passwords_wordlist_id = passwordWordlistId;
       if (usesDomain && domain.trim()) config.domain = domain.trim();
     } else {
       if (!username) { launchError = 'Username is required.'; return; }
@@ -83,6 +103,64 @@
     try { await cancelJob(id); await refresh(); } catch {}
   }
 
+  async function loadWordlists() {
+    try { wordlists = await getWordlists(); } catch { /* wordlists are optional; ignore */ }
+  }
+
+  // Pull a selected list's contents into the textarea as an editable working copy.
+  // Clears the picker so the (possibly edited) textarea is what the job uses, leaving
+  // the original list on disk untouched. Large lists are refused by the backend.
+  async function loadIntoEditor(field: 'usernames' | 'passwords') {
+    const id = field === 'usernames' ? usernameWordlistId : passwordWordlistId;
+    loadNote = { ...loadNote, [field]: '' };
+    loadError = { ...loadError, [field]: '' };
+    if (!id) { loadError = { ...loadError, [field]: 'Choose a wordlist above first.' }; return; }
+    loadingField = field;
+    try {
+      const wl = await getWordlistContent(id);
+      if (field === 'usernames') { usernames = wl.content; usernameWordlistId = ''; }
+      else { passwords = wl.content; passwordWordlistId = ''; }
+      loadNote = { ...loadNote, [field]: `Loaded a copy of “${wl.name}” (${wl.entry_count.toLocaleString()} entries). The original is untouched — edit freely, then “Save this list…” to keep changes as a new list.` };
+    } catch (e: any) {
+      loadError = { ...loadError, [field]: e?.message ?? 'Could not load list.' };
+    } finally {
+      loadingField = null;
+    }
+  }
+
+  function startSave(field: 'usernames' | 'passwords') {
+    savingField = field;
+    saveName = '';
+    saveError = '';
+  }
+
+  function cancelSave() {
+    savingField = null;
+    saveError = '';
+  }
+
+  async function confirmSave() {
+    if (!savingField) return;
+    const content = savingField === 'usernames' ? usernames : passwords;
+    if (!saveName.trim()) { saveError = 'Name is required.'; return; }
+    if (!content.trim()) { saveError = 'Nothing to save — paste a list first.'; return; }
+
+    saveBusy = true;
+    saveError = '';
+    try {
+      const category = savingField === 'usernames' ? 'username' : 'password';
+      const saved = await saveCustomWordlist(saveName.trim(), category, content);
+      await loadWordlists();
+      if (savingField === 'usernames') usernameWordlistId = saved.id;
+      else passwordWordlistId = saved.id;
+      savingField = null;
+    } catch (e: any) {
+      saveError = e.message ?? 'Save failed';
+    } finally {
+      saveBusy = false;
+    }
+  }
+
   function parseResult(job: Job): any {
     if (!job.results) return null;
     try { return JSON.parse(job.results); } catch { return null; }
@@ -92,6 +170,7 @@
 
   onMount(async () => {
     await refresh();
+    await loadWordlists();
 
     unsubscribe = wsMessages.subscribe((raw: unknown) => {
       if (!raw || typeof raw !== 'string') return;
@@ -160,18 +239,72 @@
           </div>
         {/if}
         <div class="form-group">
-          <label for="concurrency-input">Concurrency</label>
-          <input id="concurrency-input" type="number" bind:value={concurrency} min="1" max="20" />
+          <label for="concurrency-input">Concurrency <small>(SSH/FTP are cheap — go high; SMB/RDP shell out per attempt — keep lower. Server caps at 100 regardless.)</small></label>
+          <input id="concurrency-input" type="number" bind:value={concurrency} min="1" max="100" />
+        </div>
+        <div class="form-group">
+          <label for="usernames-wordlist-select">Usernames wordlist <small>(use as-is, or load ↓ to view/edit a copy)</small></label>
+          <select id="usernames-wordlist-select" bind:value={usernameWordlistId}>
+            <option value="">-- none, use pasted list / defaults --</option>
+            {#each usernameWordlists as w}
+              <option value={w.id}>{w.name} — {w.entry_count} entries ({w.source})</option>
+            {/each}
+          </select>
+          <button type="button" class="outline btn-sm save-list-btn"
+                  on:click={() => loadIntoEditor('usernames')}
+                  disabled={!usernameWordlistId || loadingField === 'usernames'}>
+            {loadingField === 'usernames' ? 'Loading…' : 'Load into editor ↓'}
+          </button>
+          {#if loadNote.usernames}<p class="load-note">{loadNote.usernames}</p>{/if}
+          {#if loadError.usernames}<p class="error-msg">{loadError.usernames}</p>{/if}
         </div>
         <div class="form-group">
           <label for="usernames-input">Usernames <small>(one per line, blank = built-in defaults)</small></label>
           <textarea id="usernames-input" bind:value={usernames} rows="4"
             placeholder="root&#10;pi&#10;admin"></textarea>
+          <button type="button" class="outline btn-sm save-list-btn" on:click={() => startSave('usernames')} disabled={!usernames.trim()}>
+            Save this list…
+          </button>
+          {#if savingField === 'usernames'}
+            <div class="save-row">
+              <input type="text" placeholder="Wordlist name" bind:value={saveName} />
+              <button class="btn-sm" on:click={confirmSave} disabled={saveBusy}>{saveBusy ? 'Saving…' : 'Save'}</button>
+              <button type="button" class="outline btn-sm" on:click={cancelSave}>Cancel</button>
+            </div>
+            {#if saveError}<p class="error-msg">{saveError}</p>{/if}
+          {/if}
+        </div>
+        <div class="form-group">
+          <label for="passwords-wordlist-select">Passwords wordlist <small>(use as-is, or load ↓ to view/edit a copy)</small></label>
+          <select id="passwords-wordlist-select" bind:value={passwordWordlistId}>
+            <option value="">-- none, use pasted list / defaults --</option>
+            {#each passwordWordlists as w}
+              <option value={w.id}>{w.name} — {w.entry_count} entries ({w.source})</option>
+            {/each}
+          </select>
+          <button type="button" class="outline btn-sm save-list-btn"
+                  on:click={() => loadIntoEditor('passwords')}
+                  disabled={!passwordWordlistId || loadingField === 'passwords'}>
+            {loadingField === 'passwords' ? 'Loading…' : 'Load into editor ↓'}
+          </button>
+          {#if loadNote.passwords}<p class="load-note">{loadNote.passwords}</p>{/if}
+          {#if loadError.passwords}<p class="error-msg">{loadError.passwords}</p>{/if}
         </div>
         <div class="form-group">
           <label for="passwords-input">Passwords <small>(one per line, blank = built-in defaults)</small></label>
           <textarea id="passwords-input" bind:value={passwords} rows="4"
             placeholder="raspberry&#10;admin&#10;password"></textarea>
+          <button type="button" class="outline btn-sm save-list-btn" on:click={() => startSave('passwords')} disabled={!passwords.trim()}>
+            Save this list…
+          </button>
+          {#if savingField === 'passwords'}
+            <div class="save-row">
+              <input type="text" placeholder="Wordlist name" bind:value={saveName} />
+              <button class="btn-sm" on:click={confirmSave} disabled={saveBusy}>{saveBusy ? 'Saving…' : 'Save'}</button>
+              <button type="button" class="outline btn-sm" on:click={cancelSave}>Cancel</button>
+            </div>
+            {#if saveError}<p class="error-msg">{saveError}</p>{/if}
+          {/if}
         </div>
       {:else}
         <div class="form-group">
@@ -316,23 +449,33 @@
 
   .hint { color: var(--ash); font-size: 0.78rem; }
 
+  .save-list-btn { align-self: flex-start; margin-top: 0.15rem; width: auto; }
+
+  .save-row {
+    display: flex; gap: 0.5rem; align-items: center; margin-top: 0.4rem;
+  }
+  .save-row input {
+    flex: 1; background: var(--forest-dark, #1a1a1a); border: 1px solid #444;
+    border-radius: 4px; color: var(--ash-light); padding: 0.35rem 0.6rem; font-size: 0.85rem;
+  }
+
   .launch-btn { width: 100%; margin-top: 0.5rem; }
 
-  .error-msg { color: #e06c75; font-size: 0.85rem; margin: 0.25rem 0; }
+  .error-msg { color: var(--clay); font-size: 0.85rem; margin: 0.25rem 0; }
 
   .attack-list { display: flex; flex-direction: column; gap: 0.75rem; }
-  .attack-item { border: 1px solid #333; border-radius: 6px; padding: 0.75rem; }
+  .attack-item { border: 1px solid var(--line); border-radius: var(--radius); padding: 0.75rem; background: var(--surface); }
   .attack-item.done { opacity: 0.9; }
 
   .attack-header {
     display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
     margin-bottom: 0.4rem;
   }
-  .attack-type { font-weight: 600; color: var(--bronze); font-size: 0.85rem; }
-  .attack-target { color: var(--ash-light); font-size: 0.85rem; flex: 1; }
+  .attack-type { font-weight: 500; color: var(--accent); font-size: 0.85rem; font-family: var(--font-mono); }
+  .attack-target { color: var(--text-2); font-size: 0.85rem; flex: 1; font-family: var(--font-mono); }
 
-  .badge-success { background: #2d6a4f; color: #95d5b2; padding: 0.15rem 0.5rem; border-radius: 3px; font-size: 0.75rem; }
-  .badge-danger  { background: #5c2121; color: #e06c75; padding: 0.15rem 0.5rem; border-radius: 3px; font-size: 0.75rem; }
+  .badge-success { background: var(--raised); color: var(--sage); border: 1px solid color-mix(in srgb, var(--sage) 42%, var(--strong)); padding: 0.15rem 0.5rem; border-radius: var(--radius-sm); font-size: 0.7rem; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; }
+  .badge-danger  { background: var(--raised); color: var(--clay); border: 1px solid color-mix(in srgb, var(--clay) 42%, var(--strong)); padding: 0.15rem 0.5rem; border-radius: var(--radius-sm); font-size: 0.7rem; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; }
 
   .btn-sm { padding: 0.2rem 0.6rem; font-size: 0.8rem; }
 
@@ -346,22 +489,22 @@
   .result-meta code { color: var(--ash-light); }
 
   .file-preview {
-    background: #111; border: 1px solid #333; border-radius: 4px;
-    padding: 0.5rem; font-size: 0.75rem; color: var(--ash-light);
+    background: var(--code-bg); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 0.5rem; font-size: 0.75rem; color: var(--text-2);
     max-height: 200px; overflow: auto; white-space: pre-wrap; word-break: break-all;
   }
 
   .creds-found { font-size: 0.85rem; }
-  .creds-found strong { color: #e5c07b; }
+  .creds-found strong { color: var(--accent); }
   .creds-found ul { margin: 0.3rem 0 0 1rem; }
   .creds-found li { margin: 0.15rem 0; }
-  .creds-found code { color: #98c379; }
+  .creds-found code { color: var(--sage); }
 
-  .no-creds { font-size: 0.85rem; color: var(--ash); margin: 0.25rem 0; }
+  .no-creds { font-size: 0.85rem; color: var(--text-3); margin: 0.25rem 0; }
 
   .disclaimer {
-    font-size: 0.8rem; color: var(--ash); border-color: #5c3a1e;
-    background: rgba(92, 58, 30, 0.15);
+    font-size: 0.8rem; color: var(--text-3); border-left: 2px solid var(--amber);
+    background: var(--raised);
   }
-  .disclaimer strong { color: #e5c07b; }
+  .disclaimer strong { color: var(--amber); }
 </style>

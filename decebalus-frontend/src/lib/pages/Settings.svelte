@@ -1,6 +1,10 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { getConfig, saveConfig, syncCves } from '../api';
+  import {
+    getConfig, saveConfig, syncCves,
+    getWordlists, deleteWordlist,
+    type WordlistMeta,
+  } from '../api';
 
   // Defaults mirror the backend's settings::Settings::default().
   let settings = {
@@ -23,6 +27,44 @@
   let saving = false;
   let syncing = false;
 
+  // Wordlists: bundled SecLists (shipped, offline) + user-saved custom lists.
+  let wordlists: WordlistMeta[] = [];
+  let wlError = '';
+  let deletingId = '';
+  let wlQuery = '';
+
+  $: filteredWordlists = wlQuery.trim()
+    ? wordlists.filter((w) =>
+        `${w.name} ${w.category} ${w.source}`.toLowerCase().includes(wlQuery.trim().toLowerCase()))
+    : wordlists;
+
+  async function loadWordlistData() {
+    try {
+      wordlists = await getWordlists();
+    } catch (e: any) {
+      wlError = e.message;
+    }
+  }
+
+  async function handleDeleteWordlist(id: string) {
+    deletingId = id;
+    wlError = '';
+    try {
+      await deleteWordlist(id);
+      await loadWordlistData();
+    } catch (e: any) {
+      wlError = e.message ?? 'Delete failed';
+    } finally {
+      deletingId = '';
+    }
+  }
+
+  function formatSize(bytes: number): string {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  }
+
   onMount(async () => {
     try {
       const config = await getConfig();
@@ -34,6 +76,7 @@
     } finally {
       loading = false;
     }
+    await loadWordlistData();
   });
 
   async function handleSyncCves() {
@@ -198,6 +241,53 @@
   </article>
 
   <article>
+    <header><strong>Wordlists</strong></header>
+    <p class="section-desc">
+      Dictionaries available to the brute-force and discovery modules. The full SecLists
+      subset (Passwords, Usernames, Discovery) ships with the app and is registered
+      automatically — everything is offline, with no downloads. Custom lists you save from
+      the Attacks tab appear here too.
+    </p>
+
+    {#if wlError}<p class="error" role="alert">{wlError}</p>{/if}
+
+    {#if wordlists.length > 0}
+      <div class="wl-toolbar">
+        <input type="search" placeholder="Filter {wordlists.length.toLocaleString()} wordlists…" bind:value={wlQuery} />
+        <span class="wl-count">{filteredWordlists.length.toLocaleString()} shown</span>
+      </div>
+      <div class="wl-scroll">
+        <table class="wl-table">
+          <thead>
+            <tr><th>Name</th><th>Category</th><th>Source</th><th>Entries</th><th>Size</th><th></th></tr>
+          </thead>
+          <tbody>
+            {#each filteredWordlists as w (w.id)}
+              <tr>
+                <td>{w.name}</td>
+                <td>{w.category}</td>
+                <td>{w.source}</td>
+                <td>{w.entry_count.toLocaleString()}</td>
+                <td>{formatSize(w.size_bytes)}</td>
+                <td>
+                  {#if w.source !== 'bundled'}
+                    <button class="outline btn-sm" on:click={() => handleDeleteWordlist(w.id)}
+                            disabled={deletingId === w.id}>
+                      {deletingId === w.id ? '…' : 'Delete'}
+                    </button>
+                  {/if}
+                </td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      </div>
+    {:else}
+      <p class="section-desc">Registering bundled wordlists… (first boot scans the shipped lists in the background)</p>
+    {/if}
+  </article>
+
+  <article>
     <footer class="form-footer">
       <button on:click={handleSave} disabled={saving} aria-busy={saving}>
         {saving ? 'Saving…' : 'Save Settings'}
@@ -262,5 +352,52 @@
     font-size: 0.875rem;
     color: var(--color-ash-light);
     margin-bottom: 1rem;
+  }
+
+  .wl-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+  }
+  .wl-table th, .wl-table td {
+    text-align: left;
+    padding: 0.35rem 0.5rem;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .wl-table td:first-child { font-family: var(--font-mono); font-size: 0.78rem; }
+
+  .wl-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  .wl-toolbar input { flex: 1; margin: 0; }
+  .wl-count {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    white-space: nowrap;
+  }
+  .wl-scroll {
+    max-height: 420px;
+    overflow-y: auto;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .wl-scroll .wl-table { margin-bottom: 0; }
+  .wl-scroll thead th {
+    position: sticky;
+    top: 0;
+    background: var(--surface);
+    z-index: 1;
+  }
+  .btn-sm {
+    padding: 0.2rem 0.6rem;
+    font-size: 0.8rem;
+    width: auto;
   }
 </style>

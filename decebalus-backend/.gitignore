@@ -72,3 +72,5 @@ pnpm-debug.log*
 
 # === DB ===
 data/
+# Bundled SecLists wordlists (shipped as data, not committed)
+assets/seclists/

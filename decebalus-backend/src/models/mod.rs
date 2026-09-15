@@ -15,6 +15,7 @@ mod engagement;
 mod credential;
 mod fact;
 mod finding;
+mod wordlist;
 
 pub use job::Job;
 pub use host::Host;
@@ -33,3 +34,4 @@ pub use engagement::Engagement;
 pub use credential::Credential;
 pub use fact::Fact;
 pub use finding::Finding;
+pub use wordlist::Wordlist;
